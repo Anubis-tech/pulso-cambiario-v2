@@ -1,5 +1,7 @@
 {
- "avisos": {},
+ "avisos": {
+  "noticias": "2026-10-19T03:23:20Z"
+ },
  "frescura": {
   "balanza": {
    "atrasado": false,
@@ -17,9 +19,9 @@
    "ultimo_dato_utc": "2026-10-01T03:59:00Z"
   },
   "noticias": {
-   "atrasado": false,
+   "atrasado": true,
    "nombre": "Titulares de prensa",
-   "ultimo_dato_utc": "2026-10-19T03:59:00Z"
+   "ultimo_dato_utc": null
   },
   "reservas": {
    "atrasado": false,
