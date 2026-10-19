@@ -67,18 +67,27 @@
     var clave = "pe:monto:" + box.getAttribute("data-calc");
     var guardado = leerLS(clave);
     if (guardado != null && input) input.value = guardado;
+    var inicial = true;
+    function poner(o, txt) {
+      if (o.textContent === txt) return;
+      o.textContent = txt;
+      if (inicial) return;
+      // Destello breve: confirma qué cifra cambió con lo que se escribió.
+      o.classList.remove("cambio"); void o.offsetWidth; o.classList.add("cambio");
+    }
     function calc() {
       var n = leerMonto(input.value);
       box.querySelectorAll("[data-tasa]").forEach(function (o) {
         var t = parseFloat(o.getAttribute("data-tasa"));
-        o.textContent = n == null ? "—" : fmt0.format(n * t);
+        poner(o, n == null ? "—" : fmt0.format(n * t));
       });
       var dif = box.querySelector("[data-dif]");
       if (dif) {
         var a = parseFloat(dif.getAttribute("data-dif")), b = parseFloat(dif.getAttribute("data-dif-b"));
-        dif.textContent = n == null ? "—" : fmt0.format(n * (a - b));
+        poner(dif, n == null ? "—" : fmt0.format(n * (a - b)));
       }
       if (n != null) guardarLS(clave, input.value);
+      inicial = false;
     }
     if (input) { input.addEventListener("input", calc); calc(); }
   });

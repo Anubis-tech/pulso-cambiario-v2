@@ -13,13 +13,13 @@
 {% block cuerpo %}
 <section class="seccion" aria-labelledby="intra-t">
   <div class="sec-head"><h2 id="intra-t">Movimiento reciente</h2><div class="controles" id="r-intradia"></div></div>
-  <div class="card"><div class="grafico h220" id="g-intradia"><p class="sin-js">Cargando gráfico…</p></div>
+  <div class="card"><div class="grafico h220" id="g-intradia"><p class="cargando" role="status"><span class="visually-hidden">Cargando gráfico</span></p></div>
   <p class="pie">Hora de Bolivia · <a href="{{ url('/metodologia/') }}">Cómo medimos</a></p></div>
 </section>
 {{ m.anuncio('superior', True) }}
 <section class="seccion" aria-labelledby="hist-t">
   <div class="sec-head"><h2 id="hist-t">Histórico diario</h2><div class="controles" id="r-paralelo"></div></div>
-  <div class="card"><div class="grafico h260" id="g-paralelo"><p class="sin-js">Cargando gráfico…</p></div>
+  <div class="card"><div class="grafico h260" id="g-paralelo"><p class="cargando" role="status"><span class="visually-hidden">Cargando gráfico</span></p></div>
   <p class="pie">Último valor de cada día. Datos desde septiembre de 2023.</p></div>
 </section>
 <section class="seccion" aria-labelledby="tab-t">

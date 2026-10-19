@@ -14,20 +14,20 @@
     <p class="cifra-grande" data-paralelo-valor="{{ D.usdt.valor }}" data-paralelo-ts="{{ D.usdt.ts }}">
       <span class="et">Paralelo (USDT en Binance)</span>
       <span class="v"><small>Bs</small>{{ D.usdt.valor_txt }}</span>
-      {% if ay %}<span class="d {{ ay.dir }}">{% if ay.dir == 'sube' %}▲ {% elif ay.dir == 'baja' %}▼ {% endif %}{{ ay.texto }}</span>{% endif %}
+      {% if ay %}<span class="d {{ ay.dir }}">{{ ay.texto }}</span>{% endif %}
     </p>
-    <p class="oficial-linea">Oficial (BCB): <b>Bs {{ D.tco.venta_txt }}</b> <span>· {{ 'para el ' ~ D.tco.dia_txt if D.tco.es_de_manana else 'hoy' }}{% if D.tco.ayer is defined %}, {{ D.tco.ayer.texto }}{% endif %}</span></p>
+    <p class="oficial-linea">Oficial (BCB): <b>Bs {{ D.tco.venta_txt }}</b> <span>{{ 'Vigente para el ' ~ D.tco.dia_txt if D.tco.es_de_manana else 'Vigente hoy' }}{% if D.tco.ayer is defined %}, {{ D.tco.ayer.texto }}{% endif %}</span></p>
     <p class="sub">{{ D.titular.sub }}</p>
     <div class="calc-rapida" data-calc="usd">
       <label for="tengo">Tengo</label>
       <input id="tengo" inputmode="decimal" autocomplete="off" value="100" aria-label="Monto en dólares">
       <span>dólares</span>
       <div class="res" aria-live="polite">
-        <span>→ <b>Bs <span data-tasa="{{ D.usdt.valor }}">{{ (100 * D.usdt.valor)|num(0) }}</span></b> al paralelo</span>
-        <span>· <b>Bs <span data-tasa="{{ D.tco.venta }}">{{ (100 * D.tco.venta)|num(0) }}</span></b> al oficial</span>
+        <span>son <b>Bs <span data-tasa="{{ D.usdt.valor }}">{{ (100 * D.usdt.valor)|num(0) }}</span></b> al paralelo</span>
+        <span>o <b>Bs <span data-tasa="{{ D.tco.venta }}">{{ (100 * D.tco.venta)|num(0) }}</span></b> al oficial</span>
       </div>
     </div>
-    <p class="hora"><span class="live-dot" aria-hidden="true"></span>Paralelo: dato de las {{ D.usdt.hora }} (<span data-hace="{{ D.usdt.ts }}">{{ D.usdt.fecha_corta }}</span>){% if D.atrasado.get('usdt', False) %} · <span class="atrasado">dato atrasado</span>{% endif %} · <a href="{{ url('/metodologia/') }}" style="color:inherit">Cómo medimos</a></p>
+    <p class="hora"><span class="live-dot" aria-hidden="true"></span>Paralelo: dato de las {{ D.usdt.hora }} (<span data-hace="{{ D.usdt.ts }}">{{ D.usdt.fecha_corta }}</span>){% if D.atrasado.get('usdt', False) %} · <span class="atrasado">dato atrasado</span>{% endif %} · <a href="{{ url('/metodologia/') }}">Cómo medimos</a></p>
   </div>
 </section>
 {% endblock %}
@@ -47,7 +47,7 @@
 
   {% if D.bancos.podio %}
   <section class="seccion" aria-labelledby="vender-t" data-calc="vender">
-    <div class="sec-head"><h2 id="vender-t">¿Dónde vender tus dólares?</h2><a class="hint" href="{{ url('/tipo-de-cambio-bancos/') }}">Los {{ D.bancos.n_bancos }} bancos →</a></div>
+    <div class="sec-head"><h2 id="vender-t">¿Dónde vender tus dólares?</h2><a class="hint" href="{{ url('/tipo-de-cambio-bancos/') }}">Ver los {{ D.bancos.n_bancos }} bancos</a></div>
     <p class="monto-linea"><label for="vendo">Si vendes</label> <span>$us</span> <input id="vendo" inputmode="decimal" autocomplete="off" value="500"> <span>en un banco, recibirías:</span></p>
     <div class="podio">
       {% for p in D.bancos.podio %}
@@ -60,7 +60,7 @@
 
   <section class="seccion" aria-labelledby="hoy-t">
     <div class="sec-head"><h2 id="hoy-t">El paralelo hoy</h2>{% if D.usdt.min24_txt %}<span class="hint">Entre Bs {{ D.usdt.min24_txt }} y {{ D.usdt.max24_txt }}</span>{% endif %}</div>
-    <div class="card"><div class="grafico h110" id="g-intradia"><p class="sin-js">Cargando gráfico…</p></div></div>
+    <div class="card"><div class="grafico h110" id="g-intradia"><p class="cargando" role="status"><span class="visually-hidden">Cargando gráfico</span></p></div></div>
   </section>
 
   {{ m.anuncio('superior') }}
@@ -68,7 +68,7 @@
   <section class="seccion" aria-labelledby="ofi-par-t">
     <div class="sec-head"><h2 id="ofi-par-t">Oficial vs. paralelo</h2><div class="controles" id="r-principal"></div></div>
     <div class="card">
-      <div class="grafico h260" id="g-principal"><p class="sin-js">Cargando gráfico…</p></div>
+      <div class="grafico h260" id="g-principal"><p class="cargando" role="status"><span class="visually-hidden">Cargando gráfico</span></p></div>
       <div class="leyenda" id="l-principal"></div>
     </div>
   </section>
@@ -111,10 +111,10 @@
   <section class="seccion" aria-labelledby="mas-t">
     <div class="sec-head"><h2 id="mas-t">Más datos</h2></div>
     <div class="tarjetas">
-      {% if meses %}<a class="tarjeta" href="{{ url(meses[0].ruta) }}"><span class="t-et">Resumen del mes</span><span class="t-val">{{ meses[0].nombre|capitalize }}</span><span class="t-ctx">Máximo, mínimo y el banco que más pagó</span><span class="t-ir">Ver resumen →</span></a>{% endif %}
-      <a class="tarjeta" href="{{ url('/reservas-internacionales/') }}"><span class="t-et">Reservas del BCB</span><span class="t-val">$us {{ D.reservas.rin_txt }} MM</span><span class="t-ctx">Al {{ D.reservas.fecha_larga }}{% if D.reservas.d12_txt is defined %} · {{ D.reservas.d12_pct_txt }}% en 12 meses{% endif %}</span><span class="t-ir">Ver reservas →</span></a>
-      <a class="tarjeta" href="{{ url('/balanza-cambiaria/') }}"><span class="t-et">Dólares que entraron y salieron</span><span class="t-val">{{ D.balanza.flujo_txt }} MM</span><span class="t-ctx">Balanza cambiaria de {{ D.balanza.mes }}</span><span class="t-ir">Ver balanza →</span></a>
-      <a class="tarjeta" href="{{ url('/tipo-de-cambio-real/') }}"><span class="t-et">Tipo de cambio real</span><span class="t-val">{{ D.itcr.valor_txt }}</span><span class="t-ctx">{{ D.itcr.mes|capitalize }} · base dic-2022 = 100</span><span class="t-ir">Ver índice →</span></a>
+      {% if meses %}<a class="tarjeta" href="{{ url(meses[0].ruta) }}"><span class="t-et">Resumen del mes</span><span class="t-val">{{ meses[0].nombre|capitalize }}</span><span class="t-ctx">Máximo, mínimo y el banco que más pagó</span><span class="t-ir">Ver resumen</span></a>{% endif %}
+      <a class="tarjeta" href="{{ url('/reservas-internacionales/') }}"><span class="t-et">Reservas del BCB</span><span class="t-val">$us {{ D.reservas.rin_txt }} MM</span><span class="t-ctx">Al {{ D.reservas.fecha_larga }}{% if D.reservas.d12_txt is defined %} · {{ D.reservas.d12_pct_txt }}% en 12 meses{% endif %}</span><span class="t-ir">Ver reservas</span></a>
+      <a class="tarjeta" href="{{ url('/balanza-cambiaria/') }}"><span class="t-et">Dólares que entraron y salieron</span><span class="t-val">{{ D.balanza.flujo_txt }} MM</span><span class="t-ctx">Balanza cambiaria de {{ D.balanza.mes }}</span><span class="t-ir">Ver balanza</span></a>
+      <a class="tarjeta" href="{{ url('/tipo-de-cambio-real/') }}"><span class="t-et">Tipo de cambio real</span><span class="t-val">{{ D.itcr.valor_txt }}</span><span class="t-ctx">{{ D.itcr.mes|capitalize }} · base dic-2022 = 100</span><span class="t-ir">Ver índice</span></a>
     </div>
   </section>
 

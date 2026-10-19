@@ -677,7 +677,7 @@ def generar_og(sitio, clave, titulo, cifra=None, sub=None):
     im = Image.new("RGB", (W, H), (10, 10, 10))
     dr = ImageDraw.Draw(im)
     dr.rectangle([0, H - 14, W, H], fill=(42, 120, 214))
-    mono = ImageFont.truetype(str(f / "IBMPlexMono-Medium.ttf"), 30)
+    mono = ImageFont.truetype(str(f / "Archivo-SemiBold.ttf"), 30)
     dr.text((70, 62), "PULSO ECONÓMICO · BOLIVIA", font=mono, fill=(227, 169, 0))
 
     def ajustar(txt, fuente, ancho):
@@ -702,7 +702,7 @@ def generar_og(sitio, clave, titulo, cifra=None, sub=None):
         big = ImageFont.truetype(str(f / "Archivo-ExtraBold.ttf"), 150)
         dr.text((66, max(y + 20, 330)), cifra, font=big, fill=(255, 255, 255))
     if sub:
-        s = ImageFont.truetype(str(f / "IBMPlexSans-Regular.ttf"), 32)
+        s = ImageFont.truetype(str(f / "Archivo-Regular.ttf"), 32)
         dr.text((70, H - 86), sub, font=s, fill=(200, 200, 200))
     ruta = sitio.salida / "img" / "og" / f"{clave}.png"
     ruta.parent.mkdir(parents=True, exist_ok=True)
@@ -722,30 +722,30 @@ def generar_hoy(sitio, D):
         dr = ImageDraw.Draw(im)
         x = 80
         y = 110 if H == 1350 else 260
-        dr.text((x, y), "DÓLAR HOY EN BOLIVIA", font=F("IBMPlexMono-Medium.ttf", 40), fill=(227, 169, 0))
+        dr.text((x, y), "DÓLAR HOY EN BOLIVIA", font=F("Archivo-SemiBold.ttf", 40), fill=(227, 169, 0))
         y += 70
-        dr.text((x, y), f"{dia_txt(u['fecha']).capitalize()} de {MESES[int(u['fecha'][5:7]) - 1]} · {u['hora']}", font=F("IBMPlexSans-Regular.ttf", 40), fill=(200, 200, 200))
+        dr.text((x, y), f"{dia_txt(u['fecha']).capitalize()} de {MESES[int(u['fecha'][5:7]) - 1]} · {u['hora']}", font=F("Archivo-Regular.ttf", 40), fill=(200, 200, 200))
         y += 120
-        dr.text((x, y), "Paralelo (USDT)", font=F("IBMPlexSans-SemiBold.ttf", 46), fill=(240, 122, 69))
+        dr.text((x, y), "Paralelo (USDT)", font=F("Archivo-SemiBold.ttf", 46), fill=(240, 122, 69))
         y += 60
         dr.text((x - 6, y), f"Bs {u['valor_txt']}", font=F("Archivo-ExtraBold.ttf", 210), fill=(255, 255, 255))
         y += 250
         ay = u.get("ayer")
         if ay:
             col = {"sube": (255, 123, 114), "baja": (53, 195, 90), "igual": (200, 200, 200)}[ay["dir"]]
-            dr.text((x, y), ay["texto"], font=F("IBMPlexSans-SemiBold.ttf", 44), fill=col)
+            dr.text((x, y), ay["texto"], font=F("Archivo-SemiBold.ttf", 44), fill=col)
             y += 110
         dr.line([(x, y), (W - x, y)], fill=(70, 70, 70), width=3)
         y += 50
-        dr.text((x, y), "Oficial BCB", font=F("IBMPlexSans-SemiBold.ttf", 46), fill=(75, 147, 234))
+        dr.text((x, y), "Oficial BCB", font=F("Archivo-SemiBold.ttf", 46), fill=(75, 147, 234))
         dr.text((W - x, y), f"Bs {t['venta_txt']}", font=F("Archivo-ExtraBold.ttf", 64), fill=(255, 255, 255), anchor="ra")
         y += 110
         if b.get("podio"):
             p = b["podio"][0]
-            dr.text((x, y), "Banco que más pagó", font=F("IBMPlexSans-SemiBold.ttf", 46), fill=(44, 191, 149))
+            dr.text((x, y), "Banco que más pagó", font=F("Archivo-SemiBold.ttf", 46), fill=(44, 191, 149))
             dr.text((W - x, y), f"Bs {p['tasa_txt']}", font=F("Archivo-ExtraBold.ttf", 64), fill=(255, 255, 255), anchor="ra")
             y += 64
-            dr.text((x, y), f"{p['nombre']} · {b['fecha_corta']}", font=F("IBMPlexSans-Regular.ttf", 36), fill=(170, 170, 170))
+            dr.text((x, y), f"{p['nombre']} · {b['fecha_corta']}", font=F("Archivo-Regular.ttf", 36), fill=(170, 170, 170))
         dr.rectangle([0, H - 150, W, H], fill=(42, 120, 214))
         dr.text((W // 2, H - 75), "elpulsoeconomico.com", font=F("Archivo-ExtraBold.ttf", 54), fill=(255, 255, 255), anchor="mm")
         ruta = sitio.salida / "img" / f"{nombre}.png"

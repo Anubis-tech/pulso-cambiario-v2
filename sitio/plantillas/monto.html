@@ -11,7 +11,7 @@
     <p class="crumbs"><a href="{{ url('/') }}">Inicio</a><span aria-hidden="true">›</span><a href="{{ url('/conversor/') }}">Conversor</a></p>
     <h1 id="h-monto">{{ M.h1 }}</h1>
     <p class="cifra-grande"><span class="et">Al paralelo (USDT, {{ D.usdt.hora }})</span><span class="v"><small>Bs</small>{{ (monto * D.usdt.valor)|num(0) }}</span></p>
-    <p class="oficial-linea">Al oficial (BCB): <b>Bs {{ (monto * D.tco.venta)|num(0) }}</b> <span>· tasa Bs {{ D.tco.venta_txt }}</span></p>
+    <p class="oficial-linea">Al oficial (BCB): <b>Bs {{ (monto * D.tco.venta)|num(0) }}</b> <span>Tasa Bs {{ D.tco.venta_txt }}</span></p>
     <p class="sub">Con el paralelo a Bs {{ D.usdt.valor_txt }} y el oficial a Bs {{ D.tco.venta_txt }}. Si cambias en un banco, mira abajo cuánto paga cada uno.</p>
   </div>
 </section>

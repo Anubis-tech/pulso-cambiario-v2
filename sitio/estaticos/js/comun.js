@@ -138,7 +138,7 @@
       }
       if (cur.length) segs.push(cur);
       segs.forEach(function (pts) {
-        p.push('<path d="M' + pts.map(function (q) { return q[0].toFixed(1) + "," + q[1].toFixed(1); }).join("L") + '" fill="none" stroke="' + s.color + '" stroke-width="' + (s.width || 2) + '"' + (s.dashed ? ' stroke-dasharray="5,4"' : "") + ' stroke-linejoin="round" stroke-linecap="round"/>');
+        p.push('<path d="M' + pts.map(function (q) { return q[0].toFixed(1) + "," + q[1].toFixed(1); }).join("L") + '" class="' + (s.dashed ? "" : "linea") + '" fill="none" stroke="' + s.color + '" stroke-width="' + (s.width || 2) + '"' + (s.dashed ? ' stroke-dasharray="5,4"' : "") + ' stroke-linejoin="round" stroke-linecap="round"/>');
       });
       for (var j = n - 1; j >= 0; j--) {
         if (data[j][s.key] != null) { p.push('<circle cx="' + X(j) + '" cy="' + Y(data[j][s.key]) + '" r="3.5" fill="' + s.color + '"/>'); break; }
@@ -150,6 +150,23 @@
     p.push("</svg>");
     el.innerHTML = p.join("") + '<div class="tooltip" aria-hidden="true"></div>';
 
+    // Animación de entrada: la línea se dibuja una sola vez, al cargar (no al cambiar de rango).
+    if (!this._dibujado) {
+      this._dibujado = true;
+      Array.prototype.forEach.call(el.querySelectorAll("path.linea"), function (ln) {
+        try { var L = Math.ceil(ln.getTotalLength()); ln.style.setProperty("--largo", L); ln.classList.add("por-trazar"); } catch (e) {}
+      });
+      var hecho = false;
+      var lanzar = function () {
+        if (hecho) return; hecho = true;
+        window.removeEventListener("scroll", revisar);
+        Array.prototype.forEach.call(el.querySelectorAll("path.por-trazar"), function (ln) { ln.classList.add("trazo"); });
+      };
+      // Se dibuja cuando el gráfico entra en pantalla; si el lector ya pasó de largo, se muestra completo.
+      var revisar = function () { var r = el.getBoundingClientRect(); if (r.top < window.innerHeight * 0.85) lanzar(); };
+      window.addEventListener("scroll", revisar, { passive: true });
+      revisar();
+    }
     var svg = el.querySelector("svg"), tip = el.querySelector(".tooltip"), guia = el.querySelector(".guia");
     var puntos = el.querySelectorAll(".punto"), cap = el.querySelector(".captura");
     var tf = o.tipFormat || function (x) { return fecha(x); };
@@ -267,4 +284,11 @@
     restarDias: restarDias, restarMeses: restarMeses, escapar: escapar, cargar: cargar, fallo: fallo,
     Lineas: Lineas, Barras: Barras, rangos: rangos, leyenda: leyenda, desde: desde
   };
+
+  /* Sombra de la barra superior al desplazarse */
+  var barra = document.querySelector(".topbar");
+  if (barra) {
+    var marcar = function () { barra.classList.toggle("con-sombra", window.scrollY > 4); };
+    window.addEventListener("scroll", marcar, { passive: true }); marcar();
+  }
 })(window);
