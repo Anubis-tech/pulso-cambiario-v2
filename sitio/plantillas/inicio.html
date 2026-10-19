@@ -65,13 +65,13 @@
   {% if D.bancos.podio %}
   <section class="seccion" aria-labelledby="vender-t" data-calc="vender">
     <div class="sec-head"><h2 id="vender-t">¿Dónde vender tus dólares?</h2><a class="hint" href="{{ url('/tipo-de-cambio-bancos/') }}">Los {{ D.bancos.n_bancos }} bancos</a></div>
-    <p class="monto-linea"><label for="vendo">Si vendes</label> <span>$us</span> <input id="vendo" inputmode="decimal" autocomplete="off" value="500"> <span>en un banco, recibirías:</span></p>
+    <p class="monto-linea"><label for="vendo">Si vendes</label> <span>$us</span> <input id="vendo" inputmode="decimal" autocomplete="off" value="500"> <span>al precio promedio que pagó cada banco, serían:</span></p>
     <div class="podio">
       {% for p in D.bancos.podio %}
       <div class="podio-fila"><span class="pos">{{ loop.index }}</span><span class="nom">{{ p.nombre }}<small>pagó Bs {{ p.tasa_txt }} por dólar</small></span><span class="rec">Bs <span data-tasa="{{ p.tasa }}">{{ p.recibe_txt }}</span><small>aprox.</small></span></div>
       {% endfor %}
     </div>
-    <p class="pie">Precio promedio que pagó cada banco el {{ D.bancos.dia_txt }} (dato del BCB, el último publicado). Lo que te paguen a ti puede variar según el monto y el canal.</p>
+    <p class="pie">Precio promedio que pagó cada banco el {{ D.bancos.dia_txt }} (dato del BCB, el último publicado). Mezcla operaciones de ventanilla y operaciones grandes negociadas: para montos chicos el precio puede ser menor.</p>
   </section>
   {% endif %}
 

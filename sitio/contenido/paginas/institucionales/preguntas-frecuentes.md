@@ -11,7 +11,7 @@ faq:
   - p: "¿A cuánto está el dólar hoy en Bolivia?"
     r: "A las {{ D.usdt.hora }} del {{ D.usdt.fecha_larga }}: paralelo (USDT/BOB) **Bs {{ D.usdt.valor_txt }}**; oficial del BCB **Bs {{ D.tco.venta_txt }}**; promedio de compra de los bancos **Bs {{ D.bancos.ppp_txt }}** ({{ D.bancos.fecha_corta }}). [Ver todo en la portada]({{ url('/') }})."
   - p: "¿Qué es el tipo de cambio oficial y quién lo fija?"
-    r: "Lo calcula y publica el Banco Central de Bolivia. Desde la RD 142/2026 es la mediana ponderada por monto de las compras de dólares de los bancos del día hábil anterior. Se publica a las 23:30 y rige al día siguiente. [Cómo se calcula]({{ url('/tipo-de-cambio-oficial/') }})."
+    r: "Lo calcula y publica el Banco Central de Bolivia. Desde la RD 142/2026 es la mediana ponderada por monto de las compras de dólares de los bancos entre las 17:01 del día hábil anterior y las 17:00 del día del cálculo. Se publica a las 23:30 y rige el día hábil siguiente. [Cómo se calcula]({{ url('/tipo-de-cambio-oficial/') }})."
   - p: "¿Qué es el dólar paralelo?"
     r: "Es el precio del dólar fuera del sistema bancario. Lo medimos con el precio del USDT en bolivianos en Binance P2P, la referencia pública más usada. [Más detalles]({{ url('/dolar-paralelo/') }})."
   - p: "¿Por qué el oficial ya no es 6,96?"

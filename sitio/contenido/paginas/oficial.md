@@ -4,6 +4,8 @@ og_titulo: "Tipo de cambio oficial del BCB hoy"
 descripcion: "Tipo de cambio oficial del BCB vigente el {{ D.tco.fecha_larga }}: Bs {{ D.tco.venta_txt }}. Cómo se calcula desde la RD 142/2026 e histórico."
 h1: "Tipo de cambio oficial del BCB hoy"
 dek: "El oficial del BCB está en Bs {{ D.tco.venta_txt }}. Cambia cada día hábil y el nuevo valor sale a las 23:30."
+resumen: "El tipo de cambio oficial lo calcula el Banco Central de Bolivia cada día hábil con las compras de dólares de los bancos, y lo publica a las 23:30. El vigente el {{ D.tco.fecha_larga }} es Bs {{ D.tco.venta_txt }}."
+fuente: "Fuente: Banco Central de Bolivia, vía un servicio que replica su publicación."
 faq:
   - p: "¿Cuál es el tipo de cambio oficial hoy?"
     r: "El tipo de cambio oficial vigente para el {{ D.tco.fecha_larga }} es **Bs {{ D.tco.venta_txt }}** por dólar{% if not D.tco.iguales %} para la venta y Bs {{ D.tco.compra_txt }} para la compra{% endif %}."
@@ -12,7 +14,7 @@ faq:
   - p: "¿Sigue existiendo el 6,96?"
     r: "No como tipo de cambio oficial. El valor fijo de Bs 6,96 para la venta rigió desde noviembre de 2011 hasta junio de 2026, cuando el BCB adoptó un régimen de tipo de cambio flexible."
   - p: "¿Por qué el oficial es distinto del precio que me dan en el banco?"
-    r: "El oficial es una mediana de muchas operaciones del día hábil anterior. Cada banco fija sus propios precios de compra y venta para sus clientes. Desde septiembre de 2026 ya no existe el tope que limitaba el precio de venta de los bancos a 10 centavos por encima del oficial. Puedes ver lo que pagó cada banco en [tipo de cambio por banco]({{ url('/tipo-de-cambio-bancos/') }})."
+    r: "El oficial es una mediana de muchas operaciones de la ventana anterior (de las 17:01 de un día hábil a las 17:00 del siguiente). Cada banco fija sus propios precios de compra y venta para sus clientes. Desde septiembre de 2026 ya no existe el tope que limitaba el precio de venta de los bancos a 10 centavos por encima del oficial. Puedes ver lo que pagó cada banco en [tipo de cambio por banco]({{ url('/tipo-de-cambio-bancos/') }})."
 ---
 ## Cómo se calcula hoy
 
@@ -29,9 +31,9 @@ El TCO se usa para las operaciones del sector público y del BCB y para los regi
 ## Cómo llegamos aquí
 
 - **Noviembre de 2011 a junio de 2026:** tipo de cambio fijo, Bs 6,86 la compra y Bs 6,96 la venta.
-- **Desde el 1 de diciembre de 2025:** el oficial sigue en 6,96, pero el BCB empieza a publicar un **valor referencial** del dólar, calculado con operaciones reales de los bancos con sus clientes. En el gráfico, ese tramo aparece sombreado, porque la línea muestra el referencial y no el oficial legal.
-- **26 de junio de 2026, RD 88/2026:** régimen de tipo de cambio flexible. El BCB calcula un oficial diario y los bancos no pueden vender a más de 10 centavos por encima de él.
-- **24 de septiembre de 2026, RD 142/2026:** el cálculo pasa del promedio ponderado a la mediana ponderada por monto, se suman las compras al BCB, la publicación se mueve a las 23:30 y se elimina el tope de 10 centavos. Desde entonces el BCB publica un único valor para compra y venta.
+- **Desde el 1 de diciembre de 2025:** el oficial sigue en 6,96, pero el BCB empieza a publicar un **valor referencial** del dólar. Tenía dos partes: la compra era el promedio ponderado de las compras de los bancos a sus clientes; la venta era el precio máximo que podían cobrar los bancos, incluido el costo de las transferencias al exterior. En el gráfico ese tramo aparece sombreado: la línea muestra la venta referencial, no el oficial legal.
+- **26 de junio de 2026, RM 245 del Ministerio de Economía y RD 88/2026 del BCB (reglamento):** régimen de tipo de cambio flexible. El BCB calcula cada día un único tipo de cambio oficial con las compras de los bancos, y los bancos no pueden vender a más de 10 centavos por encima de él. Por eso en esos meses el BCB publicaba también una "venta" igual al oficial más 0,10: era ese tope, no otro oficial.
+- **24 de septiembre de 2026, RD 142/2026:** el cálculo pasa del promedio ponderado a la mediana ponderada por monto, se suman las compras al BCB, la publicación se mueve a las 23:30 y se elimina el tope de 10 centavos. Desde entonces ya no publica la "venta" con el tope, solo el valor oficial.
 
 Más detalle en [cómo calcula el BCB el tipo de cambio oficial]({{ url('/articulos/como-calcula-el-bcb-el-tipo-de-cambio-oficial/') }}).
 

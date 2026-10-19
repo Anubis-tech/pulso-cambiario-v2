@@ -492,3 +492,18 @@ body[data-pagina="conversor"] .figuras .figura:first-child{ --tema:var(--paralel
 .detalle table.datos th,.detalle table.datos td{ padding:9px 10px; }
 .detalle table.datos tfoot td,.detalle table.datos tfoot th{ border-top:1px solid var(--border-2); }
 @media (max-width:560px){ .detalle table.datos th:nth-child(4),.detalle table.datos td:nth-child(4),.detalle table.datos th:nth-child(5),.detalle table.datos td:nth-child(5){ display:none; } .detalle table.datos{ font-size:13.5px; } .detalle table.datos th,.detalle table.datos td{ padding:8px 6px; } }
+
+/* ---------- Explicaciones plegadas en las páginas de datos ---------- */
+.explicacion{ background:var(--surface); border:1px solid var(--border); border-radius:var(--r-card); padding:20px 22px 6px; box-shadow:var(--sombra); }
+.explicacion .resumen{ margin:0 0 8px; font-size:16.5px; line-height:1.6; color:var(--ink); max-width:70ch; }
+.explicacion .fuente-linea{ margin:0 0 10px; font-size:13px; color:var(--muted); }
+.plegable{ border-top:1px solid var(--border); }
+.plegable summary{ cursor:pointer; list-style:none; display:flex; justify-content:space-between; align-items:center; gap:14px; padding:14px 0; }
+.plegable summary::-webkit-details-marker{ display:none; }
+.plegable summary h2{ margin:0; font-size:16px; font-weight:600; letter-spacing:0; }
+.plegable summary::after{ content:""; flex:none; width:8px; height:8px; border-right:2px solid var(--muted); border-bottom:2px solid var(--muted); transform:rotate(45deg); margin-right:4px; transition:transform 220ms ease-out; }
+.plegable[open] summary::after{ transform:rotate(-135deg); }
+.plegable .prosa{ padding:0 0 14px; font-size:15.5px; }
+.plegable[open] .prosa{ animation:desplegar 220ms ease-out; }
+@keyframes desplegar{ from{ opacity:0; transform:translateY(-4px); } to{ opacity:1; transform:none; } }
+@media (max-width:520px){ .explicacion{ padding:16px 18px 4px; border-radius:18px; } }

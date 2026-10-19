@@ -64,7 +64,7 @@
       {{ S.nombre }}
     </a>
     <nav class="nav" aria-label="Secciones">
-      {% set nav = [('/', 'Dólar hoy'), ('/tipo-de-cambio-bancos/', 'Bancos'), ('/conversor/', 'Conversor'), ('/dolar-paralelo/', 'Paralelo'), ('/tipo-de-cambio-oficial/', 'Oficial'), ('/dolar-bolivia/', 'Mes a mes'), ('/articulos/', 'Artículos')] %}
+      {% set nav = [('/', 'Dólar hoy'), ('/tipo-de-cambio-bancos/', 'Bancos'), ('/conversor/', 'Conversor'), ('/dolar-paralelo/', 'Paralelo'), ('/tipo-de-cambio-oficial/', 'Oficial'), ('/dolar-bolivia/', 'Mes a mes'), ('/articulos/', 'Guías')] %}
       {% for r, t in nav %}<a href="{{ url(r) }}"{% if ruta == r or (r != '/' and ruta.startswith(r)) %} aria-current="page"{% endif %}>{{ t }}</a>{% endfor %}
     </nav>
     <button type="button" class="tema-btn" data-tema-btn aria-label="Cambiar entre modo claro y oscuro" title="Modo claro / oscuro">
@@ -102,7 +102,7 @@
           <li><a href="{{ url('/balanza-cambiaria/') }}">Balanza cambiaria</a></li>
           <li><a href="{{ url('/tipo-de-cambio-real/') }}">Tipo de cambio real</a></li>
           <li><a href="{{ url('/conversor/') }}">Conversor USD ↔ Bs</a></li>
-          <li><a href="{{ url('/articulos/') }}">Artículos</a></li>
+          <li><a href="{{ url('/articulos/') }}">Guías</a></li>
         </ul>
       </nav>
       <nav aria-label="El sitio">

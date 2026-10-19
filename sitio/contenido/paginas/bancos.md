@@ -4,6 +4,8 @@ og_titulo: "Tipo de cambio por banco en Bolivia"
 descripcion: "Cuánto pagó cada banco por el dólar el {{ D.bancos.fecha_larga }}: promedio del sistema Bs {{ D.bancos.ppp_txt }}. Montos, comparación y evolución por banco."
 h1: "Tipo de cambio por banco en Bolivia"
 dek: "Si vas a vender dólares, aquí ves qué banco pagó más. Dato oficial del BCB, banco por banco."
+resumen: "Es el precio promedio al que cada banco compró dólares a sus clientes, según el BCB. Si vas a vender, te conviene el que paga más{% if D.bancos.mejor %}: el {{ D.bancos.dia_txt }} fue {{ D.bancos.mejor.nombre }}, con Bs {{ D.bancos.mejor.tasa_txt }}{% endif %}."
+fuente: "Fuente: Banco Central de Bolivia, datos del {{ D.bancos.fecha_larga }}."
 faq:
   - p: "¿Qué banco paga más por el dólar hoy?"
     r: "{% if D.bancos.mejor %}En el último dato publicado, del {{ D.bancos.fecha_larga }}, el banco que más pagó en promedio fue **{{ D.bancos.mejor.nombre }}**, con Bs {{ D.bancos.mejor.tasa_txt }} por dólar. El promedio ponderado de todo el sistema fue Bs {{ D.bancos.ppp_txt }}. Para la comparación se excluyen los bancos con muy pocas operaciones.{% else %}Todavía no hay datos suficientes para el último día.{% endif %}"
@@ -27,7 +29,7 @@ Algunas claves para leer la tabla:
 
 ## Relación con el tipo de cambio oficial
 
-Desde septiembre de 2026, el [tipo de cambio oficial]({{ url('/tipo-de-cambio-oficial/') }}) se calcula con estas mismas operaciones: compras de dólares de los bancos a sus clientes y al BCB. Hay dos diferencias con el dato de esta página. El oficial usa la **mediana** ponderada por monto, y aquí mostramos el **promedio** ponderado. Además, el oficial toma una ventana que va de las 17:01 de un día a las 17:00 del siguiente. Por eso los dos números se parecen, pero no son idénticos.
+Desde septiembre de 2026, el [tipo de cambio oficial]({{ url('/tipo-de-cambio-oficial/') }}) se calcula con operaciones parecidas: las compras de dólares de los bancos a sus clientes y, además, al BCB, que esta tabla no incluye. Hay otras dos diferencias con el dato de esta página. El oficial usa la **mediana** ponderada por monto, y aquí mostramos el **promedio** ponderado. Además, el oficial toma una ventana que va de las 17:01 de un día a las 17:00 del siguiente. Por eso los dos números se parecen, pero no son idénticos.
 
 ## Límites del dato
 

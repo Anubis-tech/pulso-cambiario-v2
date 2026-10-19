@@ -18,7 +18,7 @@
       <li>Su precio más alto fue Bs {{ mm.max_txt }} ({{ mm.max_fecha }}) y el más bajo, Bs {{ mm.min_txt }} ({{ mm.min_fecha }}).</li>
       {% if mm.of_fin_txt %}<li>El {{ 'valor referencial del BCB' if mm.referencial else 'oficial del BCB' }} pasó de Bs {{ mm.of_ini_txt }} a Bs {{ mm.of_fin_txt }}{% if mm.referencial %} (el oficial legal seguía en Bs 6,96){% endif %}.</li>{% endif %}
       {% if mm.brecha_prom_txt %}<li>La brecha entre paralelo y {{ 'referencial' if mm.referencial else 'oficial' }} promedió {{ mm.brecha_prom_txt }}%.</li>{% endif %}
-      {% if mm.mejor_banco %}<li>El banco que más pagó por el dólar en el mes, en promedio, fue <b>{{ mm.mejor_banco.nombre }}</b> (Bs {{ mm.mejor_banco.ppp_txt }}), entre los bancos con volumen relevante.</li>{% endif %}
+      {% if mm.mejor_banco %}<li>El banco que mejor pagó en el mes fue <b>{{ mm.mejor_banco.nombre }}</b>: en los días en que compró, pagó en promedio {{ mm.mejor_banco.vs_txt }} Bs por dólar frente al promedio de todos los bancos esos mismos días (su precio promedio del mes fue Bs {{ mm.mejor_banco.ppp_txt }}). Solo cuentan bancos con volumen relevante.</li>{% endif %}
     </ul>
   </section>
 
@@ -30,7 +30,7 @@
       <thead><tr><th scope="col">Fecha</th><th scope="col">Paralelo (Bs)</th><th scope="col">{{ 'Referencial' if mm.referencial else 'Oficial' }} (Bs)</th><th scope="col">Brecha</th></tr></thead>
       <tbody>{% for d in mm.dias %}<tr><th scope="row">{{ d.fecha_corta }}</th><td class="num">{{ d.paralelo_txt }}</td><td class="num">{{ d.oficial_txt }}</td><td class="num">{{ d.brecha_txt }}</td></tr>{% endfor %}</tbody>
     </table></div>
-    <p class="pie">Paralelo: último valor del día del USDT/BOB en Binance P2P. {{ 'Referencial: valor que publicaba el BCB con operaciones de los bancos.' if mm.referencial else 'Oficial: valor vigente ese día según el BCB.' }} <a href="{{ url('/metodologia/') }}">Cómo medimos</a>.</p>
+    <p class="pie">Paralelo: último valor del día del USDT/BOB en Binance P2P. {{ 'Referencial: venta del valor referencial que publicaba el BCB (un precio máximo de venta).' if mm.referencial else 'Oficial: valor vigente ese día según el BCB.' }} <a href="{{ url('/metodologia/') }}">Cómo medimos</a>.</p>
   </section>
 
   <nav class="seccion" aria-label="Otros meses" style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">

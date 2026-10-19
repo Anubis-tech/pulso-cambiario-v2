@@ -21,16 +21,23 @@
     {% block figuras %}{% endblock %}
   </section>
   {% block cuerpo %}{% endblock %}
-  {{ m.anuncio('medio') }}
-  <article class="seccion prosa">
-    {{ prosa | safe }}
-  </article>
+  <section class="seccion explicacion" aria-label="Para entender estas cifras">
+    {% if M.get('resumen') %}<p class="resumen">{{ M.resumen }}</p>{% endif %}
+    {% if M.get('fuente') %}<p class="fuente-linea">{{ M.fuente }}</p>{% endif %}
+    {% for sec in secciones %}
+    <details class="plegable">
+      <summary><h2 id="{{ sec.id }}">{{ sec.titulo|safe }}</h2></summary>
+      <div class="prosa">{{ sec.html|safe }}</div>
+    </details>
+    {% endfor %}
+  </section>
   {% block despues_prosa %}{% endblock %}
   {{ m.faq(M.faq) }}
+  {{ m.anuncio('medio') }}
   {{ m.relacionados(articulos_rel) }}
   {{ m.suscripcion() }}
   {% block compartir %}{% endblock %}
-  {{ m.anuncio('inferior') }}
+  {% if articulos_rel %}{{ m.anuncio('inferior') }}{% endif %}{# sin guías relacionadas, el anuncio inferior quedaría casi pegado al del medio #}
 </div>
 {% endblock %}
 {% block js %}

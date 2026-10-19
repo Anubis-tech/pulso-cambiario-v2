@@ -432,7 +432,9 @@ def fetch_usdt_bob(data):
         log("  Se agotaron los reintentos - se omite esta corrida.")
         return False
     prices.sort()
-    median_price = prices[len(prices) // 2]
+    n = len(prices)
+    # Mediana real: con una cantidad par de anuncios, promedio de los dos del medio.
+    median_price = round((prices[(n - 1) // 2] + prices[n // 2]) / 2, 3)
 
     today = bolivia_today()
     usdt = data["usdt"]

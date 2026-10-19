@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% import "macros.html" as m with context %}
-{% set migas = [('/articulos/', 'Artículos'), (M.ruta, M.titulo_corto if M.titulo_corto is defined else M.h1)] %}
+{% set migas = [('/articulos/', 'Guías'), (M.ruta, M.titulo_corto if M.titulo_corto is defined else M.h1)] %}
 {% block jsonld %}
 {{ m.jsonld_migas(migas) }}
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":{{ M.h1|tojson }},"description":{{ M.descripcion|tojson }},"inLanguage":"es-BO","datePublished":{{ (M.fecha|string)|tojson }},"dateModified":{{ ((M.actualizado if M.actualizado is defined else M.fecha)|string)|tojson }},"mainEntityOfPage":{{ abs_url(M.ruta)|tojson }},"image":[{{ abs_url(M.og)|tojson }}],"wordCount":{{ M.palabras }},"author":{% if S.responsable.nombre %}{"@type":"Person","name":{{ S.responsable.nombre|tojson }},"url":{{ abs_url('/acerca/')|tojson }}}{% else %}{"@type":"Organization","name":{{ S.nombre|tojson }},"url":{{ abs_url('/acerca/')|tojson }}}{% endif %},"publisher":{"@type":"Organization","name":{{ S.nombre|tojson }},"logo":{"@type":"ImageObject","url":{{ abs_url('/icono-512.png')|tojson }}}}}</script>

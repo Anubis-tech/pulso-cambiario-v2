@@ -4,6 +4,8 @@ og_titulo: "Balanza cambiaria de Bolivia"
 descripcion: "Balanza cambiaria del BCB en {{ D.balanza.mes }}: flujo neto de {{ D.balanza.flujo_txt }} millones de dólares. Ingreso y egreso de divisas mes a mes y acumulado de 12 meses."
 h1: "Balanza cambiaria de Bolivia"
 dek: "Cuántas divisas entraron y salieron cada mes según el registro del Banco Central de Bolivia."
+resumen: "La balanza cambiaria muestra cuántos dólares entraron y salieron del país por el sistema financiero. En {{ D.balanza.mes }} el saldo fue de {{ D.balanza.flujo_txt }} millones de dólares."
+fuente: "Fuente: Banco Central de Bolivia, datos de {{ D.balanza.mes }}."
 faq:
   - p: "¿Qué es la balanza cambiaria?"
     r: "Es el registro que lleva el Banco Central de Bolivia de los ingresos y egresos de divisas que pasan por sus cuentas en un período. Si entran más divisas de las que salen, hay superávit; si salen más, hay déficit."

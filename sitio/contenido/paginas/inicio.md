@@ -23,7 +23,7 @@ En Bolivia conviven hoy tres precios del dólar, y cada uno responde a una pregu
 
 **El precio de los bancos.** El BCB publica, banco por banco, a qué precio promedio compró dólares cada entidad y cuánto compró. Es el dato más cercano a lo que de verdad pagaron los bancos. Pocas fuentes lo muestran así. [Ver los bancos]({{ url('/tipo-de-cambio-bancos/') }}).
 
-La **brecha** es la distancia entre el paralelo y el oficial. Llegó a superar el 160% en mayo de 2025, cuando el oficial seguía en Bs 6,96 y el paralelo pasó los Bs 18. Desde que el oficial empezó a moverse, la brecha se redujo a unos pocos puntos. [Ver la historia de la brecha]({{ url('/brecha-cambiaria/') }}).
+La **brecha** es la distancia entre el paralelo y el oficial. Llegó a superar el 160% en mayo de 2025, cuando el oficial seguía en Bs 6,96 y el paralelo pasó los Bs 18. Desde que el oficial empezó a moverse, la brecha se redujo a pocos puntos y hoy oscila cerca de cero. [Ver la historia de la brecha]({{ url('/brecha-cambiaria/') }}).
 
 ## De dónde salen los datos
 

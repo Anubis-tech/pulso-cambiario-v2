@@ -26,9 +26,9 @@
     Promise.all([PE.cargar("tco"), PE.cargar("usdt")]).then(function (r) {
       var tco = r[0], usdt = r[1], par = {};
       usdt.diario.forEach(function (f) { par[f[0]] = f[1]; });
-      var filas = tco.filas.map(function (f) { return { x: f[0], venta: f[2], paralelo: par[f[0]] != null ? par[f[0]] : null }; });
+      var filas = tco.filas.map(function (f) { return { x: f[0], venta: f[3], paralelo: par[f[0]] != null ? par[f[0]] : null }; });
       var series = [
-        { key: "venta", label: "Oficial (venta)", color: "var(--accent)", width: 2.25 },
+        { key: "venta", label: "Oficial BCB", color: "var(--accent)", width: 2.25 },
         { key: "paralelo", label: "Paralelo USDT/BOB", color: "var(--paralelo)", width: 2 }
       ];
       var g = null;
@@ -38,7 +38,7 @@
         else g.actualizar({ data: data });
       });
       PE.leyenda("l-principal", [
-        { label: "Oficial BCB (venta)", color: "var(--accent)" },
+        { label: "Oficial BCB", color: "var(--accent)" },
         { label: "Paralelo USDT/BOB", color: "var(--paralelo)" },
         { label: "Tramo de valor referencial BCB", color: "var(--band-ref)" }
       ]);
@@ -94,10 +94,10 @@
   function oficial() {
     if (!document.getElementById("g-oficial")) return;
     PE.cargar("tco").then(function (t) {
-      var filas = t.filas.map(function (f) { return { x: f[0], compra: f[1], venta: f[2] }; });
+      var filas = t.filas.map(function (f) { return { x: f[0], compra: f[1], oficial: f[3] }; });
       var series = [
-        { key: "compra", label: "Compra", color: "var(--accent)", width: 2.25 },
-        { key: "venta", label: "Venta", color: "var(--accent-ink)", width: 1.6, dashed: true }
+        { key: "oficial", label: "Oficial", color: "var(--accent)", width: 2.25 },
+        { key: "compra", label: "Compra", color: "var(--accent-ink)", width: 1.6, dashed: true }
       ];
       var g = null;
       PE.rangos("r-oficial", rangosFecha([[30, "d", "30 días"], [3, "m", "3 meses"], [12, "m", "1 año"], [0, "", "Todo"]]), 2, function (op) {
@@ -106,8 +106,8 @@
         else g.actualizar({ data: data });
       });
       PE.leyenda("l-oficial", [
-        { label: "Compra", color: "var(--accent)", tipo: "linea" },
-        { label: "Venta", color: "var(--accent-ink)", tipo: "punteada" },
+        { label: "Oficial (el que usa este sitio)", color: "var(--accent)", tipo: "linea" },
+        { label: "Compra publicada", color: "var(--accent-ink)", tipo: "punteada" },
         { label: "Tramo de valor referencial BCB", color: "var(--band-ref)" }
       ]);
     }).catch(function () { PE.fallo("g-oficial"); });

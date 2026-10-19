@@ -4,13 +4,15 @@ og_titulo: "Tipo de cambio real de Bolivia (ITCR)"
 descripcion: "Índice de tipo de cambio real de Bolivia en {{ D.itcr.mes }}: {{ D.itcr.valor_txt }} (base dic-2022 = 100). Qué mide, cómo leerlo y su evolución desde 2000."
 h1: "Índice de tipo de cambio real (ITCR)"
 dek: "Una medida de cuán caros o baratos son los precios de Bolivia frente a los de sus socios comerciales, ajustada por inflación."
+resumen: "El tipo de cambio real compara los precios de Bolivia con los de sus socios comerciales, corrigiendo por inflación. En {{ D.itcr.mes }} el índice fue {{ D.itcr.valor_txt }} (diciembre de 2022 = 100): si sube, Bolivia se abarata frente a ellos."
+fuente: "Fuente: Banco Central de Bolivia, índice multilateral."
 faq:
   - p: "¿Qué significa que el índice suba?"
     r: "Que el boliviano se **depreció en términos reales**: los bienes bolivianos se abaratan frente a los de los socios comerciales. Eso ayuda a exportar y encarece lo importado. Si el índice baja, pasa lo contrario: hay apreciación real."
   - p: "¿Por qué saltó el índice a mediados de 2026?"
     r: "Porque el tipo de cambio oficial dejó de estar fijo en junio de 2026 y subió con fuerza. En los datos, el índice pasó de alrededor de 113 en junio a más de 146 en julio de 2026, una depreciación real abrupta."
   - p: "¿Qué es la base diciembre de 2022 = 100?"
-    r: "Es el punto de referencia del índice: diciembre de 2022 vale 100, y cualquier otro mes se compara contra él. Un valor de {{ D.itcr.valor_txt }} significa que el tipo de cambio real está {{ D.itcr.vs_base_txt }}% respecto de ese mes."
+    r: "Es el punto de referencia del índice: diciembre de 2022 vale 100, y cualquier otro mes se compara contra él. Un valor de {{ D.itcr.valor_txt }} significa que el tipo de cambio real está {{ D.itcr.vs_base_txt.lstrip('+−') }}% {{ 'por debajo' if D.itcr.vs_base_txt.startswith('−') else 'por encima' }} de ese mes."
 ---
 ## Qué mide
 

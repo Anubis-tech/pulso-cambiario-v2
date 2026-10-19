@@ -51,7 +51,7 @@ Con datos del BCB:
 | Jun-2026 | 3.617 | 2.883 | 666 |
 | {{ D.reservas.fecha_larga }} | {{ D.reservas.rin_txt }} | — | {{ D.reservas.divisas_txt }} |
 
-*Millones de dólares.*
+*Millones de dólares. El total son las reservas netas de obligaciones de corto plazo, la cifra que publica el BCB; por eso oro y divisas no suman exactamente el total (también hay DEG y la posición con el FMI, y se restan obligaciones).*
 
 Se ven dos cosas:
 

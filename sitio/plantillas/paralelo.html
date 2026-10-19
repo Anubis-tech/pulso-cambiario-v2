@@ -1,7 +1,7 @@
 {% extends "dato.html" %}
 {% set migas = [('/dolar-paralelo/', 'Dólar paralelo')] %}
 {% block jsonld_extra %}
-{{ m.jsonld_dataset("Dólar paralelo en Bolivia (USDT/BOB, Binance P2P)", "Precio del dólar en el mercado paralelo boliviano, medido como la mediana de los 10 primeros anuncios de venta de USDT por bolivianos en Binance P2P, varias veces al día.", '/dolar-paralelo/', '/datos/usdt.json', '2023-09-21', D.usdt.fecha, ['dólar paralelo', 'USDT/BOB', 'Binance P2P', 'Bolivia'], 'Binance P2P', 'https://p2p.binance.com/') }}
+{{ m.jsonld_dataset("Dólar paralelo en Bolivia (USDT/BOB, Binance P2P)", "Precio del dólar en el mercado paralelo boliviano, medido como la mediana de los 10 primeros anuncios en los que se compra USDT a cambio de bolivianos (lo que pagan a quien vende USDT) en Binance P2P, varias veces al día.", '/dolar-paralelo/', '/datos/usdt.json', '2023-09-21', D.usdt.fecha, ['dólar paralelo', 'USDT/BOB', 'Binance P2P', 'Bolivia'], 'Binance P2P', 'https://p2p.binance.com/') }}
 {% endblock %}
 {% block meta %}<span><span class="live-dot" aria-hidden="true"></span>Última medición: {{ D.usdt.hora }} del {{ D.usdt.fecha_larga }} (hora de Bolivia)</span>{% endblock %}
 {% block figuras %}
@@ -20,7 +20,7 @@
 <section class="seccion" aria-labelledby="hist-t">
   <div class="sec-head"><h2 id="hist-t">Histórico diario</h2><div class="controles" id="r-paralelo"></div></div>
   <div class="card"><div class="grafico h260" id="g-paralelo"><p class="sin-js">Cargando gráfico…</p></div>
-  <p class="pie">Último valor de cada día. Datos desde septiembre de 2023.</p></div>
+  <p class="pie">Último valor de cada día. Datos desde septiembre de 2023; hasta agosto de 2024 vienen de la versión anterior del sitio.</p></div>
 </section>
 <section class="seccion" aria-labelledby="tab-t">
   <div class="sec-head"><h2 id="tab-t">Últimos 10 días</h2><a class="hint" href="{{ url('/datos/usdt.json') }}">Descargar datos (JSON)</a></div>

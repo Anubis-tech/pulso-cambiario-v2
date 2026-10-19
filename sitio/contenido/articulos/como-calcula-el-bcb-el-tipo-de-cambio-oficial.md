@@ -45,17 +45,17 @@ Supongamos que en un día los bancos hicieron tres compras de dólares:
 
 ## Qué cambió en 2026
 
-- **1 de diciembre de 2025.** El oficial sigue en 6,86 / 6,96, pero el BCB empieza a publicar cada día un **valor referencial** del dólar, calculado con las operaciones de los bancos con sus clientes. El primer día ese referencial fue de Bs 7,85 para la compra y Bs 9,32 para la venta.
-- **26 de junio de 2026, RD 88/2026.** Bolivia adopta un **régimen de tipo de cambio flexible**. El BCB calcula el oficial cada día y los bancos no pueden vender dólares a más de **10 centavos** por encima de ese valor.
-- **24 de septiembre de 2026, RD 142/2026.** Se reemplaza el reglamento de junio. Se cambia el promedio ponderado por la mediana ponderada, se suman las compras al BCB, se amplía la ventana de tiempo, la publicación pasa a las 23:30 y **se elimina el tope de 10 centavos** para la venta de los bancos. Desde entonces el BCB publica un único valor, igual para compra y venta.
+- **1 de diciembre de 2025.** El oficial sigue en 6,86 / 6,96, pero el BCB empieza a publicar cada día un **valor referencial** del dólar. Su compra es el promedio ponderado de las compras de los bancos a sus clientes; su venta es el precio máximo que pueden cobrar los bancos, incluido el costo de las transferencias al exterior. El primer día fue de Bs 7,85 para la compra y Bs 9,32 para la venta.
+- **26 de junio de 2026, RM 245 del Ministerio de Economía y RD 88/2026 del BCB (reglamento).** Bolivia adopta un **régimen de tipo de cambio flexible**. El BCB calcula el oficial cada día y los bancos no pueden vender dólares a más de **10 centavos** por encima de ese valor.
+- **24 de septiembre de 2026, RD 142/2026.** Se reemplaza el reglamento de junio. Se cambia el promedio ponderado por la mediana ponderada, se suman las compras al BCB, se amplía la ventana de tiempo, la publicación pasa a las 23:30 y **se elimina el tope de 10 centavos** para la venta de los bancos. Antes también había un único valor oficial: lo que se publicaba aparte como "venta" era el tope de 10 centavos. Desde septiembre solo queda el oficial.
 
 ## Para qué sirve el oficial (y para qué no)
 
-El TCO es obligatorio para las **operaciones del sector público y del BCB** y para los **registros contables**. Para las operaciones de cambio entre privados (lo que te paga tu banco o un cambista) es una **referencia**. Cada banco fija sus precios de compra y venta, y desde septiembre de 2026 ya no hay un tope legal para su precio de venta.
+El TCO se usa en las **operaciones del sector público y del BCB** y en los **registros contables**. Para las operaciones de cambio entre privados (lo que te paga tu banco o un cambista) es una **referencia**. Cada banco fija sus precios de compra y venta, y desde septiembre de 2026 ya no hay un tope legal para su precio de venta.
 
 En la práctica:
 
-- Si vas a **vender** dólares en un banco, mira lo que pagó cada banco en [tipo de cambio por banco]({{ url('/tipo-de-cambio-bancos/') }}). Ese dato sale de las mismas operaciones que usa el BCB para el oficial.
+- Si vas a **vender** dólares en un banco, mira lo que pagó cada banco en [tipo de cambio por banco]({{ url('/tipo-de-cambio-bancos/') }}). Ese dato sale de operaciones parecidas a las que usa el BCB para el oficial, aunque el oficial suma además las compras al BCB.
 - Si vas a **comprar** dólares en un banco, pregunta su precio de venta. Puede estar por encima del oficial.
 - Para **impuestos, facturas en dólares o contratos con el Estado**, se usa el oficial vigente ese día. Consulta siempre con tu contador la norma que aplica a tu caso.
 
@@ -69,7 +69,7 @@ En [tipo de cambio oficial]({{ url('/tipo-de-cambio-oficial/') }}) mostramos el 
 
 - Banco Central de Bolivia, Resolución de Directorio N° 142/2026 (24-sep-2026), resumida por [BDA Abogados](https://www.bda-lawfirm.com/news/asi-se-define-el-precio-del-dolar-en-bolivia-los-nuevos-criterios-del-bcb/) y [Los Tiempos](https://www.lostiempos.com/actualidad/economia/20260925/bcb-implementara-nuevo-metodo-calcular-tipo-cambio-oficial).
 - Eliminación del tope de 10 centavos: [Oxígeno](https://oxigeno.bo/nueva-resolucion-del-bcb-no-contempla-el-limite-de-10-centavos-para-la-venta-de-dolares-por-parte-de-los-bancos/).
-- Paso al régimen flexible (RD 88/2026): [Panamericana](https://www.panamericana.bo/articulo/economia/fin-tipo-cambio-fijo-gobierno-flexibiliza-cotizacion-dolar-bcb-calculara-diariamente-mercado-financiero/20260626220035016353.html).
+- Paso al régimen flexible (RM 245 y RD 88/2026): [Panamericana](https://www.panamericana.bo/articulo/economia/fin-tipo-cambio-fijo-gobierno-flexibiliza-cotizacion-dolar-bcb-calculara-diariamente-mercado-financiero/20260626220035016353.html).
 - Valor referencial desde el 1-dic-2025: [Los Tiempos](https://www.lostiempos.com/actualidad/economia/20251201/bcb-publica-hoy-valor-referencial-del-dolar-bolivianos).
 
 </div>

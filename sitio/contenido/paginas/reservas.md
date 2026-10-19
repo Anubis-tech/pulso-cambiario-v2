@@ -4,6 +4,8 @@ og_titulo: "Reservas internacionales del BCB"
 descripcion: "Reservas internacionales netas del BCB al {{ D.reservas.fecha_larga }}: {{ D.reservas.rin_txt }} millones de dólares. Composición en oro y divisas, evolución desde 2016 y qué significan."
 h1: "Reservas internacionales del BCB"
 dek: "Cuántos activos en moneda extranjera tiene el Banco Central de Bolivia, de qué están hechos y cómo han cambiado."
+resumen: "Las reservas internacionales netas del BCB sumaban $us {{ D.reservas.rin_txt }} millones al {{ D.reservas.fecha_larga }}. Son el oro, las divisas y otros activos externos con los que el país respalda su moneda."
+fuente: "Fuente: Banco Central de Bolivia, datos al {{ D.reservas.fecha_larga }}."
 faq:
   - p: "¿Cuánto tiene Bolivia en reservas internacionales?"
     r: "Al {{ D.reservas.fecha_larga }}, las reservas internacionales netas del BCB suman **{{ D.reservas.rin_txt }} millones de dólares**{% if D.reservas.d12_txt is defined %}, {{ D.reservas.d12_txt }} millones ({{ D.reservas.d12_pct_txt }}%) respecto de un año antes{% endif %}. Alrededor del {{ D.reservas.oro_pct_txt }}% es oro."

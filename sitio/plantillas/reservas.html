@@ -8,7 +8,7 @@
 {{ m.figura('Reservas internacionales netas', D.reservas.rin_txt, 'MM USD', (D.reservas.d12_txt ~ ' MM (' ~ D.reservas.d12_pct_txt ~ '%)') if D.reservas.d12_txt is defined else None, 'baja' if (D.reservas.d12_dir is defined and D.reservas.d12_dir == 'sube') else 'sube', '', 'en 12 meses', 'Al ' ~ D.reservas.fecha_larga, D.atrasado.get('reservas', False)) }}
 {{ m.figura('Peso del oro', D.reservas.oro_pct_txt ~ '%', '', None, 'igual', '', '', 'del total de reservas', False, 'var(--oro)') }}
 {{ m.figura('Divisas', D.reservas.divisas_txt, 'MM USD', None, 'igual', '', '', 'Dólares y otras monedas', False, 'var(--divisas)') }}
-{{ m.figura('Máximo de la serie', D.reservas.pico_txt, 'MM USD', None, 'igual', '', '', D.reservas.pico_fecha) }}
+{{ m.figura('Valor más alto desde 2016', D.reservas.pico_txt, 'MM USD', None, 'igual', '', '', D.reservas.pico_fecha) }}
 {% endblock %}
 {% block cuerpo %}
 <section class="seccion" aria-labelledby="hist-t">

@@ -1,7 +1,7 @@
 {% extends "dato.html" %}
 {% set migas = [('/brecha-cambiaria/', 'Brecha cambiaria')] %}
 {% block jsonld_extra %}
-{{ m.jsonld_dataset("Brecha cambiaria en Bolivia: dólar paralelo frente al oficial", "Diferencia porcentual diaria entre el precio del dólar paralelo (USDT/BOB en Binance P2P) y el tipo de cambio oficial de venta del Banco Central de Bolivia.", '/brecha-cambiaria/', '/datos/brecha.json', '2024-06-14', D.usdt.fecha, ['brecha cambiaria', 'dólar paralelo', 'tipo de cambio oficial', 'Bolivia']) }}
+{{ m.jsonld_dataset("Brecha cambiaria en Bolivia: dólar paralelo frente al oficial", "Diferencia porcentual diaria entre el precio del dólar paralelo (USDT/BOB en Binance P2P) y el tipo de cambio oficial del Banco Central de Bolivia.", '/brecha-cambiaria/', '/datos/brecha.json', '2024-06-14', D.usdt.fecha, ['brecha cambiaria', 'dólar paralelo', 'tipo de cambio oficial', 'Bolivia']) }}
 {% endblock %}
 {% block meta %}<span>Paralelo de las {{ D.usdt.hora }} frente al oficial vigente el {{ D.tco.fecha_corta }}</span>{% endblock %}
 {% block figuras %}
@@ -14,7 +14,7 @@
 <section class="seccion" aria-labelledby="hist-t">
   <div class="sec-head"><h2 id="hist-t">Evolución de la brecha</h2><div class="controles" id="r-brecha"></div></div>
   <div class="card"><div class="grafico h260" id="g-brecha"><p class="sin-js">Cargando gráfico…</p></div>
-  <p class="pie">Brecha = (paralelo − oficial de venta) ÷ oficial de venta. En el tramo sombreado (1-dic-2025 a fines de junio de 2026) se compara contra el valor referencial del BCB, no contra el oficial fijo de Bs 6,96.</p></div>
+  <p class="pie">Brecha = (paralelo − oficial) ÷ oficial. Sombreado: comparada contra el valor referencial del BCB (dic-2025 a jun-2026). Detalle en "Cómo se calcula aquí", más abajo.</p></div>
 </section>
 {{ m.anuncio('superior', True) }}
 <section class="seccion" aria-labelledby="tab-t">

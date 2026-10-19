@@ -4,6 +4,8 @@ og_titulo: "Dólar paralelo en Bolivia hoy"
 descripcion: "Precio del dólar paralelo en Bolivia hoy: Bs {{ D.usdt.valor_txt }} según USDT/BOB en Binance P2P ({{ D.usdt.hora }}). Gráfico de 24 horas, histórico desde 2023 y comparación con el oficial."
 h1: "Dólar paralelo en Bolivia hoy"
 dek: "Hoy el dólar paralelo está a Bs {{ D.usdt.valor_txt }}. Lo medimos con el precio del USDT en Binance, la referencia que usa la gente."
+resumen: "El dólar paralelo es el precio del dólar fuera de los bancos. Lo medimos con el USDT en Binance P2P, con lo que pagan a quien vende: a las {{ D.usdt.hora }} estaba en Bs {{ D.usdt.valor_txt }}."
+fuente: "Fuente: Binance P2P, mediana de los 10 primeros anuncios. Medición de las {{ D.usdt.hora }}."
 faq:
   - p: "¿A cuánto está el dólar paralelo hoy?"
     r: "A las {{ D.usdt.hora }} del {{ D.usdt.fecha_larga }} (hora de Bolivia), el USDT cotiza a **Bs {{ D.usdt.valor_txt }}** en Binance P2P.{% if D.usdt.min24_txt %} En las últimas 24 horas se movió entre Bs {{ D.usdt.min24_txt }} y Bs {{ D.usdt.max24_txt }}.{% endif %}"
@@ -22,10 +24,10 @@ No existe un registro oficial de esas operaciones. Por eso hace falta una **refe
 
 ## Cómo lo medimos
 
-- **Fuente:** la API pública de Binance P2P, la sección de anuncios para vender USDT a cambio de bolivianos.
-- **Cálculo:** tomamos los 10 primeros anuncios que muestra Binance y nos quedamos con la **mediana**, el valor del medio. La mediana no se deja arrastrar por un anuncio con un precio absurdo, como sí lo haría un promedio.
+- **Fuente:** la API pública de Binance P2P, la sección de anuncios para vender USDT a cambio de bolivianos, es decir, lo que te pagan si vendes USDT.
+- **Cálculo:** tomamos los 10 primeros anuncios que muestra Binance y nos quedamos con la **mediana**: el valor del medio, o el promedio de los dos del medio cuando son 10. La mediana no se deja arrastrar por un anuncio con un precio absurdo, como sí lo haría un promedio.
 - **Frecuencia:** se intenta medir cada 15 minutos. En la práctica hay huecos de varias horas, porque el servicio que programa las consultas (GitHub Actions) demora u omite ejecuciones y porque Binance a veces no devuelve anuncios a servidores de centros de datos. Por eso mostramos siempre la hora de la última medición exitosa.
-- **Control de calidad:** si un valor nuevo difiere más de 25% del anterior, se descarta como probable error. Si Binance no responde, se reintenta hasta tres veces.
+- **Control de calidad:** si un valor nuevo difiere más de 25% del anterior, se descarta como probable error. Si Binance no responde, se hacen hasta tres intentos.
 - **Valor diario:** el gráfico histórico usa el último valor de cada día.
 
 ## Qué no es

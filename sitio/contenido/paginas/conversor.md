@@ -4,6 +4,8 @@ og_titulo: "Conversor de dólares a bolivianos"
 descripcion: "Conversor de dólares a bolivianos con el tipo de cambio de hoy: paralelo Bs {{ D.usdt.valor_txt }}, oficial Bs {{ D.tco.venta_txt }} y promedio de los bancos. Tablas rápidas de 1 a 5.000 dólares."
 h1: "Convertir dólares a bolivianos"
 dek: "Calcula cuántos bolivianos son tus dólares (o al revés) con el tipo de cambio oficial, el paralelo y el que pagan los bancos."
+resumen: "Escribe un monto y elige la tasa: el oficial del BCB, el paralelo o lo que pagan los bancos. El cálculo es referencial."
+fuente: "Fuentes: Banco Central de Bolivia y Binance P2P, con los últimos datos publicados."
 faq:
   - p: "¿Cuántos bolivianos son 100 dólares hoy?"
     r: "Al dólar paralelo de Bs {{ D.usdt.valor_txt }}, 100 dólares son **Bs {{ (100 * D.usdt.valor)|num }}**. Al oficial de Bs {{ D.tco.venta_txt }}, son **Bs {{ (100 * D.tco.venta)|num }}**."

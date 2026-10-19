@@ -128,32 +128,68 @@ def flecha(delta, umbral=0.0005):
 # Cálculos sobre los datos
 # ---------------------------------------------------------------------------
 
+FLEX_INICIO = "2026-06-29"  # primer valor del régimen flexible (RD 88/2026)
+
+
+def preparar_tco(data):
+    """Valor oficial que usa el sitio para la brecha y los gráficos ('tco_oficial').
+    - Hasta jun-2026: la venta publicada (6,96 fijo y, de dic-2025 a jun-2026, la venta
+      del valor referencial, que era un tope de venta).
+    - Desde el 29-jun-2026: el TCO único que calcula el BCB, que viene en la columna de
+      compra. Entre jul y sep-2026 la columna de venta era el tope (TCO + 0,10), no el TCO.
+    """
+    for r in data.get("tco", []):
+        v, c = r.get("tco_venta_bcb"), r.get("tco_compra_bcb")
+        if v is None:
+            continue
+        r["tco_oficial"] = c if (r["date"] >= FLEX_INICIO and c is not None) else v
+
+
+def preparar_reservas(data):
+    """La planilla del BCB trae, en algunos meses, dos registros: uno con las reservas
+    netas de obligaciones (la cifra que publica el BCB) y otro con la suma de los
+    componentes. Para que la serie sea una sola, se usa siempre la neta de obligaciones."""
+    for r in data.get("reservas", []):
+        if r.get("netas_obligaciones") is not None:
+            r["neta"] = r["netas_obligaciones"]
+
+
+def secciones_h2(html_txt):
+    """Divide la prosa en secciones por cada <h2>, para mostrarlas plegadas."""
+    partes = re.split(r'(<h2[^>]*>.*?</h2>)', html_txt, flags=re.S)
+    salida = []
+    for k in range(1, len(partes), 2):
+        m = re.match(r'<h2(?: id="([^"]*)")?[^>]*>(.*?)</h2>', partes[k], flags=re.S)
+        salida.append({"id": m.group(1) or f"sec-{k}", "titulo": m.group(2), "html": partes[k + 1].strip()})
+    return salida
+
+
 def calcular(data, noticias, estado):
     D = {}
 
     # --- TCO / valor referencial ---
-    tco = sorted([r for r in data["tco"] if r.get("tco_venta_bcb") is not None], key=lambda r: r["date"])
+    tco = sorted([r for r in data["tco"] if r.get("tco_oficial") is not None], key=lambda r: r["date"])
     u = tco[-1]
-    hace7 = en_o_antes(tco, resta_dias(u["date"], 7), "tco_venta_bcb")
-    anterior = next((r for r in reversed(tco[:-1]) if r["tco_venta_bcb"] != u["tco_venta_bcb"] or r["tco_compra_bcb"] != u.get("tco_compra_bcb")), None)
-    d7 = (u["tco_venta_bcb"] - hace7["tco_venta_bcb"]) if hace7 else None
+    hace7 = en_o_antes(tco, resta_dias(u["date"], 7), "tco_oficial")
+    anterior = next((r for r in reversed(tco[:-1]) if r["tco_oficial"] != u["tco_oficial"] or r["tco_compra_bcb"] != u.get("tco_compra_bcb")), None)
+    d7 = (u["tco_oficial"] - hace7["tco_oficial"]) if hace7 else None
     D["tco"] = {
         "fecha": u["date"], "fecha_larga": fecha_larga(u["date"]), "fecha_corta": fecha_corta(u["date"]),
-        "compra": u.get("tco_compra_bcb"), "venta": u["tco_venta_bcb"],
-        "compra_txt": num(u.get("tco_compra_bcb")), "venta_txt": num(u["tco_venta_bcb"]),
-        "iguales": u.get("tco_compra_bcb") == u["tco_venta_bcb"],
+        "compra": u.get("tco_compra_bcb"), "venta": u["tco_oficial"], "venta_publicada": u.get("tco_venta_bcb"),
+        "compra_txt": num(u.get("tco_compra_bcb")), "venta_txt": num(u["tco_oficial"]),
+        "iguales": u.get("tco_compra_bcb") == u.get("tco_venta_bcb"),
         "d7": d7, "d7_txt": num(d7, 2, True) if d7 is not None else None, "d7_dir": direccion(d7), "d7_flecha": flecha(d7),
-        "anterior": anterior and {"fecha": anterior["date"], "fecha_corta": fecha_corta(anterior["date"]), "venta_txt": num(anterior["tco_venta_bcb"])},
+        "anterior": anterior and {"fecha": anterior["date"], "fecha_corta": fecha_corta(anterior["date"]), "venta_txt": num(anterior["tco_oficial"])},
     }
-    hace30 = en_o_antes(tco, resta_dias(u["date"], 30), "tco_venta_bcb")
+    hace30 = en_o_antes(tco, resta_dias(u["date"], 30), "tco_oficial")
     if hace30:
-        ch = u["tco_venta_bcb"] - hace30["tco_venta_bcb"]
+        ch = u["tco_oficial"] - hace30["tco_oficial"]
         D["tco"]["d30"] = ch
         D["tco"]["d30_txt"] = num(ch, 2, True)
-        D["tco"]["d30_pct_txt"] = num(ch / hace30["tco_venta_bcb"] * 100, 1, True)
+        D["tco"]["d30_pct_txt"] = num(ch / hace30["tco_oficial"] * 100, 1, True)
         D["tco"]["d30_dir"] = direccion(ch)
     D["tco"]["ultimos"] = [
-        {"fecha_corta": fecha_corta(r["date"]), "compra_txt": num(r.get("tco_compra_bcb")), "venta_txt": num(r["tco_venta_bcb"])}
+        {"fecha_corta": fecha_corta(r["date"]), "compra_txt": num(r.get("tco_compra_bcb")), "venta_txt": num(r.get("tco_venta_bcb")), "oficial_txt": num(r["tco_oficial"]), "tope": r["date"] >= FLEX_INICIO and r.get("tco_venta_bcb") != r.get("tco_compra_bcb")}
         for r in reversed(tco[-10:])
     ]
 
@@ -187,9 +223,9 @@ def calcular(data, noticias, estado):
         D["usdt"]["d30_dir"] = direccion(ch)
 
     # --- Brecha ---
-    brecha_bs = valor - u["tco_venta_bcb"]
-    brecha_pct = brecha_bs / u["tco_venta_bcb"] * 100
-    venta_por_fecha = {r["date"]: r["tco_venta_bcb"] for r in tco}
+    brecha_bs = valor - u["tco_oficial"]
+    brecha_pct = brecha_bs / u["tco_oficial"] * 100
+    venta_por_fecha = {r["date"]: r["tco_oficial"] for r in tco}
     serie_brecha = []
     for r in diario:
         v = venta_por_fecha.get(r["date"])
@@ -210,7 +246,7 @@ def calcular(data, noticias, estado):
     }
     b7 = None
     if p7 and hace7:
-        b7 = brecha_pct - ((p7["usdt_bob"] - hace7["tco_venta_bcb"]) / hace7["tco_venta_bcb"] * 100)
+        b7 = brecha_pct - ((p7["usdt_bob"] - hace7["tco_oficial"]) / hace7["tco_oficial"] * 100)
     D["brecha"]["d7_txt"] = num(b7, 1, True) if b7 is not None else None
     D["brecha"]["d7_dir"] = direccion(b7, 0.05)
     D["brecha"]["d7_flecha"] = flecha(b7, 0.05)
@@ -362,7 +398,7 @@ def enriquecer(D, data):
     cómo se cuentan."""
     hoy = D["generado"]["fecha"]
     diario = sorted(data["usdt"], key=lambda r: r["date"])
-    tco = sorted([r for r in data["tco"] if r.get("tco_venta_bcb") is not None], key=lambda r: r["date"])
+    tco = sorted([r for r in data["tco"] if r.get("tco_oficial") is not None], key=lambda r: r["date"])
     u, t = D["usdt"], D["tco"]
 
     # Paralelo contra el cierre del día anterior
@@ -377,7 +413,7 @@ def enriquecer(D, data):
     # Oficial contra el valor vigente el día anterior
     if len(tco) > 1:
         prev = tco[-2]
-        dlt = t["venta"] - prev["tco_venta_bcb"]
+        dlt = t["venta"] - prev["tco_oficial"]
         t["ayer"] = {"delta": dlt, "dir": direccion(dlt, 0.005), "flecha": flecha(dlt, 0.005),
                      "texto": ("igual que el día anterior" if abs(dlt) < 0.005 else
                                f"{'sube' if dlt > 0 else 'baja'} {centavos_txt(dlt)}")}
@@ -420,11 +456,11 @@ def enriquecer(D, data):
     # Hace un año
     hace1 = en_o_antes(diario, resta_dias(u["fecha"], 365), "usdt_bob")
     if hace1:
-        tv = en_o_antes(tco, hace1["date"], "tco_venta_bcb")
+        tv = en_o_antes(tco, hace1["date"], "tco_oficial")
         D["hace_un_anio"] = {
             "fecha_larga": fecha_larga(hace1["date"]), "paralelo_txt": num(hace1["usdt_bob"]),
-            "oficial_txt": num(tv["tco_venta_bcb"]) if tv else None,
-            "brecha_txt": num((hace1["usdt_bob"] / tv["tco_venta_bcb"] - 1) * 100, 0) if tv else None,
+            "oficial_txt": num(tv["tco_oficial"]) if tv else None,
+            "brecha_txt": num((hace1["usdt_bob"] / tv["tco_oficial"] - 1) * 100, 0) if tv else None,
             "cambio_txt": num((u["valor"] / hace1["usdt_bob"] - 1) * 100, 0, True),
         }
     else:
@@ -463,9 +499,10 @@ def resumenes_mensuales(data):
     regreso (el inicio de cada mes) y apunta a búsquedas como
     'dólar octubre 2026 Bolivia'."""
     diario = sorted(data["usdt"], key=lambda r: r["date"])
-    tco = {r["date"]: r["tco_venta_bcb"] for r in data["tco"] if r.get("tco_venta_bcb") is not None}
+    tco = {r["date"]: r["tco_oficial"] for r in data["tco"] if r.get("tco_oficial") is not None}
     meses_disp = sorted({r["date"][:7] for r in diario if r["date"] >= "2024-06"})
     bancos = data.get("banks") or {}
+    ppp_dia = {r["date"]: r["rate"] for r in (data.get("aggregates") or {}).get("Bancos (promedio ponderado)", []) if r.get("rate")}
     salida = []
     for ym in meses_disp:
         y, mth = int(ym[:4]), int(ym[5:7])
@@ -479,18 +516,21 @@ def resumenes_mensuales(data):
         cambio = (fin["usdt_bob"] / ini["usdt_bob"] - 1) * 100
         of = [(r["date"], tco[r["date"]]) for r in filas if r["date"] in tco]
         brechas = [(r["usdt_bob"] / tco[r["date"]] - 1) * 100 for r in filas if r["date"] in tco]
-        # Banco que más pagó en el mes (promedio ponderado por monto, solo bancos con volumen)
+        # Banco que más pagó en el mes: el que pagó más que el promedio del mercado en los
+        # mismos días en que operó (ponderado por su monto). Un promedio simple del mes
+        # premiaría al que compró en los días caros, no al que pagó mejor.
         acum = {}
         for nb, serie in bancos.items():
             for r in serie:
-                if r["date"].startswith(ym) and r.get("rate") and r.get("monto"):
-                    a = acum.setdefault(nb, [0.0, 0.0])
-                    a[0] += r["rate"] * r["monto"]
+                if r["date"].startswith(ym) and r.get("rate") and r.get("monto") and r["date"] in ppp_dia:
+                    a = acum.setdefault(nb, [0.0, 0.0, 0.0])
+                    a[0] += (r["rate"] - ppp_dia[r["date"]]) * r["monto"]
                     a[1] += r["monto"]
+                    a[2] += r["rate"] * r["monto"]
         total_m = sum(a[1] for a in acum.values())
-        candidatos = [(nb, a[0] / a[1], a[1]) for nb, a in acum.items()
+        candidatos = [(nb, a[2] / a[1], a[1], a[0] / a[1]) for nb, a in acum.items()
                       if a[1] >= 0.002 * total_m and nb not in BANCOS_PEQUENOS] if total_m else []
-        mejor = max(candidatos, key=lambda c: c[1]) if candidatos else None
+        mejor = max(candidatos, key=lambda c: c[3]) if candidatos else None
         verbo = "subió" if cambio > 0.25 else ("bajó" if cambio < -0.25 else "casi no se movió")
         titular = (f"En {nombre} el paralelo {verbo}" +
                    (f" {num(abs(cambio), 1)}%: de Bs {num(ini['usdt_bob'])} a Bs {num(fin['usdt_bob'])}" if verbo != "casi no se movió" else f": cerró en Bs {num(fin['usdt_bob'])}"))
@@ -503,7 +543,7 @@ def resumenes_mensuales(data):
             "min_txt": num(mn["usdt_bob"]), "min_fecha": fecha_larga(mn["date"]),
             "of_ini_txt": num(of[0][1]) if of else None, "of_fin_txt": num(of[-1][1]) if of else None,
             "brecha_prom_txt": num(sum(brechas) / len(brechas), 1) if brechas else None,
-            "mejor_banco": {"nombre": NOMBRE_BANCO.get(mejor[0], mejor[0]), "ppp_txt": num(mejor[1])} if mejor else None,
+            "mejor_banco": {"nombre": NOMBRE_BANCO.get(mejor[0], mejor[0]), "ppp_txt": num(mejor[1]), "vs_txt": num(mejor[3], 2, True)} if mejor else None,
             "referencial": "2025-12" <= ym <= "2026-06",
             "dias": [{"fecha_corta": fecha_corta(r["date"]), "paralelo_txt": num(r["usdt_bob"]),
                       "oficial_txt": num(tco[r["date"]]) if r["date"] in tco else "—",
@@ -523,17 +563,17 @@ def resumenes_mensuales(data):
 
 def series_para_graficos(data):
     """Archivos de datos chicos, uno por gráfico (en vez de 389 KB para todo)."""
-    tco = sorted([r for r in data["tco"] if r.get("tco_venta_bcb") is not None], key=lambda r: r["date"])
+    tco = sorted([r for r in data["tco"] if r.get("tco_oficial") is not None], key=lambda r: r["date"])
     diario = sorted(data["usdt"], key=lambda r: r["date"])
     intra = sorted(data.get("usdt_intraday_recent") or [], key=lambda p: p["ts"])
-    venta = {r["date"]: r["tco_venta_bcb"] for r in tco}
+    venta = {r["date"]: r["tco_oficial"] for r in tco}
     brecha = [[r["date"], venta[r["date"]], round(r["usdt_bob"], 4),
                round((r["usdt_bob"] - venta[r["date"]]) / venta[r["date"]] * 100, 3)]
               for r in diario if r["date"] in venta]
     res = sorted([r for r in data["reservas"] if r.get("neta") is not None], key=lambda r: r["date"])
     r2 = lambda v: None if v is None else round(v, 2)  # noqa: E731
     return {
-        "tco": {"filas": [[r["date"], r.get("tco_compra_bcb"), r["tco_venta_bcb"]] for r in tco], "tramos": [TRAMO_REFERENCIAL]},
+        "tco": {"filas": [[r["date"], r.get("tco_compra_bcb"), r.get("tco_venta_bcb"), r["tco_oficial"]] for r in tco], "tramos": [TRAMO_REFERENCIAL]},
         "usdt": {"diario": [[r["date"], round(r["usdt_bob"], 4)] for r in diario], "intradia": [[p["ts"], p["value"]] for p in intra]},
         "brecha": {"filas": brecha, "tramos": [TRAMO_REFERENCIAL]},
         "reservas": {"filas": [[r["date"], r2(r.get("neta")), r2(r.get("netas_obligaciones")), r2(r.get("divisas")), r2(r.get("oro")), r2(r.get("deg")), r2(r.get("fmi"))] for r in res],
@@ -797,6 +837,8 @@ def construir(datos_dir, salida, entorno=None, base=None):
         base = "" if entorno == "produccion" else cfg["ruta_base_preview"]
     datos_dir, salida = Path(datos_dir), Path(salida)
     data = json.loads((datos_dir / "data.json").read_text(encoding="utf-8"))
+    preparar_tco(data)
+    preparar_reservas(data)
     noticias = json.loads((datos_dir / "noticias.json").read_text(encoding="utf-8")) if (datos_dir / "noticias.json").exists() else None
     estado = json.loads((datos_dir / "estado.json").read_text(encoding="utf-8")) if (datos_dir / "estado.json").exists() else {}
 
@@ -849,7 +891,7 @@ def construir(datos_dir, salida, entorno=None, base=None):
     # --- Páginas de datos (texto en sitio/contenido/paginas/<clave>.md) ---
     def md_pagina(clave):
         meta, cuerpo = leer_md(SITIO / "contenido" / "paginas" / f"{clave}.md")
-        for k in ("titulo", "descripcion", "dek", "og_titulo"):
+        for k in ("titulo", "descripcion", "dek", "og_titulo", "resumen", "fuente"):
             if isinstance(meta.get(k), str) and "{{" in meta[k]:
                 meta[k] = s.env.from_string(meta[k]).render(D=D, S=cfg).strip()
         meta.setdefault("faq", [])
@@ -890,7 +932,7 @@ def construir(datos_dir, salida, entorno=None, base=None):
         meta, prosa = md_pagina(clave)
         meta["og"] = og.get(clave, og["sitio"])
         rel = [a for a in articulos if clave in (a.get("relacionado_con") or [])]
-        s.pagina(ruta, plantilla, meta, {"prosa": prosa, "clave": clave, "articulos_rel": rel, "articulos": articulos[:4],
+        s.pagina(ruta, plantilla, meta, {"prosa": prosa, "secciones": secciones_h2(prosa), "clave": clave, "articulos_rel": rel, "articulos": articulos[:4],
                                          "meses": meses}, cambia=freq, prioridad=prio)
 
     # --- Resúmenes mensuales ---
@@ -922,9 +964,9 @@ def construir(datos_dir, salida, entorno=None, base=None):
         s.pagina(ruta_m, "monto.html", meta_m, {"monto": monto, "m_txt": m_txt, "hist": hist, "clave": "conversor"}, cambia="hourly", prioridad=0.6)
 
     # --- Artículos ---
-    meta_idx = {"titulo": "Artículos: dólar, tipo de cambio y economía de Bolivia, explicados",
+    meta_idx = {"titulo": "Guías: dólar, tipo de cambio y economía de Bolivia, explicados",
                 "descripcion": "Guías claras sobre el tipo de cambio oficial, el dólar paralelo, la brecha cambiaria, las reservas del BCB y cómo convertir dólares a bolivianos.",
-                "h1": "Artículos", "dek": "Explicaciones claras, con datos y fuentes, sobre el mercado cambiario de Bolivia.", "og": og["sitio"]}
+                "h1": "Guías", "dek": "Explicaciones claras, con datos y fuentes, sobre el mercado cambiario de Bolivia.", "og": og["sitio"]}
     s.pagina("/articulos/", "articulos.html", meta_idx, {"lista": articulos, "clave": "articulos"}, cambia="weekly", prioridad=0.6)
     for a in articulos:
         a["og"] = generar_og(s, "art-" + a["slug"], a["titulo_corto"] if a.get("titulo_corto") else a["h1"], None, "Pulso Económico · Artículo")

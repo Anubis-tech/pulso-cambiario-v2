@@ -25,9 +25,9 @@ Las consultas las ejecuta un proceso automático en GitHub Actions. Los horarios
 
 ## Dólar paralelo
 
-- Se consulta la sección de anuncios para vender USDT a cambio de bolivianos en Binance P2P y se toman los **10 primeros anuncios** que muestra la plataforma.
+- Se consulta la sección de anuncios para vender USDT a cambio de bolivianos en Binance P2P (lo que te pagan si vendes USDT) y se toman los **10 primeros anuncios** que muestra la plataforma.
 - Se publica la **mediana** de esos 10 precios. La mediana resiste mejor que el promedio a un anuncio con un precio fuera de lugar.
-- **Controles:** si Binance devuelve una lista vacía, se reintenta hasta 3 veces. Si el valor nuevo difiere más de 25% del anterior, se descarta.
+- **Controles:** si Binance devuelve una lista vacía, se hacen hasta 3 intentos. Si el valor nuevo difiere más de 25% del anterior, se descarta.
 - **Valor diario:** para el histórico se guarda el último valor de cada día (hora de Bolivia).
 - **Frecuencia real:** aunque la consulta se programa cada 15 minutos, en los 30 días previos al 18-oct-2026 hubo en promedio entre 4 y 8 mediciones exitosas por día, con una separación típica (mediana) de unas 4 horas. Las causas son las demoras y omisiones de los horarios de GitHub Actions y las respuestas vacías de Binance a servidores de centros de datos. Por eso mostramos siempre la hora exacta de la última medición.
 - **Límites:** el USDT es una aproximación al dólar paralelo, no el precio del billete. El precio de compra y el de venta difieren. Binance puede cambiar o restringir su API sin aviso.
@@ -48,7 +48,7 @@ Las consultas las ejecuta un proceso automático en GitHub Actions. Los horarios
 
 ## Brecha cambiaria
 
-Brecha (%) = (paralelo − oficial de venta) ÷ oficial de venta × 100. La cifra de hoy usa la última medición del paralelo. El histórico usa el último valor de cada día y el oficial vigente ese día.
+Brecha (%) = (paralelo − oficial) ÷ oficial × 100. El paralelo es el precio que pagan en Binance P2P a quien vende USDT. El oficial es la venta publicada hasta junio de 2026 (6,96 y luego la venta del valor referencial, que era un precio máximo) y, desde el 29 de junio de 2026, el valor único que calcula el BCB. Entre julio y septiembre de 2026 el BCB publicaba además una "venta" igual al oficial más 10 centavos, que era el tope de venta de los bancos y no se usa. La cifra de hoy usa la última medición del paralelo. El histórico usa el último valor de cada día y el oficial vigente ese día.
 
 ## Reservas, balanza e ITCR
 

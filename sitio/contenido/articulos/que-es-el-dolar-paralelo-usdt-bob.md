@@ -32,9 +32,9 @@ Por eso la prensa boliviana empezó a reportar el "dólar paralelo" junto con el
 
 ## Cómo lo medimos en Pulso Económico
 
-- Intentamos consultar cada 15 minutos la API pública de Binance P2P, en la sección de anuncios para vender USDT a cambio de bolivianos.
-- Tomamos los **10 primeros anuncios** y publicamos la **mediana**: si ordenas los 10 precios de menor a mayor, es el valor del medio. A diferencia del promedio, un anuncio con un precio absurdo no la mueve.
-- Si Binance no responde, reintentamos. Si el precio nuevo salta más de 25% respecto del anterior, lo descartamos por probable error.
+- Intentamos consultar cada 15 minutos la API pública de Binance P2P, en la sección de anuncios para vender USDT a cambio de bolivianos, es decir, lo que te pagan si vendes USDT.
+- Tomamos los **10 primeros anuncios** y publicamos la **mediana**: si ordenas los 10 precios de menor a mayor, es el promedio de los dos del medio. A diferencia del promedio, un anuncio con un precio absurdo no la mueve.
+- Si Binance no responde, hacemos hasta tres intentos. Si el precio nuevo salta más de 25% respecto del anterior, lo descartamos por probable error.
 
 El resultado se ve en [dólar paralelo]({{ url('/dolar-paralelo/') }}). Hoy, a las {{ D.usdt.hora }}, es **Bs {{ D.usdt.valor_txt }}**.
 
@@ -47,13 +47,13 @@ El resultado se ve en [dólar paralelo]({{ url('/dolar-paralelo/') }}). Hoy, a l
 
 ## ¿Y ahora que el oficial es flexible?
 
-Desde junio de 2026, el tipo de cambio oficial se calcula cada día con operaciones reales de los bancos. Desde entonces, el paralelo y el oficial quedaron muy cerca: la [brecha]({{ url('/brecha-cambiaria/') }}) pasó de más de 160% en mayo de 2025 a unos pocos puntos, a veces incluso negativa. El paralelo sigue siendo útil como termómetro: si vuelve a separarse mucho del oficial, es una señal de que al precio oficial no hay dólares suficientes.
+Desde junio de 2026, el tipo de cambio oficial se calcula cada día con las compras de dólares de los bancos. Desde entonces, el paralelo y el oficial quedaron muy cerca: la [brecha]({{ url('/brecha-cambiaria/') }}) pasó de más de 160% en mayo de 2025 a unos pocos puntos, a veces incluso negativa. El paralelo sigue siendo útil como termómetro: si vuelve a separarse mucho del oficial, es una señal de que al precio oficial no hay dólares suficientes.
 
 <div class="fuentes" markdown="1">
 
 **Fuentes**
 
-- Datos propios: mediana de anuncios de USDT/BOB en Binance P2P, desde septiembre de 2023. Ver la [metodología]({{ url('/metodologia/') }}).
+- Datos propios: mediana de anuncios de USDT/BOB en Binance P2P desde agosto de 2024. Antes de esa fecha, la serie viene de la versión anterior de este sitio y sus valores no están redondeados, así que su método exacto no está documentado. Ver la [metodología]({{ url('/metodologia/') }}).
 - Rol del USDT y de las plataformas P2P en el mercado boliviano: [Correo del Sur](https://correodelsur.com/economia/20260319/dolar-paralelo-en-bolivia-el-rol-de-las-plataformas-p2p.html) y [CriptoNoticias](https://www.criptonoticias.com/mercados/usdt-parte-fundamental-dolar-paralelo-bolivia/).
 
 </div>

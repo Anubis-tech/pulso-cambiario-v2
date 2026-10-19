@@ -38,6 +38,11 @@
 | K4 | Se declara que el TCO viene de un servicio de terceros (`apibcb.cucu.bo`), no directamente del BCB | `/metodologia/` | Sí | ✅ |
 | K5 | Se quitan del `data.json` público las series de pronóstico (`forecast`, `garch`), que nadie actualiza | `construir.py` | No | ✅ |
 | K6 | Titulares de prensa escapados en el servidor (la v1 los insertaba con `innerHTML`) | Plantilla Jinja con escape automático | No | ✅ |
+| K7 | Entre jul y sep-2026 la "venta" del BCB era el tope (TCO + 0,10). La brecha y los gráficos usan ahora el TCO único desde el 29-jun-2026 (antes la brecha salía ~0,9 puntos más baja en ese tramo) | `preparar_tco()` en `construir.py`; verificación independiente, hallazgo 2 | Sí | ✅ |
+| K8 | El valor referencial (dic-2025 a jun-2026) se explica bien: la compra era un promedio de operaciones y la venta, un precio máximo | Comunicado BCB dic-2025; hallazgo 1 | Sí | ✅ |
+| K9 | Reservas: una sola definición (netas de obligaciones, la cifra que publica el BCB) en lugar de mezclar dos registros por mes | `preparar_reservas()`; hallazgo 11 | Sí | ✅ |
+| K10 | "Banco que mejor pagó en el mes": diferencia contra el mercado en los mismos días, no promedio simple | `resumenes_mensuales()`; hallazgo 16 | Sí | ✅ |
+| K11 | Mediana real del paralelo (promedio de los dos del medio con 10 anuncios), RM 245, ventana del TCO, "operaciones parecidas" y otras correcciones de texto | Hallazgos 3 a 9, 14, 17 a 19 | Sí | ✅ |
 
 ## Rendimiento, SEO técnico y accesibilidad
 
