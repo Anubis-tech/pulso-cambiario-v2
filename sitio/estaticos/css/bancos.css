@@ -1,0 +1,90 @@
+/* Estilos de la herramienta interactiva por banco (portada de la v1, acotada
+   a .app-bancos para no chocar con el resto del sitio). */
+.app-bancos{ font-variant-numeric:tabular-nums; }
+.app-bancos [hidden]{ display:none!important; }
+.app-bancos button{ font:inherit; color:inherit; }
+.app-bancos section{ display:flex; flex-direction:column; gap:12px; margin:28px 0; }
+
+.app-bancos .spotlight{ padding:16px 0; border-bottom:1px solid var(--border); }
+.app-bancos .spotlight-headline{ margin:0 0 16px; font-size:16px; font-weight:600; line-height:1.45; max-width:70ch; }
+.app-bancos .spotlight-grid{ display:flex; flex-wrap:wrap; gap:22px 40px; }
+.app-bancos .spotlight-figure{ flex:1 1 220px; min-width:200px; }
+.app-bancos .s-label{ font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); margin-bottom:6px; }
+.app-bancos .s-row{ display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; }
+.app-bancos .s-value{ font-family:var(--font-display); font-weight:800; font-size:clamp(30px,4.6vw,44px); line-height:.95; letter-spacing:-.01em; }
+.app-bancos .s-unit{ font-family:var(--font-mono); font-size:12px; font-weight:500; color:var(--muted); margin-left:7px; }
+.app-bancos .s-chip{ font-family:var(--font-mono); font-size:13px; font-weight:600; white-space:nowrap; }
+.app-bancos .s-chip.up{ color:var(--good); }
+.app-bancos .s-chip.down{ color:var(--bad); }
+.app-bancos .s-context{ margin-top:8px; font-size:13px; color:var(--ink-2); }
+.app-bancos .hl-row{ display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }
+.app-bancos .hl-row + .hl-row{ margin-top:6px; }
+.app-bancos .hl-v{ font-family:var(--font-display); font-weight:800; font-size:clamp(24px,3.6vw,34px); line-height:1; }
+.app-bancos .hl-v.bad{ color:var(--bad); } .app-bancos .hl-v.good{ color:var(--good); }
+.app-bancos .hl-b{ font-weight:600; font-size:15px; }
+.app-bancos .hl-k{ font-family:var(--font-mono); font-size:10.5px; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; }
+.app-bancos .hl-note{ font-size:13px; color:var(--muted); padding-top:4px; }
+
+.app-bancos .filters{ position:sticky; top:52px; z-index:4; background:var(--bg); border-bottom:2px solid var(--rule); }
+@media (max-width:760px){ .app-bancos .filters{ top:84px; } }
+.app-bancos .filters-inner{ padding:8px 0; display:flex; flex-direction:column; gap:6px; }
+.app-bancos .frow{ display:flex; align-items:flex-start; gap:10px 14px; flex-wrap:wrap; }
+.app-bancos .flabel{ font-family:var(--font-mono); font-size:10.5px; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; width:58px; flex:none; padding-top:9px; }
+@media (max-width:720px){ .app-bancos .flabel{ width:100%; padding-top:0; } .app-bancos .filters{ position:static; } }
+.app-bancos .grow{ flex:1 1 400px; min-width:0; }
+.app-bancos .fmeta{ display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; margin-top:5px; font-family:var(--font-mono); font-size:11px; color:var(--muted); }
+.app-bancos .linkbtn{ border:0; background:none; padding:4px 0; cursor:pointer; font-family:var(--font-mono); font-size:11.5px; color:var(--accent-ink); text-decoration:underline; text-underline-offset:2px; }
+.app-bancos .controls{ display:flex; flex-wrap:wrap; gap:6px; }
+.app-bancos .pill{ font-family:var(--font-mono); font-size:11.5px; font-weight:500; color:var(--ink-2); background:var(--surface); border:1px solid var(--rule); padding:8px 11px; min-height:36px; cursor:pointer; white-space:nowrap; text-transform:uppercase; letter-spacing:.03em; }
+.app-bancos .pill.active{ background:var(--rule); border-color:var(--rule); color:var(--bg); }
+.app-bancos .pill:disabled{ opacity:.38; cursor:not-allowed; }
+.app-bancos .bank-row{ display:flex; flex-wrap:wrap; gap:6px; }
+.app-bancos .pill-sistema{ font-weight:600; border-color:var(--ingreso); }
+.app-bancos .pill-sistema.active{ background:var(--ingreso); border-color:var(--ingreso); color:#fff; }
+.app-bancos .pill-bank{ color:var(--ink); border-color:var(--b, var(--rule)); border-left-width:5px; font-weight:600; text-transform:none; letter-spacing:0; }
+.app-bancos .pill-bank.active{ background:var(--b, var(--ink)); border-color:var(--b, var(--ink)); color:var(--on, #fff); }
+
+.app-bancos .kpis{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); border-top:1px solid var(--rule); border-left:1px solid var(--border); }
+@media (max-width:520px){ .app-bancos .kpis{ grid-template-columns:repeat(2,1fr); } }
+.app-bancos .kpi{ background:var(--surface); border-bottom:1px solid var(--border); border-right:1px solid var(--border); padding:12px 14px; display:flex; flex-direction:column; gap:4px; }
+.app-bancos .kpi .label{ font-family:var(--font-mono); font-size:10.5px; color:var(--muted); font-weight:500; text-transform:uppercase; letter-spacing:.05em; }
+.app-bancos .kpi .value{ font-family:var(--font-mono); font-size:20px; font-weight:500; }
+.app-bancos .kpi .sub{ font-size:11.5px; color:var(--muted); }
+.app-bancos .chart-wrap{ position:relative; height:270px; }
+.app-bancos .chart-wrap.tall{ height:420px; }
+.app-bancos .legend{ display:flex; flex-wrap:wrap; gap:6px 14px; font-size:12.5px; color:var(--ink-2); margin-top:10px; }
+.app-bancos .legend .item{ display:flex; align-items:center; gap:6px; }
+.app-bancos .legend .swatch{ width:10px; height:10px; flex:none; }
+.app-bancos .legend .swatch.line{ height:2px; width:16px; }
+.app-bancos .empty{ position:absolute; inset:0; display:none; align-items:center; justify-content:center; text-align:center; color:var(--muted); font-size:13px; background:var(--surface); padding:0 16px; }
+.app-bancos .empty.on{ display:flex; }
+.app-bancos .context-note{ margin:0; font-size:14px; color:var(--ink-2); max-width:74ch; }
+
+.app-bancos .tablewrap{ overflow-x:auto; }
+.app-bancos table{ width:100%; border-collapse:collapse; font-family:var(--font-mono); font-size:12.5px; }
+.app-bancos thead th{ text-align:right; font-weight:500; color:var(--muted); padding:0 10px 8px; border-bottom:1px solid var(--rule); white-space:nowrap; vertical-align:bottom; font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; }
+.app-bancos thead th:first-child{ text-align:left; padding-left:0; }
+.app-bancos thead th button{ border:0; background:none; padding:6px 0; cursor:pointer; color:inherit; font:inherit; text-transform:inherit; letter-spacing:inherit; white-space:nowrap; }
+.app-bancos thead th[aria-sort="ascending"] button::after{ content:" ▲"; font-size:8px; }
+.app-bancos thead th[aria-sort="descending"] button::after{ content:" ▼"; font-size:8px; }
+.app-bancos thead th[aria-sort] button{ color:var(--ink); }
+.app-bancos tbody td, .app-bancos tfoot td{ padding:8px 10px; border-bottom:1px solid var(--grid); text-align:right; white-space:nowrap; }
+.app-bancos tbody td:first-child, .app-bancos tfoot td:first-child{ text-align:left; padding-left:0; font-family:var(--font-ui); font-weight:600; font-size:13px; }
+.app-bancos tbody tr:hover td{ background:var(--surface-2); }
+.app-bancos tfoot td{ border-top:2px solid var(--rule); border-bottom:0; font-weight:600; }
+.app-bancos td.muted, .app-bancos .dim{ color:var(--muted); font-weight:400; }
+.app-bancos .bsw{ display:inline-block; width:8px; height:8px; margin-right:8px; }
+.app-bancos .mbar{ position:relative; display:inline-block; min-width:92px; text-align:right; }
+.app-bancos .mbar i{ position:absolute; left:0; top:50%; height:14px; transform:translateY(-50%); background:var(--avg); opacity:.28; }
+.app-bancos .mbar span{ position:relative; }
+.app-bancos .prima{ display:inline-flex; align-items:center; gap:8px; justify-content:flex-end; }
+.app-bancos .prima .track{ position:relative; width:96px; height:14px; }
+.app-bancos .prima .track::before{ content:""; position:absolute; left:50%; top:0; bottom:0; width:1px; background:var(--avg); }
+.app-bancos .prima .track i{ position:absolute; top:2px; height:10px; }
+.app-bancos .prima .num{ min-width:48px; text-align:right; }
+.app-bancos .good{ color:var(--good); } .app-bancos .bad{ color:var(--bad); }
+.app-bancos i.g{ background:var(--good); } .app-bancos i.r{ background:var(--bad); }
+.app-bancos details.metodo{ margin-top:6px; }
+.app-bancos details.metodo summary{ cursor:pointer; font-family:var(--font-mono); font-size:11.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-2); }
+.app-bancos details.metodo ul{ margin:10px 0 0; padding-left:18px; max-width:78ch; }
+.app-bancos details.metodo li{ margin:0 0 6px; font-size:13px; color:var(--ink-2); line-height:1.55; }
