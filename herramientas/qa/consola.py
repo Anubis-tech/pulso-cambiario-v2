@@ -11,7 +11,8 @@ with sync_playwright() as p:
         pg=ctx.new_page(); errs=[]
         pg.on('console', lambda m: errs.append(f'{m.type}: {m.text}') if m.type in ('error','warning') else None)
         pg.on('pageerror', lambda e: errs.append(f'JS: {e}'))
-        pg.goto(base+ruta, wait_until='networkidle'); pg.mouse.wheel(0,20000); pg.wait_for_timeout(1200)
+        resp=pg.goto(base+ruta, wait_until='networkidle'); pg.mouse.wheel(0,20000); pg.wait_for_timeout(1200)
+        if resp is None or resp.status != 200: errs.append(f'HTTP {resp.status if resp else "sin respuesta"}')
         errs=[e for e in errs if 'favicon' not in e]
         if errs: problemas+=1; print(ruta, errs[:4])
         pg.close()
