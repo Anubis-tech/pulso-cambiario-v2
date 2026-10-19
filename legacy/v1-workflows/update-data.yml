@@ -1,0 +1,75 @@
+name: Actualizar datos de Pulso Cambiario
+
+on:
+  schedule:
+    # Cada 3 horas. GitHub Actions usa UTC; Bolivia es UTC-4 todo el año.
+    - cron: "0 */3 * * *"
+  workflow_dispatch: {}  # permite lanzarlo manualmente desde la pestaña Actions
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Descargar el repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      - name: Actualizar datos numéricos (TCO, bancos, reservas, balanza, ITCR)
+        run: python scripts/update_data.py --only tco,banks,reservas,balanza,itcr
+
+      - name: Actualizar noticias (RSS de El Deber)
+        run: python scripts/update_news.py
+        continue-on-error: true  # si el sitio de noticias falla, igual se publican los datos numéricos
+
+      - name: Publicar cambios si hubo datos nuevos
+        run: |
+          git config user.name "pulso-cambiario-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data.json noticias.json
+          if git diff --cached --quiet; then
+            echo "Sin cambios - no se hace commit."
+          else
+            git commit -m "Actualización automática de datos ($(date -u +%Y-%m-%dT%H:%M:%SZ))"
+            for i in 1 2 3; do
+              git pull --rebase origin HEAD && git push && break
+              echo "Push falló (probablemente chocó con el workflow de USDT), reintentando ($i)..."
+              sleep 5
+            done
+          fi
+
+      # A partir de acá: publicar el sitio en GitHub Pages con el estado
+      # actual del repositorio. Hace falta este paso explícito porque un
+      # commit hecho con el token automático de GitHub Actions (el de
+      # arriba) NO dispara la reconstrucción automática de Pages - por eso
+      # el sitio se quedaba mostrando datos viejos aunque el repositorio ya
+      # tuviera los nuevos.
+      - name: Preparar sitio para GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Empaquetar sitio
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+      - name: Publicar en GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
