@@ -21,7 +21,7 @@
   "noticias": {
    "atrasado": true,
    "nombre": "Titulares de prensa",
-   "ultimo_dato_utc": null
+   "ultimo_dato_utc": "2026-10-15T07:21:00Z"
   },
   "reservas": {
    "atrasado": false,
@@ -31,13 +31,60 @@
   "tco": {
    "atrasado": false,
    "nombre": "Tipo de cambio oficial (TCO)",
-   "ultimo_dato_utc": "2026-10-19T03:59:00Z"
+   "ultimo_dato_utc": "2026-10-20T03:59:00Z"
   },
   "usdt": {
    "atrasado": false,
    "nombre": "Dólar paralelo (Binance P2P)",
-   "ultimo_dato_utc": "2026-10-19T01:26:04Z"
+   "ultimo_dato_utc": "2026-10-19T08:44:30Z"
   }
  },
- "fuentes": {}
+ "fuentes": {
+  "balanza": {
+   "fallas_seguidas": 0,
+   "ultimo_error": null,
+   "ultimo_intento": "2026-10-19T08:44:41Z",
+   "ultimo_ok": "2026-10-19T08:44:41Z"
+  },
+  "banks": {
+   "fallas_seguidas": 0,
+   "ultimo_error": null,
+   "ultimo_intento": "2026-10-19T08:44:33Z",
+   "ultimo_ok": "2026-10-19T08:44:33Z"
+  },
+  "itcr": {
+   "fallas_seguidas": 0,
+   "ultimo_error": null,
+   "ultimo_intento": "2026-10-19T08:44:47Z",
+   "ultimo_ok": "2026-10-19T08:44:47Z"
+  },
+  "noticias": {
+   "fallas_seguidas": 0,
+   "ultimo_cambio": "2026-10-19T08:44:48Z",
+   "ultimo_error": null,
+   "ultimo_intento": "2026-10-19T08:44:48Z",
+   "ultimo_ok": "2026-10-19T08:44:48Z"
+  },
+  "reservas": {
+   "fallas_seguidas": 0,
+   "ultimo_error": null,
+   "ultimo_intento": "2026-10-19T08:44:40Z",
+   "ultimo_ok": "2026-10-19T08:44:40Z"
+  },
+  "tco": {
+   "fallas_seguidas": 0,
+   "ultimo_cambio": "2026-10-19T08:44:31Z",
+   "ultimo_error": null,
+   "ultimo_intento": "2026-10-19T08:44:31Z",
+   "ultimo_ok": "2026-10-19T08:44:31Z"
+  },
+  "usdt": {
+   "fallas_seguidas": 0,
+   "ultimo_cambio": "2026-10-19T08:44:30Z",
+   "ultimo_error": null,
+   "ultimo_intento": "2026-10-19T08:44:30Z",
+   "ultimo_ok": "2026-10-19T08:44:30Z"
+  }
+ },
+ "ultima_corrida": "2026-10-19T08:44:48Z"
 }
