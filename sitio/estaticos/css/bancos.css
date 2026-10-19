@@ -5,7 +5,7 @@
 .app-bancos button{ font:inherit; color:inherit; }
 .app-bancos section{ display:flex; flex-direction:column; gap:12px; margin:28px 0; }
 
-.app-bancos .spotlight{ padding:16px 0; border-bottom:1px solid var(--border); }
+.app-bancos .spotlight{ padding:20px 22px; margin-bottom:16px; }
 .app-bancos .spotlight-headline{ margin:0 0 16px; font-size:16px; font-weight:600; line-height:1.45; max-width:70ch; }
 .app-bancos .spotlight-grid{ display:flex; flex-wrap:wrap; gap:22px 40px; }
 .app-bancos .spotlight-figure{ flex:1 1 220px; min-width:200px; }
@@ -41,10 +41,10 @@
 .app-bancos .bank-row{ display:flex; flex-wrap:wrap; gap:6px; }
 .app-bancos .pill-sistema{ font-weight:600; border-color:var(--ingreso); }
 .app-bancos .pill-sistema.active{ background:var(--ingreso); border-color:var(--ingreso); color:#fff; }
-.app-bancos .pill-bank{ color:var(--ink); border-color:var(--b, var(--rule)); border-left-width:5px; font-weight:600; text-transform:none; letter-spacing:0; }
+.app-bancos .pill-bank{ color:var(--ink); border:2px solid var(--b, var(--rule)); font-weight:600; text-transform:none; letter-spacing:0; }
 .app-bancos .pill-bank.active{ background:var(--b, var(--ink)); border-color:var(--b, var(--ink)); color:var(--on, #fff); }
 
-.app-bancos .kpis{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); border-top:1px solid var(--rule); border-left:1px solid var(--border); }
+.app-bancos .kpis{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); background:var(--surface); border:1px solid var(--border); border-radius:var(--r-card,18px); overflow:hidden; }
 @media (max-width:520px){ .app-bancos .kpis{ grid-template-columns:repeat(2,1fr); } }
 .app-bancos .kpi{ background:var(--surface); border-bottom:1px solid var(--border); border-right:1px solid var(--border); padding:12px 14px; display:flex; flex-direction:column; gap:4px; }
 .app-bancos .kpi .label{ font-family:var(--font-mono); font-size:12.5px; color:var(--muted); font-weight:500; }

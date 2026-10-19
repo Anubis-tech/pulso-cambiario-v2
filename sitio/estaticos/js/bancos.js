@@ -146,14 +146,14 @@ const RANGO_INICIAL = DIAS_MES_EN_CURSO < MIN_DIAS_MES ? '30d' : 'mes';
 const state = {from:FIRST, to:LAST, gran:'dia', range:RANGO_INICIAL, sel:new Set(), sort:{k:'m',dir:-1}};
 const $ = id => document.getElementById(id);
 const cssv = n => getComputedStyle(document.querySelector('#app-bancos .card') || document.documentElement).getPropertyValue(n).trim();
-const MONO = "'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace";
+const MONO = "Poppins,system-ui,sans-serif";
 const charts = {};
 
 // Colores de marca por banco: los mismos del sitio Pulso Económico
 const BANK_COLORS = {
   'BISA':'#F5B700','Economico':'#ED1C24','FIE':'#DF1583','Fortaleza':'#1C529C','Ganadero':'#2E7D32',
-  'Mercantil Santa Cruz':'#3D8A25','Nacional de Bolivia':'#00A651','PRODEM':'#7CB342','PyME Ecofuturo':'#F57C00',
-  'PyME de la Comunidad':'#D4A017','Solidario':'#46009B','Union':'#005E9E','de Credito':'#F7941D','de la Nacion Argentina':'#75AADB'
+  'Mercantil Santa Cruz':'#4DB6AC','Nacional de Bolivia':'#00A651','PRODEM':'#7CB342','PyME Ecofuturo':'#F57C00',
+  'PyME de la Comunidad':'#D4A017','Solidario':'#8B5CF6','Union':'#005E9E','de Credito':'#F7941D','de la Nacion Argentina':'#75AADB'
 };
 const bankColor = b => BANK_COLORS[b] || '#888888';
 function onColor(hex){
@@ -434,8 +434,8 @@ function renderLine(pr, selBanks){
         })
       },
       scales:{
-        x:{grid:{display:false}, border:{color:grid}, ticks:{color:tick, autoSkip:false, maxRotation:0, font:{family:MONO,size:10}, callback:xTicksFn(keys.length)}},
-        y:{grace:'8%', grid:{color:grid, drawTicks:false}, border:{display:false}, ticks:{color:tick, maxTicksLimit:5, padding:8, font:{family:MONO,size:10}, callback:v => fmt(v,2)}}
+        x:{grid:{display:false}, border:{color:grid}, ticks:{color:tick, autoSkip:false, maxRotation:0, font:{family:MONO,size:11}, callback:xTicksFn(keys.length)}},
+        y:{grace:'8%', grid:{color:grid, drawTicks:false}, border:{display:false}, ticks:{color:tick, maxTicksLimit:5, padding:8, font:{family:MONO,size:11}, callback:v => fmt(v,2)}}
       }
     }
   });
@@ -487,8 +487,8 @@ function renderBar(pr){
         })
       },
       scales:{
-        x:{stacked:true, grid:{display:false}, border:{color:grid}, ticks:{color:tick, autoSkip:false, maxRotation:0, font:{family:MONO,size:10}, callback:xTicksFn(keys.length)}},
-        y:{stacked:true, beginAtZero:true, grid:{color:grid, drawTicks:false}, border:{display:false}, ticks:{color:tick, maxTicksLimit:5, padding:8, font:{family:MONO,size:10}, callback:v => usd(v)}}
+        x:{stacked:true, grid:{display:false}, border:{color:grid}, ticks:{color:tick, autoSkip:false, maxRotation:0, font:{family:MONO,size:11}, callback:xTicksFn(keys.length)}},
+        y:{stacked:true, beginAtZero:true, grid:{color:grid, drawTicks:false}, border:{display:false}, ticks:{color:tick, maxTicksLimit:5, padding:8, font:{family:MONO,size:11}, callback:v => usd(v)}}
       }
     }
   });
@@ -545,11 +545,11 @@ function renderBubble(aggs){
         }
       }})},
       scales:{
-        x:{type:'logarithmic', grid:{color:grid, drawTicks:false}, border:{display:false}, ticks:{color:tick, padding:8, font:{family:MONO,size:10}, callback:v => { const l = Math.log10(v); return Math.abs(l-Math.round(l))<1e-9 ? usd(v) : ''; }},
-           title:{display:true, text:'Monto comprado (USD, escala logarítmica)', color:tick, font:{family:MONO,size:10}}},
+        x:{type:'logarithmic', grid:{color:grid, drawTicks:false}, border:{display:false}, ticks:{color:tick, padding:8, font:{family:MONO,size:11}, callback:v => { const l = Math.log10(v); return Math.abs(l-Math.round(l))<1e-9 ? usd(v) : ''; }},
+           title:{display:true, text:'Monto comprado (USD, escala logarítmica)', color:tick, font:{family:MONO,size:11}}},
         y:{grace:'10%', border:{display:false}, grid:{color:ctx => ctx.tick && ctx.tick.value === 0 ? cssv('--avg') : grid, lineWidth:ctx => ctx.tick && ctx.tick.value === 0 ? 1.5 : 1, drawTicks:false},
-           ticks:{color:tick, padding:8, font:{family:MONO,size:10}, callback:v => fmtSigned(v,1)},
-           title:{display:true, text:'Diferencia vs mercado (Bs/USD) · arriba paga más', color:tick, font:{family:MONO,size:10}}}
+           ticks:{color:tick, padding:8, font:{family:MONO,size:11}, callback:v => fmtSigned(v,1)},
+           title:{display:true, text:'Diferencia vs mercado (Bs/USD) · arriba paga más', color:tick, font:{family:MONO,size:11}}}
       }
     }
   });

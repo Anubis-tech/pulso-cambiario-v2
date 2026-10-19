@@ -138,10 +138,10 @@
       }
       if (cur.length) segs.push(cur);
       segs.forEach(function (pts) {
-        p.push('<path d="M' + pts.map(function (q) { return q[0].toFixed(1) + "," + q[1].toFixed(1); }).join("L") + '" fill="none" stroke="' + s.color + '" stroke-width="' + (s.width || 2) + '"' + (s.dashed ? ' stroke-dasharray="5,4"' : "") + ' stroke-linejoin="round" stroke-linecap="round"/>');
+        p.push('<path d="M' + pts.map(function (q) { return q[0].toFixed(1) + "," + q[1].toFixed(1); }).join("L") + '" class="' + (s.dashed ? "" : "linea") + '" fill="none" stroke="' + s.color + '" stroke-width="' + (s.width || 2) + '"' + (s.dashed ? ' stroke-dasharray="5,4"' : "") + ' stroke-linejoin="round" stroke-linecap="round"/>');
       });
       for (var j = n - 1; j >= 0; j--) {
-        if (data[j][s.key] != null) { p.push('<circle cx="' + X(j) + '" cy="' + Y(data[j][s.key]) + '" r="3.5" fill="' + s.color + '"/>'); break; }
+        if (data[j][s.key] != null) { p.push('<circle class="fin" cx="' + X(j) + '" cy="' + Y(data[j][s.key]) + '" r="3.5" fill="' + s.color + '"/>'); break; }
       }
       p.push('<circle class="punto" data-k="' + s.key + '" r="4.5" fill="' + s.color + '" stroke="var(--surface)" stroke-width="1.5" cx="0" cy="0" visibility="hidden"/>');
     });
@@ -150,6 +150,24 @@
     p.push("</svg>");
     el.innerHTML = p.join("") + '<div class="tooltip" aria-hidden="true"></div>';
 
+    // La línea se dibuja una sola vez, cuando el gráfico entra en pantalla. No en el gráfico del día (casi plano).
+    if (!this._dibujado && el.id !== "g-intradia") {
+      this._dibujado = true;
+      var lineas = el.querySelectorAll("path.linea"), fines = el.querySelectorAll("circle.fin");
+      Array.prototype.forEach.call(lineas, function (ln) {
+        try { ln.style.setProperty("--largo", Math.ceil(ln.getTotalLength())); ln.classList.add("por-trazar"); } catch (e) {}
+      });
+      Array.prototype.forEach.call(fines, function (c) { c.classList.add("fin-pend"); });
+      var hecho = false;
+      var lanzar = function () {
+        if (hecho) return; hecho = true;
+        window.removeEventListener("scroll", revisar);
+        Array.prototype.forEach.call(el.querySelectorAll(".por-trazar,.fin-pend"), function (n) { n.classList.add("trazo"); });
+      };
+      var revisar = function () { if (el.getBoundingClientRect().top < window.innerHeight * 0.85) lanzar(); };
+      window.addEventListener("scroll", revisar, { passive: true });
+      revisar();
+    }
     var svg = el.querySelector("svg"), tip = el.querySelector(".tooltip"), guia = el.querySelector(".guia");
     var puntos = el.querySelectorAll(".punto"), cap = el.querySelector(".captura");
     var tf = o.tipFormat || function (x) { return fecha(x); };
@@ -277,4 +295,17 @@
     raiz.setAttribute("data-theme", nuevo);
     try { localStorage.setItem("pe:tema", nuevo === "light" ? "claro" : "oscuro"); } catch (e) {}
   });
+
+  /* Pestaña de la sección activa siempre a la vista en el celular */
+  var activa = document.querySelector(".nav [aria-current]");
+  if (activa && activa.parentNode.scrollWidth > activa.parentNode.clientWidth) {
+    var nav = activa.parentNode;
+    nav.scrollLeft += activa.getBoundingClientRect().left - nav.getBoundingClientRect().left - (nav.clientWidth - activa.offsetWidth) / 2;
+  }
+  /* Sombra de la barra superior al desplazarse */
+  var barra = document.querySelector(".topbar");
+  if (barra) {
+    var marcar = function () { barra.classList.toggle("con-sombra", window.scrollY > 4); };
+    window.addEventListener("scroll", marcar, { passive: true }); marcar();
+  }
 })(window);

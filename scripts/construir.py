@@ -60,6 +60,8 @@ NOMBRE_BANCO = {
     "Banco PyME Ecofuturo": "Banco PyME Ecofuturo",
     "Banco PyME de la Comunidad": "Banco PyME de la Comunidad",
 }
+MIN_OPS = 20      # operaciones mínimas en el día para entrar en los rankings
+MIN_PART = 0.005  # participación mínima en el monto del día (0,5%)
 BANCOS_PEQUENOS = {"Banco PyME Ecofuturo", "Banco PyME de la Comunidad"}
 
 
@@ -241,7 +243,12 @@ def calcular(data, noticias, estado):
         f["n_txt"] = num(f["n"], 0) if f["n"] is not None else "—"
         f["part_txt"] = num(f["monto"] / total_m * 100, 1) if (f["monto"] and total_m) else "—"
     filas_b.sort(key=lambda f: -f["tasa"])
-    relevantes = [f for f in filas_b if not f["pequeno"] and (f["monto"] or 0) >= 0.002 * total_m]
+    # Regla única para todos los bancos: para entrar en los rankings ("el que más pagó",
+    # "menor precio", podio) un banco necesita al menos MIN_OPS operaciones y MIN_PART del
+    # monto del día. Así un precio que sale de muy pocas operaciones no encabeza nada.
+    for f in filas_b:
+        f["elegible"] = (f["n"] or 0) >= MIN_OPS and total_m and (f["monto"] or 0) >= MIN_PART * total_m
+    relevantes = [f for f in filas_b if f["elegible"]]
     D["bancos"] = {
         "fecha": f_b, "fecha_larga": fecha_larga(f_b) if f_b else None, "fecha_corta": fecha_corta(f_b) if f_b else None,
         "filas": filas_b, "n_bancos": len(filas_b),
@@ -435,9 +442,9 @@ def enriquecer(D, data):
     total = sum(f["monto"] or 0 for f in b["filas"])
     for f in b["filas"]:
         motivo = None
-        if f["pequeno"]:
-            motivo = "banco PyME con pocas operaciones"
-        elif total and (f["monto"] or 0) < 0.002 * total:
+        if (f["n"] or 0) < MIN_OPS:
+            motivo = f"pocas operaciones ese día ({f['n_txt']})"
+        elif total and (f["monto"] or 0) < MIN_PART * total:
             motivo = "compró muy poco ese día"
         f["motivo"] = motivo
         f["relevante"] = motivo is None
@@ -669,16 +676,30 @@ class Sitio:
         return md_a_html(t.render(D=self.D, S=self.cfg, url=self.url))
 
 
+COLOR_SECCION = {"inicio": (163, 224, 95), "paralelo": (244, 122, 61), "oficial": (79, 143, 247),
+                 "bancos": (45, 212, 191), "brecha": (244, 114, 182), "reservas": (232, 177, 58),
+                 "balanza": (60, 201, 160), "itcr": (124, 140, 255), "conversor": (56, 198, 244)}
+FONDO = (11, 11, 12)
+TARJETA = (22, 22, 24)
+GRIS = (142, 142, 150)
+
+
+def _fuente(nombre, tam):
+    from PIL import ImageFont
+    return ImageFont.truetype(str(RAIZ / "herramientas" / "fuentes-og" / nombre), tam)
+
+
 def generar_og(sitio, clave, titulo, cifra=None, sub=None):
-    """Imagen de 1200x630 para la vista previa al compartir (WhatsApp, redes)."""
-    from PIL import Image, ImageDraw, ImageFont
-    f = RAIZ / "herramientas" / "fuentes-og"
+    """Imagen de 1200x630 para la vista previa al compartir (WhatsApp, redes), con el
+    estilo del sitio: tablero oscuro, Poppins y el color de la sección."""
+    from PIL import Image, ImageDraw
     W, H = 1200, 630
-    im = Image.new("RGB", (W, H), (10, 10, 10))
+    acento = COLOR_SECCION.get(clave, (163, 224, 95))
+    im = Image.new("RGB", (W, H), FONDO)
     dr = ImageDraw.Draw(im)
-    dr.rectangle([0, H - 14, W, H], fill=(42, 120, 214))
-    mono = ImageFont.truetype(str(f / "IBMPlexMono-Medium.ttf"), 30)
-    dr.text((70, 62), "PULSO ECONÓMICO · BOLIVIA", font=mono, fill=(227, 169, 0))
+    dr.rounded_rectangle([40, 40, W - 40, H - 40], radius=36, fill=TARJETA)
+    dr.rounded_rectangle([80, 84, 80 + 56, 84 + 8], radius=4, fill=acento)
+    dr.text((80, 108), "Pulso Económico", font=_fuente("Poppins_500Medium.ttf", 30), fill=GRIS)
 
     def ajustar(txt, fuente, ancho):
         lineas, act = [], ""
@@ -692,18 +713,16 @@ def generar_og(sitio, clave, titulo, cifra=None, sub=None):
         lineas.append(act)
         return lineas
 
-    tam = 64 if cifra else 74
-    tit = ImageFont.truetype(str(f / "Archivo-ExtraBold.ttf"), tam)
-    y = 130
-    for ln in ajustar(titulo, tit, W - 140)[:3]:
-        dr.text((70, y), ln, font=tit, fill=(255, 255, 255))
-        y += int(tam * 1.12)
+    tam = 58 if cifra else 68
+    tit = _fuente("Poppins_600SemiBold.ttf", tam)
+    y = 170
+    for ln in ajustar(titulo, tit, W - 180)[:3]:
+        dr.text((80, y), ln, font=tit, fill=(244, 244, 245))
+        y += int(tam * 1.18)
     if cifra:
-        big = ImageFont.truetype(str(f / "Archivo-ExtraBold.ttf"), 150)
-        dr.text((66, max(y + 20, 330)), cifra, font=big, fill=(255, 255, 255))
+        dr.text((76, max(y + 6, 300)), cifra, font=_fuente("Poppins_600SemiBold.ttf", 140), fill=(255, 255, 255))
     if sub:
-        s = ImageFont.truetype(str(f / "IBMPlexSans-Regular.ttf"), 32)
-        dr.text((70, H - 86), sub, font=s, fill=(200, 200, 200))
+        dr.text((80, H - 120), sub, font=_fuente("Poppins_400Regular.ttf", 28), fill=GRIS)
     ruta = sitio.salida / "img" / "og" / f"{clave}.png"
     ruta.parent.mkdir(parents=True, exist_ok=True)
     im.save(ruta, optimize=True)
@@ -713,41 +732,53 @@ def generar_og(sitio, clave, titulo, cifra=None, sub=None):
 def generar_hoy(sitio, D):
     """'El dólar de hoy' como imagen para mandar por WhatsApp o subir a estados:
     cuadrada (1080x1350) y vertical (1080x1920). Se regenera en cada corrida."""
-    from PIL import Image, ImageDraw, ImageFont
-    f = RAIZ / "herramientas" / "fuentes-og"
-    F = lambda n, t: ImageFont.truetype(str(f / n), t)  # noqa: E731
+    from PIL import Image, ImageDraw
+    F = _fuente
     u, t, b = D["usdt"], D["tco"], D["bancos"]
     for nombre, (W, H) in (("hoy-cuadrado", (1080, 1350)), ("hoy-estado", (1080, 1920))):
-        im = Image.new("RGB", (W, H), (10, 10, 10))
+        im = Image.new("RGB", (W, H), FONDO)
         dr = ImageDraw.Draw(im)
-        x = 80
-        y = 110 if H == 1350 else 260
-        dr.text((x, y), "DÓLAR HOY EN BOLIVIA", font=F("IBMPlexMono-Medium.ttf", 40), fill=(227, 169, 0))
-        y += 70
-        dr.text((x, y), f"{dia_txt(u['fecha']).capitalize()} de {MESES[int(u['fecha'][5:7]) - 1]} · {u['hora']}", font=F("IBMPlexSans-Regular.ttf", 40), fill=(200, 200, 200))
-        y += 120
-        dr.text((x, y), "Paralelo (USDT)", font=F("IBMPlexSans-SemiBold.ttf", 46), fill=(240, 122, 69))
-        y += 60
-        dr.text((x - 6, y), f"Bs {u['valor_txt']}", font=F("Archivo-ExtraBold.ttf", 210), fill=(255, 255, 255))
-        y += 250
+        x = 70
+        y = 90 if H == 1350 else 250
+        dr.text((x, y), "Dólar hoy en Bolivia", font=F("Poppins_600SemiBold.ttf", 54), fill=(244, 244, 245))
+        y += 80
+        dr.text((x, y), f"{dia_txt(u['fecha']).capitalize()} de {MESES[int(u['fecha'][5:7]) - 1]}, {u['hora']}", font=F("Poppins_400Regular.ttf", 36), fill=GRIS)
+        y += 90
+        # Tarjeta principal: el paralelo
+        alto = 470
+        dr.rounded_rectangle([x - 20, y, W - x + 20, y + alto], radius=44, fill=TARJETA)
+        dr.ellipse([x + 20, y + 52, x + 38, y + 70], fill=(244, 122, 61))
+        dr.text((x + 54, y + 38), "Paralelo (USDT)", font=F("Poppins_500Medium.ttf", 40), fill=(199, 199, 205))
+        dr.text((x + 14, y + 100), f"Bs {u['valor_txt']}", font=F("Poppins_600SemiBold.ttf", 190), fill=(255, 255, 255))
         ay = u.get("ayer")
         if ay:
-            col = {"sube": (255, 123, 114), "baja": (53, 195, 90), "igual": (200, 200, 200)}[ay["dir"]]
-            dr.text((x, y), ay["texto"], font=F("IBMPlexSans-SemiBold.ttf", 44), fill=col)
-            y += 110
-        dr.line([(x, y), (W - x, y)], fill=(70, 70, 70), width=3)
-        y += 50
-        dr.text((x, y), "Oficial BCB", font=F("IBMPlexSans-SemiBold.ttf", 46), fill=(75, 147, 234))
-        dr.text((W - x, y), f"Bs {t['venta_txt']}", font=F("Archivo-ExtraBold.ttf", 64), fill=(255, 255, 255), anchor="ra")
-        y += 110
+            col, fondo = {"sube": ((242, 97, 90), (60, 30, 30)), "baja": ((163, 224, 95), (40, 55, 30)),
+                          "igual": ((199, 199, 205), (38, 38, 42))}[ay["dir"]]
+            fz = F("Poppins_600SemiBold.ttf", 38)
+            ancho = dr.textlength(ay["texto"], font=fz)
+            dr.rounded_rectangle([x + 20, y + alto - 110, x + 20 + ancho + 60, y + alto - 46], radius=32, fill=fondo)
+            dr.text((x + 50, y + alto - 104), ay["texto"], font=fz, fill=col)
+        y += alto + 30
+        # Dos tarjetas: oficial y banco que más pagó
+        ancho_t = (W - 2 * x + 40 - 30) // 2
+        tarjetas = [("Oficial BCB", f"Bs {t['venta_txt']}", (79, 143, 247), "Vigente " + ("para el " + t["dia_txt"] if t.get("es_de_manana") else "hoy"))]
         if b.get("podio"):
             p = b["podio"][0]
-            dr.text((x, y), "Banco que más pagó", font=F("IBMPlexSans-SemiBold.ttf", 46), fill=(44, 191, 149))
-            dr.text((W - x, y), f"Bs {p['tasa_txt']}", font=F("Archivo-ExtraBold.ttf", 64), fill=(255, 255, 255), anchor="ra")
-            y += 64
-            dr.text((x, y), f"{p['nombre']} · {b['fecha_corta']}", font=F("IBMPlexSans-Regular.ttf", 36), fill=(170, 170, 170))
-        dr.rectangle([0, H - 150, W, H], fill=(42, 120, 214))
-        dr.text((W // 2, H - 75), "elpulsoeconomico.com", font=F("Archivo-ExtraBold.ttf", 54), fill=(255, 255, 255), anchor="mm")
+            tarjetas.append(("Banco que más pagó", f"Bs {p['tasa_txt']}", (45, 212, 191), p["nombre"]))
+        for k, (et, val, colp, ctx) in enumerate(tarjetas):
+            x0 = x - 20 + k * (ancho_t + 30)
+            dr.rounded_rectangle([x0, y, x0 + ancho_t, y + 260], radius=40, fill=TARJETA)
+            dr.ellipse([x0 + 36, y + 50, x0 + 52, y + 66], fill=colp)
+            dr.text((x0 + 66, y + 36), et, font=F("Poppins_500Medium.ttf", 32), fill=(199, 199, 205))
+            dr.text((x0 + 34, y + 92), val, font=F("Poppins_600SemiBold.ttf", 76), fill=(255, 255, 255))
+            dr.text((x0 + 36, y + 196), ctx, font=F("Poppins_400Regular.ttf", 28), fill=GRIS)
+        # Pie: la marca
+        fz = F("Poppins_600SemiBold.ttf", 44)
+        txt = "elpulsoeconomico.com"
+        ancho = dr.textlength(txt, font=fz)
+        yb = H - (150 if H == 1350 else 260)
+        dr.rounded_rectangle([(W - ancho) / 2 - 44, yb, (W + ancho) / 2 + 44, yb + 96], radius=48, fill=(163, 224, 95))
+        dr.text((W // 2, yb + 48), txt, font=fz, fill=FONDO, anchor="mm")
         ruta = sitio.salida / "img" / f"{nombre}.png"
         ruta.parent.mkdir(parents=True, exist_ok=True)
         im.save(ruta, optimize=True)
@@ -948,7 +979,7 @@ def construir(datos_dir, salida, entorno=None, base=None):
         s.escribir("/ads.txt", f"google.com, {cfg['adsense']['id_editor']}, DIRECT, f08c47fec0942fa0\n")
     s.escribir("/manifest.webmanifest", json.dumps({
         "name": cfg["nombre"], "short_name": cfg["nombre_corto"], "lang": cfg["idioma"],
-        "start_url": base + "/", "display": "browser", "background_color": "#0a0a0a", "theme_color": "#0a0a0a",
+        "start_url": base + "/", "display": "browser", "background_color": "#0b0b0c", "theme_color": "#0b0b0c",
         "icons": [{"src": base + "/icono-192.png", "sizes": "192x192", "type": "image/png"},
                   {"src": base + "/icono-512.png", "sizes": "512x512", "type": "image/png"}]}, ensure_ascii=False, indent=1))
     # Cabeceras y redirecciones para Cloudflare Pages (GitHub Pages las ignora).

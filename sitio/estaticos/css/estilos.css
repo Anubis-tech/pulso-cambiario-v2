@@ -78,7 +78,7 @@
 body[data-pagina="inicio"]   { --tema:#a3e05f; }
 body[data-pagina="paralelo"] { --tema:#f47a3d; }
 body[data-pagina="oficial"]  { --tema:#4f8ff7; }
-body[data-pagina="bancos"]   { --tema:#b18cff; }
+body[data-pagina="bancos"]   { --tema:#2dd4bf; }
 body[data-pagina="brecha"]   { --tema:#f472b6; }
 body[data-pagina="reservas"] { --tema:#e8b13a; }
 body[data-pagina="balanza"]  { --tema:#3cc9a0; }
@@ -104,7 +104,7 @@ button,input,select,textarea{ font:inherit; }
 .visually-hidden{ position:absolute!important; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
 .skip{ position:absolute; left:-999px; top:0; background:#fff; color:#000; padding:8px 12px; z-index:10; border-radius:var(--r-s); }
 .skip:focus{ left:8px; top:8px; }
-:focus-visible{ outline:2px solid var(--tema); outline-offset:3px; border-radius:6px; }
+:focus-visible{ outline:2px solid var(--ink); outline-offset:3px; border-radius:6px; box-shadow:0 0 0 6px color-mix(in srgb, var(--tema) 55%, transparent); }
 
 /* ---------- Barra superior ---------- */
 .topbar{ background:var(--topbar-bg); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); position:sticky; top:0; z-index:5; border-bottom:1px solid var(--border); }
@@ -125,7 +125,6 @@ button,input,select,textarea{ font:inherit; }
 
 /* ---------- Encabezado de página ---------- */
 .page-head{ position:relative; overflow:hidden; color:var(--head-ink); }
-.page-head::before{ content:""; position:absolute; inset:-40% auto auto -10%; width:70%; height:180%; background:radial-gradient(closest-side, color-mix(in srgb, var(--tema) 22%, transparent), transparent 70%); pointer-events:none; }
 .page-head .wrap{ position:relative; padding-top:30px; padding-bottom:26px; }
 .crumbs{ font-size:13px; color:var(--head-muted); margin:0 0 10px; }
 .crumbs a{ color:var(--head-muted); text-decoration:none; }
@@ -275,7 +274,7 @@ article.prosa.seccion > *{ max-width:70ch; }
 .campo{ display:flex; flex-direction:column; gap:6px; flex:1 1 180px; }
 .campo label{ font-size:13px; font-weight:500; color:var(--muted); }
 .campo input,.campo select{ font-size:20px; font-weight:500; padding:11px 14px; border:1px solid var(--border-2); border-radius:var(--r-in); background:var(--surface-2); color:var(--ink); width:100%; min-height:50px; transition:border-color var(--rapido) var(--curva); }
-.campo input:focus,.campo select:focus{ outline:none; border-color:var(--tema); }
+.campo input:focus,.campo select:focus{ outline:none; border-color:var(--ink); box-shadow:0 0 0 3px color-mix(in srgb, var(--tema) 60%, transparent); }
 .conv-res{ display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:10px; }
 .conv-res > div{ padding:16px 18px; background:var(--surface-2); border-radius:var(--r-in); }
 .conv-res .r-et{ font-size:13px; font-weight:500; color:var(--muted); }
@@ -314,7 +313,6 @@ textarea.codigo{ width:100%; min-height:110px; font-family:ui-monospace,SFMono-R
    Portada: tablero del día
    ========================================================================= */
 .hero-dolar{ position:relative; overflow:hidden; color:var(--head-ink); }
-.hero-dolar::before{ content:""; position:absolute; inset:-30% auto auto -15%; width:75%; height:160%; background:radial-gradient(closest-side, rgba(163,224,95,var(--brillo)), transparent 70%); pointer-events:none; }
 .hero-dolar .wrap{ position:relative; padding-top:28px; padding-bottom:6px; }
 .hero-saludo h1{ font-size:14px; font-weight:500; color:var(--muted); margin:0 0 4px; letter-spacing:0; }
 .hero-saludo .titular{ font-weight:600; font-size:clamp(24px,4.4vw,32px); letter-spacing:-.02em; line-height:1.2; margin:0; text-wrap:balance; }
@@ -330,7 +328,7 @@ a.kpi:hover{ border-color:var(--border-2); background:var(--surface-2); color:va
 .kpi-principal{ grid-area:pri; display:flex; flex-direction:column; justify-content:space-between; gap:14px; background:linear-gradient(155deg, rgba(244,122,61,.16) 0%, transparent 62%), var(--surface); border-color:rgba(244,122,61,.25); }
 .kpi-oficial{ grid-area:ofi; } .kpi-brecha{ grid-area:bre; } .kpi-bancos{ grid-area:ban; }
 .kpi-oficial .k-et::before,.kpi-brecha .k-et::before,.kpi-bancos .k-et::before{ content:""; display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:8px; vertical-align:1px; }
-.kpi-oficial .k-et::before{ background:var(--accent); } .kpi-brecha .k-et::before{ background:#f472b6; } .kpi-bancos .k-et::before{ background:#b18cff; }
+.kpi-oficial .k-et::before{ background:var(--accent); } .kpi-brecha .k-et::before{ background:#f472b6; } .kpi-bancos .k-et::before{ background:#2dd4bf; }
 .cifra-grande{ display:flex; flex-wrap:wrap; align-items:center; gap:6px 14px; margin:0; }
 .cifra-grande .et{ width:100%; font-size:14px; font-weight:500; color:var(--ink-2); }
 .cifra-grande .et::before{ content:""; display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--paralelo); margin-right:8px; vertical-align:1px; }
@@ -372,7 +370,7 @@ a.kpi:hover{ border-color:var(--border-2); background:var(--surface-2); color:va
 .podio-fila .rec small{ font-weight:400; font-size:12px; color:var(--muted); display:block; letter-spacing:0; }
 .monto-linea{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; font-size:15px; color:var(--ink-2); margin:0 0 14px; }
 .monto-linea input{ font-size:18px; font-weight:600; width:8ch; padding:6px 14px; border:1px solid var(--border-2); border-radius:999px; background:var(--surface-2); color:var(--ink); min-height:44px; }
-.monto-linea input:focus{ outline:none; border-color:var(--tema); }
+.monto-linea input:focus{ outline:none; border-color:var(--ink); box-shadow:0 0 0 3px color-mix(in srgb, var(--tema) 60%, transparent); }
 .compartir-grande{ background:linear-gradient(150deg, rgba(31,157,85,.18), transparent 60%), var(--surface); border:1px solid var(--border); border-radius:var(--r-card); padding:20px; display:grid; gap:16px; grid-template-columns:auto 1fr; align-items:center; }
 .compartir-grande img{ width:108px; height:auto; border-radius:12px; }
 .compartir-grande h2{ font-size:19px; margin:0 0 4px; }
@@ -405,7 +403,7 @@ details.leer-mas[open] > summary::after{ transform:rotate(-135deg); }
 
 /* Recuadros con datos y gráficos: siempre oscuros, también en modo claro.
    En modo claro solo cambia el fondo de la página. */
-.figuras .figura,.kpi,.card,.tabla-wrap,.podio-fila,.tarjetas .tarjeta,.destacado,.compartir-grande,.conv-res,.embed-box{
+.figuras .figura,.kpi,.card,.tabla-wrap,.app-bancos .spotlight,.app-bancos .kpis,.podio-fila,.tarjetas .tarjeta,.destacado,.compartir-grande,.conv-res,.embed-box{
   color-scheme: dark;
   --bg:#0b0b0c; --surface:#161618; --surface-2:#1d1d20; --surface-3:#26262a;
   --head-bg:#0b0b0c; --head-ink:#f4f4f5; --head-muted:#9a9aa2;
@@ -427,3 +425,31 @@ details.leer-mas[open] > summary::after{ transform:rotate(-135deg); }
 }
 .calc-rapida{ border:1px solid rgba(15,15,20,.08); }
 @media (max-width:520px){ table.datos th, table.datos td{ padding:11px 12px; } .tabla-wrap{ padding:4px 0; } }
+
+/* Color de la sección siempre visible, también en el celular: franja bajo la barra superior */
+.topbar{ border-bottom:3px solid var(--tema); }
+/* Calculadora: sin hueco vacío en computadora */
+.calc-rapida{ align-self:start; }
+.calc-rapida .res{ margin-top:4px; }
+/* En el conversor y los montos, la primera tarjeta es el paralelo: lleva su color, no el de la sección */
+body[data-pagina="conversor"] .figuras .figura:first-child{ --tema:var(--paralelo); }
+/* Muestras de leyenda visibles sobre negro */
+.leyenda .sw:not(.linea):not(.punteada){ box-shadow:inset 0 0 0 1px var(--border-2); }
+/* Publicidad distinguible también en modo oscuro */
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .ad{ background:#1f1f23; border-style:dashed; border-color:rgba(255,255,255,.22); } }
+:root[data-theme="dark"] .ad{ background:#1f1f23; border-style:dashed; border-color:rgba(255,255,255,.22); }
+
+/* ---------- Animaciones (solo las que confirman algo o guían la vista) ---------- */
+.topbar{ transition:box-shadow 200ms ease; }
+.topbar.con-sombra{ box-shadow:0 8px 20px -14px rgba(0,0,0,.45); }
+[data-tasa].cambio,.conv-res .r-val.cambio{ animation:destello 400ms cubic-bezier(.2,.7,.2,1); border-radius:6px; }
+@keyframes destello{ 0%{ background:color-mix(in srgb, var(--tema) 35%, transparent); } 100%{ background:transparent; } }
+.grafico svg.chart{ animation:aparecer 180ms ease-out; }
+@keyframes aparecer{ from{ opacity:0; } to{ opacity:1; } }
+.grafico path.por-trazar{ stroke-dasharray:var(--largo); stroke-dashoffset:var(--largo); }
+.grafico path.por-trazar.trazo{ animation:trazar 700ms cubic-bezier(.2,.7,.2,1) forwards; }
+@keyframes trazar{ to{ stroke-dashoffset:0; } }
+.grafico circle.fin-pend{ opacity:0; }
+.grafico circle.fin-pend.trazo{ animation:aparecer 150ms ease-out 700ms forwards; }
+@media (prefers-reduced-motion: reduce){ .grafico path.por-trazar{ stroke-dasharray:none!important; stroke-dashoffset:0!important; } .grafico circle.fin-pend{ opacity:1!important; } }
+.app-bancos .spotlight{ background:var(--surface); border:1px solid var(--border); border-radius:var(--r-card); padding:20px 22px; }
