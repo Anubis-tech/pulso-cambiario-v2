@@ -267,4 +267,14 @@
     restarDias: restarDias, restarMeses: restarMeses, escapar: escapar, cargar: cargar, fallo: fallo,
     Lineas: Lineas, Barras: Barras, rangos: rangos, leyenda: leyenda, desde: desde
   };
+
+  /* Botón de modo claro / oscuro (la elección se guarda solo en este navegador) */
+  var btnTema = document.querySelector("[data-tema-btn]");
+  if (btnTema) btnTema.addEventListener("click", function () {
+    var raiz = document.documentElement, actual = raiz.getAttribute("data-theme");
+    var oscuro = actual ? actual === "dark" : (window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches);
+    var nuevo = oscuro ? "light" : "dark";
+    raiz.setAttribute("data-theme", nuevo);
+    try { localStorage.setItem("pe:tema", nuevo === "light" ? "claro" : "oscuro"); } catch (e) {}
+  });
 })(window);
