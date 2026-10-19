@@ -145,7 +145,7 @@ const DIAS_MES_EN_CURSO = DATA.dates.filter(d => d.slice(0,7) === LAST.slice(0,7
 const RANGO_INICIAL = DIAS_MES_EN_CURSO < MIN_DIAS_MES ? '30d' : 'mes';
 const state = {from:FIRST, to:LAST, gran:'dia', range:RANGO_INICIAL, sel:new Set(), sort:{k:'m',dir:-1}};
 const $ = id => document.getElementById(id);
-const cssv = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const cssv = n => getComputedStyle(document.querySelector('#app-bancos .card') || document.documentElement).getPropertyValue(n).trim();
 const MONO = "'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace";
 const charts = {};
 
