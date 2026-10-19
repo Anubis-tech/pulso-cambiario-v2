@@ -19,8 +19,8 @@
 <link rel="icon" href="{{ url('/favicon.svg') }}" type="image/svg+xml">
 <link rel="apple-touch-icon" href="{{ url('/apple-touch-icon.png') }}">
 <link rel="manifest" href="{{ url('/manifest.webmanifest') }}">
-<link rel="preload" href="{{ url('/fuentes/archivo-latin-800-normal.woff2') }}" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="{{ url('/fuentes/ibm-plex-sans-latin-400-normal.woff2') }}" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{{ url('/fuentes/poppins-latin-600-normal.woff2') }}" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{{ url('/fuentes/poppins-latin-400-normal.woff2') }}" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="{{ estatico('/css/estilos.css') }}">
 {% block css %}{% endblock %}
 <meta property="og:type" content="{{ 'article' if M.tipo_og is defined and M.tipo_og == 'article' else 'website' }}">
@@ -68,7 +68,7 @@
   </div>
 </header>
 {% if not produccion %}
-<div class="aviso" style="margin:0;border-left:0;border-right:0;text-align:center;font-size:13px;padding:6px 12px">Versión de prueba (2.0). Esta página no aparece en Google. El sitio oficial sigue siendo <a href="https://elpulsoeconomico.com/">elpulsoeconomico.com</a>.</div>
+<div class="aviso aviso-preview">Versión de prueba (2.0). Esta página no aparece en Google. El sitio oficial sigue siendo <a href="https://elpulsoeconomico.com/">elpulsoeconomico.com</a>.</div>
 {% endif %}
 {% block cabecera %}{% endblock %}
 <main id="contenido">

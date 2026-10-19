@@ -36,7 +36,7 @@
   <nav class="seccion" aria-label="Otros meses" style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
     {% if mm.anterior %}<a class="btn" href="{{ url(mm.anterior.ruta) }}">← {{ mm.anterior.nombre|capitalize }}</a>{% else %}<span></span>{% endif %}
     <a class="btn" href="{{ url('/dolar-bolivia/') }}">Todos los meses</a>
-    {% if mm.siguiente %}<a class="btn" href="{{ url(mm.siguiente.ruta) }}">{{ mm.siguiente.nombre|capitalize }} →</a>{% endif %}
+    {% if mm.siguiente %}<a class="btn" href="{{ url(mm.siguiente.ruta) }}">{{ mm.siguiente.nombre|capitalize }}</a>{% endif %}
   </nav>
   {{ m.compartir('El dólar en Bolivia en ' ~ mm.nombre ~ ': ' ~ mm.titular ~ '.', mm.ruta) }}
   {{ m.suscripcion() }}

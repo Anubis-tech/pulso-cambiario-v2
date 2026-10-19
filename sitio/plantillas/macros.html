@@ -34,7 +34,7 @@
 <div class="figura{% if ancha %} ancha{% endif %}">
   <p class="f-label">{% if color %}<span class="sw" style="background:{{ color }}"></span>{% endif %}{{ etiqueta }}</p>
   <p class="f-valor">{{ valor }}{% if unidad %}<small>{{ unidad }}</small>{% endif %}</p>
-  {% if delta %}<p class="f-delta {{ delta_dir }}">{{ delta_flecha }} {{ delta }} {{ delta_ctx }}</p>{% endif %}
+  {% if delta %}<p class="f-delta {{ delta_dir }}">{{ delta }} {{ delta_ctx }}</p>{% endif %}
   {% if ctx %}<p class="f-ctx">{{ ctx }}</p>{% endif %}
   {% if atrasado %}<span class="atrasado">Dato atrasado: la fuente no respondió en las últimas horas</span>{% endif %}
 </div>

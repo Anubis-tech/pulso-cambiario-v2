@@ -874,7 +874,7 @@ def construir(datos_dir, salida, entorno=None, base=None):
         "titulo": "El dólar en Bolivia mes a mes | Pulso Económico",
         "descripcion": "Resumen de cada mes del dólar en Bolivia desde junio de 2024: máximo, mínimo y cierre del paralelo, el oficial, la brecha y el banco que más pagó.",
         "h1": "El dólar en Bolivia, mes a mes", "dek": "Cómo cerró cada mes el paralelo, el oficial y los bancos.", "og": og["sitio"]},
-        {"meses": meses}, cambia="daily", prioridad=0.6)
+        {"meses": meses, "clave": "meses"}, cambia="daily", prioridad=0.6)
     for mm in meses:
         meta_m = {"titulo": f"Dólar en Bolivia: {mm['nombre']} | Pulso Económico",
                   "descripcion": f"{mm['titular']}. Máximo Bs {mm['max_txt']} ({mm['max_fecha']}), mínimo Bs {mm['min_txt']}"
@@ -883,7 +883,7 @@ def construir(datos_dir, salida, entorno=None, base=None):
                   "titulo_corto": mm["nombre"].capitalize()}
         if len(meta_m["descripcion"]) > 160:
             meta_m["descripcion"] = meta_m["descripcion"][:157].rsplit(" ", 1)[0] + "…"
-        s.pagina(mm["ruta"], "mes.html", meta_m, {"mm": mm}, cambia="daily" if mm.get("en_curso") else "monthly",
+        s.pagina(mm["ruta"], "mes.html", meta_m, {"mm": mm, "clave": "meses"}, cambia="daily" if mm.get("en_curso") else "monthly",
                  prioridad=0.5, lastmod=mm["ultimo_dia"])
 
     # --- Páginas de montos típicos (búsquedas como "100 dólares en bolivianos") ---
@@ -895,17 +895,17 @@ def construir(datos_dir, salida, entorno=None, base=None):
                   "h1": f"{m_txt} dólares en bolivianos", "og": og["conversor"], "titulo_corto": f"$us {m_txt} en bolivianos"}
         diario = sorted(data["usdt"], key=lambda r: r["date"])[-30:]
         hist = [{"fecha_corta": fecha_corta(r["date"]), "bs_txt": num(monto * r["usdt_bob"], 0)} for r in reversed(diario)]
-        s.pagina(ruta_m, "monto.html", meta_m, {"monto": monto, "m_txt": m_txt, "hist": hist}, cambia="hourly", prioridad=0.6)
+        s.pagina(ruta_m, "monto.html", meta_m, {"monto": monto, "m_txt": m_txt, "hist": hist, "clave": "conversor"}, cambia="hourly", prioridad=0.6)
 
     # --- Artículos ---
     meta_idx = {"titulo": "Artículos: dólar, tipo de cambio y economía de Bolivia, explicados",
                 "descripcion": "Guías claras sobre el tipo de cambio oficial, el dólar paralelo, la brecha cambiaria, las reservas del BCB y cómo convertir dólares a bolivianos.",
                 "h1": "Artículos", "dek": "Explicaciones claras, con datos y fuentes, sobre el mercado cambiario de Bolivia.", "og": og["sitio"]}
-    s.pagina("/articulos/", "articulos.html", meta_idx, {"lista": articulos}, cambia="weekly", prioridad=0.6)
+    s.pagina("/articulos/", "articulos.html", meta_idx, {"lista": articulos, "clave": "articulos"}, cambia="weekly", prioridad=0.6)
     for a in articulos:
         a["og"] = generar_og(s, "art-" + a["slug"], a["titulo_corto"] if a.get("titulo_corto") else a["h1"], None, "Pulso Económico · Artículo")
         otros = [x for x in articulos if x["slug"] != a["slug"]][:3]
-        s.pagina(a["ruta"], "articulo.html", a, {"otros": otros}, cambia="monthly", prioridad=0.6,
+        s.pagina(a["ruta"], "articulo.html", a, {"otros": otros, "clave": "articulos"}, cambia="monthly", prioridad=0.6,
                  lastmod=str(a.get("actualizado") or a["fecha"]))
 
     # --- Páginas institucionales ---
