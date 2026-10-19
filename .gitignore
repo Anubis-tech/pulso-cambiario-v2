@@ -1,0 +1,8 @@
+# Sitio generado (se publica desde GitHub Actions, no se guarda en el repo)
+_site/
+# Los datos viven en la rama "datos" (ver README.md). Para trabajar en local:
+#   git worktree add datos datos   (o descargar los archivos de esa rama)
+datos/
+__pycache__/
+*.pyc
+.DS_Store
