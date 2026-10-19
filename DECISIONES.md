@@ -90,10 +90,3 @@ Umbrales: paralelo 8 h, TCO 4 días, bancos 6 días, reservas 21 días, balanza 
 
 En el preview, los anuncios son recuadros grises con la etiqueta "Espacio publicitario". Reservan su alto, así que cuando haya anuncios reales el contenido no salta (CLS ≈ 0). Hay 3 posiciones por página como máximo: superior (banner horizontal), medio e inferior. Se activan con dos campos de `config/sitio.json`.
 
-## D14. Conflicto de interés **[a decidir por el dueño]**
-
-El sitio compara bancos, y el responsable trabaja en uno de ellos (Banco Fortaleza). En el dato del 16-oct-2026, Banco Fortaleza aparece primero ("el que más pagó") por puro orden de los datos. Recomiendo:
-1. Declarar el vínculo en "Acerca de" (campo `responsable.declaracion_intereses` en `config/sitio.json`). Mientras está vacío, la página muestra un aviso.
-2. Consultar las políticas de su empleador sobre actividades externas y uso de información del sistema financiero, aunque los datos sean públicos.
-
-No es un problema técnico, pero si un lector lo descubre por su cuenta, la credibilidad del sitio se resiente.

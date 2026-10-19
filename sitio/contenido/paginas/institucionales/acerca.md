@@ -28,13 +28,7 @@ Perfil profesional: [{{ S.responsable.linkedin }}]({{ S.responsable.linkedin }})
 *[Pendiente: nombre del responsable, trayectoria y por qué es una fuente confiable en estos temas. Se completa en `config/sitio.json`.]*
 {% endif %}
 
-## Independencia y conflictos de interés
-
-{% if S.responsable.declaracion_intereses %}
-{{ S.responsable.declaracion_intereses }}
-{% else %}
-*[Pendiente: declaración de vínculos con entidades financieras. Un sitio que compara bancos debe decir si su responsable trabaja o trabajó en alguno, y comprometerse a no favorecerlo. Se completa en `config/sitio.json`, campo "declaracion_intereses".]*
-{% endif %}
+## Independencia
 
 Pulso Económico no es una entidad financiera ni una casa de cambio. No compra ni vende divisas, no cobra por mostrar a un banco antes que a otro y no recomienda operaciones. Las tablas se ordenan solo por los datos.
 

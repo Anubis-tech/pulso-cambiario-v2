@@ -60,8 +60,6 @@ NOMBRE_BANCO = {
     "Banco PyME Ecofuturo": "Banco PyME Ecofuturo",
     "Banco PyME de la Comunidad": "Banco PyME de la Comunidad",
 }
-MIN_OPS = 20      # operaciones mínimas en el día para entrar en los rankings
-MIN_PART = 0.005  # participación mínima en el monto del día (0,5%)
 BANCOS_PEQUENOS = {"Banco PyME Ecofuturo", "Banco PyME de la Comunidad"}
 
 
@@ -243,12 +241,7 @@ def calcular(data, noticias, estado):
         f["n_txt"] = num(f["n"], 0) if f["n"] is not None else "—"
         f["part_txt"] = num(f["monto"] / total_m * 100, 1) if (f["monto"] and total_m) else "—"
     filas_b.sort(key=lambda f: -f["tasa"])
-    # Regla única para todos los bancos: para entrar en los rankings ("el que más pagó",
-    # "menor precio", podio) un banco necesita al menos MIN_OPS operaciones y MIN_PART del
-    # monto del día. Así un precio que sale de muy pocas operaciones no encabeza nada.
-    for f in filas_b:
-        f["elegible"] = (f["n"] or 0) >= MIN_OPS and total_m and (f["monto"] or 0) >= MIN_PART * total_m
-    relevantes = [f for f in filas_b if f["elegible"]]
+    relevantes = [f for f in filas_b if not f["pequeno"] and (f["monto"] or 0) >= 0.002 * total_m]
     D["bancos"] = {
         "fecha": f_b, "fecha_larga": fecha_larga(f_b) if f_b else None, "fecha_corta": fecha_corta(f_b) if f_b else None,
         "filas": filas_b, "n_bancos": len(filas_b),
@@ -442,9 +435,9 @@ def enriquecer(D, data):
     total = sum(f["monto"] or 0 for f in b["filas"])
     for f in b["filas"]:
         motivo = None
-        if (f["n"] or 0) < MIN_OPS:
-            motivo = f"pocas operaciones ese día ({f['n_txt']})"
-        elif total and (f["monto"] or 0) < MIN_PART * total:
+        if f["pequeno"]:
+            motivo = "banco PyME con pocas operaciones"
+        elif total and (f["monto"] or 0) < 0.002 * total:
             motivo = "compró muy poco ese día"
         f["motivo"] = motivo
         f["relevante"] = motivo is None
@@ -677,7 +670,7 @@ class Sitio:
 
 
 COLOR_SECCION = {"inicio": (163, 224, 95), "paralelo": (244, 122, 61), "oficial": (79, 143, 247),
-                 "bancos": (45, 212, 191), "brecha": (244, 114, 182), "reservas": (232, 177, 58),
+                 "bancos": (177, 140, 255), "brecha": (244, 114, 182), "reservas": (232, 177, 58),
                  "balanza": (60, 201, 160), "itcr": (124, 140, 255), "conversor": (56, 198, 244)}
 FONDO = (11, 11, 12)
 TARJETA = (22, 22, 24)
@@ -764,7 +757,7 @@ def generar_hoy(sitio, D):
         tarjetas = [("Oficial BCB", f"Bs {t['venta_txt']}", (79, 143, 247), "Vigente " + ("para el " + t["dia_txt"] if t.get("es_de_manana") else "hoy"))]
         if b.get("podio"):
             p = b["podio"][0]
-            tarjetas.append(("Banco que más pagó", f"Bs {p['tasa_txt']}", (45, 212, 191), p["nombre"]))
+            tarjetas.append(("Banco que más pagó", f"Bs {p['tasa_txt']}", (177, 140, 255), p["nombre"]))
         for k, (et, val, colp, ctx) in enumerate(tarjetas):
             x0 = x - 20 + k * (ancho_t + 30)
             dr.rounded_rectangle([x0, y, x0 + ancho_t, y + 260], radius=40, fill=TARJETA)

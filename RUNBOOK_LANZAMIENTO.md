@@ -10,7 +10,7 @@
 
 ## 0. Antes del día del lanzamiento
 
-- [ ] Completar en `config/sitio.json`: `responsable` (nombre, descripción y **declaración de intereses**) y `contacto.correo`. Las páginas "Acerca de", "Contacto" y "Privacidad" muestran avisos mientras estos campos estén vacíos.
+- [ ] Completar en `config/sitio.json`: `responsable` (nombre y descripción) y `contacto.correo`. Las páginas "Acerca de", "Contacto" y "Privacidad" muestran avisos mientras estos campos estén vacíos.
 - [ ] Revisar con un abogado la política de privacidad y los términos (`sitio/contenido/paginas/institucionales/`).
 - [ ] Decidir la analítica (DECISIONES D6 y `README.md`) y obtener el ID.
 - [ ] Confirmar que la v1 sigue igual que en el commit base `10e17f0`. Si alguien la cambió, revisar qué cambió e incorporarlo a la v2.

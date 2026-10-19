@@ -1,18 +1,14 @@
 {
   "_ayuda": "Configuración del sitio. Lo que está vacío queda desactivado. Ver README.md, sección 'Configuración', para saber qué poner en cada campo.",
-
   "nombre": "Pulso Económico",
   "nombre_corto": "Pulso Económico",
   "lema": "Dólar, reservas y mercado cambiario de Bolivia, con datos actualizados",
   "dominio": "https://elpulsoeconomico.com",
   "idioma": "es-BO",
-
   "_entorno": "'preview' = no indexable, sin anuncios ni analítica reales. 'produccion' = sitio oficial. Se puede forzar con la variable de entorno SITIO_ENTORNO.",
   "entorno": "preview",
-
   "_ruta_base_preview": "Carpeta donde GitHub Pages publica el preview (anubis-tech.github.io/pulso-cambiario-v2/). En producción, con dominio propio, la ruta base es vacía.",
   "ruta_base_preview": "/pulso-cambiario-v2",
-
   "adsense": {
     "_ayuda": "ID de editor tipo 'pub-1234567890123456'. Con el ID vacío no se carga ningún anuncio y se genera ads.txt solo cuando haya ID. 'activo' debe ser true para mostrar anuncios en producción.",
     "id_editor": "",
@@ -24,40 +20,32 @@
       "inferior": ""
     }
   },
-
   "analitica": {
     "_ayuda": "proveedor: '' (ninguno), 'ga4', 'cloudflare' o 'plausible'. id: el ID de medición (G-XXXX para GA4, token para Cloudflare Web Analytics, dominio para Plausible).",
     "proveedor": "",
     "id": ""
   },
-
   "busqueda": {
     "_ayuda": "Código de verificación de Bing Webmaster Tools (meta msvalidate.01). El de Google ya está verificado con un archivo.",
     "bing": ""
   },
-
   "suscripcion": {
     "_ayuda": "URL del formulario del servicio de correo (por ejemplo Buttondown o Mailchimp) y enlaces a canales. Vacío = el bloque muestra 'próximamente'.",
     "formulario_accion": "",
     "telegram": "",
     "whatsapp": ""
   },
-
   "contacto": {
     "correo": "",
     "correo_publicidad": ""
   },
-
   "responsable": {
     "_ayuda": "Datos de la página 'Acerca de'. Completar con datos reales. Mientras estén vacíos, la página muestra un aviso visible.",
     "nombre": "",
     "descripcion": "",
     "ciudad": "Santa Cruz de la Sierra, Bolivia",
-    "linkedin": "",
-    "_declaracion_intereses": "Texto que declara vínculos con entidades financieras (por ejemplo, si el responsable trabaja en un banco). Un sitio que compara bancos debe transparentarlo. Vacío = la página muestra un aviso para completarlo.",
-    "declaracion_intereses": ""
+    "linkedin": ""
   },
-
   "redes": {
     "x": "",
     "facebook": "",

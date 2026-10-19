@@ -27,7 +27,7 @@
     </tbody>
     <tfoot><tr class="destacada"><th scope="row">Promedio del sistema</th><td class="num">{{ D.bancos.ppp_txt }}</td><td></td><td class="num">{{ ('$us ' ~ D.bancos.monto_txt ~ ' MM') if D.bancos.monto_txt else '—' }}</td><td class="num">100%</td><td class="num">{{ D.bancos.n_txt or '—' }}</td></tr></tfoot>
   </table></div>
-  <p class="pie">† Banco con menos de 20 operaciones ese día o con menos del 0,5% del monto total: su precio puede depender de muy pocas operaciones, por eso no entra en "el que más pagó", en "menor precio" ni en "¿Dónde vender?". La regla es la misma para todos los bancos. "Vs. promedio" en verde: el banco pagó más que el promedio ese día.{% if S.responsable.declaracion_intereses %} {{ S.responsable.declaracion_intereses }}{% endif %}</p>
+  <p class="pie">† Banco PyME o que compró muy poco ese día (menos de 0,2% del total): su precio puede depender de una o dos operaciones, por eso no entra en "el que más pagó" ni en "menor precio". "Vs. promedio" en verde: el banco pagó más que el promedio ese día.</p>
 </section>
 
 {{ m.anuncio('superior', True) }}

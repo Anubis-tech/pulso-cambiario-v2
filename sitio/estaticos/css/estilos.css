@@ -78,7 +78,7 @@
 body[data-pagina="inicio"]   { --tema:#a3e05f; }
 body[data-pagina="paralelo"] { --tema:#f47a3d; }
 body[data-pagina="oficial"]  { --tema:#4f8ff7; }
-body[data-pagina="bancos"]   { --tema:#2dd4bf; }
+body[data-pagina="bancos"]   { --tema:#b18cff; }
 body[data-pagina="brecha"]   { --tema:#f472b6; }
 body[data-pagina="reservas"] { --tema:#e8b13a; }
 body[data-pagina="balanza"]  { --tema:#3cc9a0; }
@@ -328,7 +328,7 @@ a.kpi:hover{ border-color:var(--border-2); background:var(--surface-2); color:va
 .kpi-principal{ grid-area:pri; display:flex; flex-direction:column; justify-content:space-between; gap:14px; background:linear-gradient(155deg, rgba(244,122,61,.16) 0%, transparent 62%), var(--surface); border-color:rgba(244,122,61,.25); }
 .kpi-oficial{ grid-area:ofi; } .kpi-brecha{ grid-area:bre; } .kpi-bancos{ grid-area:ban; }
 .kpi-oficial .k-et::before,.kpi-brecha .k-et::before,.kpi-bancos .k-et::before{ content:""; display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:8px; vertical-align:1px; }
-.kpi-oficial .k-et::before{ background:var(--accent); } .kpi-brecha .k-et::before{ background:#f472b6; } .kpi-bancos .k-et::before{ background:#2dd4bf; }
+.kpi-oficial .k-et::before{ background:var(--accent); } .kpi-brecha .k-et::before{ background:#f472b6; } .kpi-bancos .k-et::before{ background:#b18cff; }
 .cifra-grande{ display:flex; flex-wrap:wrap; align-items:center; gap:6px 14px; margin:0; }
 .cifra-grande .et{ width:100%; font-size:14px; font-weight:500; color:var(--ink-2); }
 .cifra-grande .et::before{ content:""; display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--paralelo); margin-right:8px; vertical-align:1px; }
@@ -453,3 +453,33 @@ body[data-pagina="conversor"] .figuras .figura:first-child{ --tema:var(--paralel
 .grafico circle.fin-pend.trazo{ animation:aparecer 150ms ease-out 700ms forwards; }
 @media (prefers-reduced-motion: reduce){ .grafico path.por-trazar{ stroke-dasharray:none!important; stroke-dashoffset:0!important; } .grafico circle.fin-pend{ opacity:1!important; } }
 .app-bancos .spotlight{ background:var(--surface); border:1px solid var(--border); border-radius:var(--r-card); padding:20px 22px; }
+
+/* ---------- Publicidad: rótulo fuera del anuncio y separación de los controles ---------- */
+.ad{ margin:32px auto; padding-top:24px; }
+.ad::before{ top:5px; }
+.ad:has(ins){ border-style:solid; border-color:var(--border); }   /* con anuncio real: borde sólido y discreto */
+.ad.horizontal{ min-height:124px; }
+
+/* ---------- Nube de color animada, en el color de cada sección ---------- */
+.page-head::before,.hero-dolar::before{ content:""; position:absolute; top:0; left:-14%; width:70%; height:100%; pointer-events:none;
+  background:radial-gradient(closest-side, color-mix(in srgb, var(--tema) var(--nube), transparent), transparent 72%);
+  animation:nube 18s ease-in-out infinite alternate; will-change:transform; }
+:root{ --nube:34%; }
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --nube:22%; } }
+:root[data-theme="dark"]{ --nube:22%; }
+.page-head .wrap,.hero-dolar .wrap{ position:relative; }
+@keyframes nube{ 0%{ transform:translate3d(0,0,0) scale(1); } 50%{ transform:translate3d(10%,6%,0) scale(1.1); } 100%{ transform:translate3d(22%,-4%,0) scale(.95); } }
+
+/* ---------- Entrada escalonada (una sola vez, al cargar) ----------
+   La tarjeta del paralelo solo se desliza, sin transparencia, para que la cifra
+   principal se vea desde el primer instante. */
+@keyframes subir{ from{ opacity:0; transform:translateY(12px); } to{ opacity:1; transform:none; } }
+@keyframes deslizar{ from{ transform:translateY(12px); } to{ transform:none; } }
+.hero-saludo .sub{ animation:subir 460ms var(--curva) both; }
+.kpi-principal{ animation:deslizar 460ms var(--curva) both; }
+.kpi-oficial{ animation:subir 460ms var(--curva) 70ms both; }
+.kpi-brecha{ animation:subir 460ms var(--curva) 130ms both; }
+.kpi-bancos{ animation:subir 460ms var(--curva) 190ms both; }
+.calc-rapida{ animation:subir 460ms var(--curva) 250ms both; }
+.figuras .figura{ animation:subir 460ms var(--curva) both; }
+.figuras .figura:nth-child(2){ animation-delay:60ms; } .figuras .figura:nth-child(3){ animation-delay:120ms; } .figuras .figura:nth-child(4){ animation-delay:180ms; }

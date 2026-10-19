@@ -71,7 +71,7 @@
       <div class="podio-fila"><span class="pos">{{ loop.index }}</span><span class="nom">{{ p.nombre }}<small>pagó Bs {{ p.tasa_txt }} por dólar</small></span><span class="rec">Bs <span data-tasa="{{ p.tasa }}">{{ p.recibe_txt }}</span><small>aprox.</small></span></div>
       {% endfor %}
     </div>
-    <p class="pie">Precio promedio que pagó cada banco el {{ D.bancos.dia_txt }} (dato del BCB, el último publicado). Lo que te paguen a ti puede variar según el monto y el canal.{% if S.responsable.declaracion_intereses %} {{ S.responsable.declaracion_intereses }}{% endif %}</p>
+    <p class="pie">Precio promedio que pagó cada banco el {{ D.bancos.dia_txt }} (dato del BCB, el último publicado). Lo que te paguen a ti puede variar según el monto y el canal.</p>
   </section>
   {% endif %}
 

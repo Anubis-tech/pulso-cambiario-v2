@@ -39,7 +39,7 @@ Cada 15 min (GitHub Actions)
 
 | Campo | Qué es | Qué poner |
 |---|---|---|
-| `responsable.nombre`, `descripcion`, `declaracion_intereses` | Página "Acerca de" | Datos reales. **La declaración de intereses es importante** (DECISIONES D14) |
+| `responsable.nombre`, `descripcion` | Página "Acerca de" | Datos reales |
 | `contacto.correo`, `correo_publicidad` | Contacto | Correos reales |
 | `adsense.id_editor` | ID de AdSense (`pub-…`) | Genera `ads.txt` automáticamente |
 | `adsense.activo` | Mostrar anuncios | `true` solo cuando AdSense apruebe el sitio |
@@ -69,6 +69,6 @@ python herramientas/qa/consola.py _site http://localhost:8000 # errores de JavaS
 
 ## Licencias de terceros
 
-- Tipografías Archivo e IBM Plex: SIL Open Font License (`sitio/estaticos/fuentes/LICENCIA-*.txt`).
+- Tipografía Poppins: SIL Open Font License (`sitio/estaticos/fuentes/LICENCIA-Poppins-OFL.txt`).
 - Chart.js 4.4.1: MIT.
 - Datos: Banco Central de Bolivia y Binance P2P. Se citan en cada página.

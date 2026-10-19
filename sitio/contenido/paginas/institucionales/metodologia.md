@@ -43,7 +43,7 @@ Las consultas las ejecuta un proceso automático en GitHub Actions. Los horarios
 - El BCB publica, por entidad y por día, el precio promedio de las compras de dólares a clientes y el monto comprado.
 - **Promedio del sistema:** promedio de los precios de todos los bancos, ponderado por el monto que compró cada uno.
 - **Vs. mercado (herramienta interactiva):** diferencia entre el promedio ponderado del banco y el del mercado en los mismos días, ponderada por el monto del banco.
-- **Muestra delgada (†):** en la tabla del día, un banco con menos de 20 operaciones o con menos del 0,5% del monto total no entra en los rankings ("el que más pagó", "menor precio" y "¿Dónde vender?"). La regla es la misma para todos los bancos. En la herramienta interactiva, que mira un período, se marcan los bancos PyME o con menos de 0,2% del monto del mercado, o con datos en menos de la mitad de los días.
+- **Muestra delgada (†):** bancos PyME o con menos de 0,2% del monto del mercado, o con datos en menos de la mitad de los días del período. Su precio puede depender de muy pocas operaciones.
 - **Para comparar bancos** ("el que más pagó / el que menos pagó") se excluyen los bancos con muestra delgada.
 
 ## Brecha cambiaria
