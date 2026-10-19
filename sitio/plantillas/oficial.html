@@ -1,0 +1,30 @@
+{% extends "dato.html" %}
+{% set migas = [('/tipo-de-cambio-oficial/', 'Tipo de cambio oficial')] %}
+{% block jsonld_extra %}
+{{ m.jsonld_dataset("Tipo de cambio oficial del Banco Central de Bolivia (TCO)", "Serie diaria del tipo de cambio oficial de compra y venta del dólar estadounidense publicado por el Banco Central de Bolivia. Incluye el valor referencial publicado entre diciembre de 2025 y junio de 2026.", '/tipo-de-cambio-oficial/', '/datos/tco.json', '2024-06-14', D.tco.fecha, ['tipo de cambio oficial', 'TCO', 'Banco Central de Bolivia', 'dólar']) }}
+{% endblock %}
+{% block meta %}<span>Vigente el {{ D.tco.fecha_larga }} · el BCB publica el nuevo valor cada día hábil a las 23:30</span>{% endblock %}
+{% block figuras %}
+{{ m.figura('Oficial BCB · venta', D.tco.venta_txt, 'Bs', D.tco.d7_txt ~ ' Bs' if D.tco.d7_txt else None, D.tco.d7_dir, D.tco.d7_flecha, 'en 7 días', 'Vigente el ' ~ D.tco.fecha_corta, D.atrasado.get('tco', False), 'var(--accent)') }}
+{{ m.figura('Oficial BCB · compra', D.tco.compra_txt, 'Bs', None, 'igual', '', '', 'Un solo valor desde la RD 142/2026 (fines de sep-2026)' if D.tco.iguales else '') }}
+{{ m.figura('Cambio en 30 días', D.tco.d30_txt ~ ' Bs' if D.tco.d30_txt is defined else '—', '', (D.tco.d30_pct_txt ~ '%') if D.tco.d30_pct_txt is defined else None, D.tco.d30_dir if D.tco.d30_dir is defined else 'igual', '', '', '') }}
+{{ m.figura('Paralelo, para comparar', D.usdt.valor_txt, 'Bs', None, 'igual', '', '', 'Brecha: ' ~ D.brecha.pct_txt ~ '%', False, 'var(--paralelo)') }}
+{% endblock %}
+{% block cuerpo %}
+<section class="seccion" aria-labelledby="hist-t">
+  <div class="sec-head"><h2 id="hist-t">Evolución del tipo de cambio oficial</h2><div class="controles" id="r-oficial"></div></div>
+  <div class="card"><div class="grafico h280" id="g-oficial"><p class="sin-js">Cargando gráfico…</p></div>
+  <div class="leyenda" id="l-oficial"></div>
+  <p class="pie">Tramo sombreado (1-dic-2025 a fines de junio de 2026): el oficial legal seguía fijo en Bs 6,86 / 6,96 y el gráfico muestra el <b>valor referencial</b> que publicaba el BCB con operaciones reales de los bancos. Desde fines de junio de 2026 la línea es el tipo de cambio oficial del régimen flexible.</p></div>
+</section>
+{{ m.anuncio('superior', True) }}
+<section class="seccion" aria-labelledby="tab-t">
+  <div class="sec-head"><h2 id="tab-t">Últimos valores publicados</h2><a class="hint" href="{{ url('/datos/tco.json') }}">Descargar datos (JSON)</a></div>
+  <div class="tabla-wrap"><table class="datos">
+    <caption>Fecha de vigencia. El valor del viernes rige también sábado, domingo y lunes.</caption>
+    <thead><tr><th scope="col">Vigente el</th><th scope="col">Compra (Bs)</th><th scope="col">Venta (Bs)</th></tr></thead>
+    <tbody>{% for f in D.tco.ultimos %}<tr><th scope="row">{{ f.fecha_corta }}</th><td class="num">{{ f.compra_txt }}</td><td class="num">{{ f.venta_txt }}</td></tr>{% endfor %}</tbody>
+  </table></div>
+</section>
+{% endblock %}
+{% block compartir %}{{ m.compartir('Tipo de cambio oficial del BCB: Bs ' ~ D.tco.venta_txt ~ ', vigente el ' ~ D.tco.fecha_larga ~ '.', '/tipo-de-cambio-oficial/') }}{% endblock %}

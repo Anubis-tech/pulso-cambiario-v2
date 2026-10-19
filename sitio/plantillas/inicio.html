@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+{% block jsonld %}
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":{{ (abs_url('/') ~ '#sitio')|tojson }},"name":{{ S.nombre|tojson }},"url":{{ abs_url('/')|tojson }},"inLanguage":"es-BO","description":{{ S.lema|tojson }},"publisher":{"@id":{{ (abs_url('/') ~ '#org')|tojson }}}},{"@type":"Organization","@id":{{ (abs_url('/') ~ '#org')|tojson }},"name":{{ S.nombre|tojson }},"url":{{ abs_url('/')|tojson }},"logo":{"@type":"ImageObject","url":{{ abs_url('/icono-512.png')|tojson }},"width":512,"height":512}}]}</script>
+{{ m.jsonld_dataset("Tipo de cambio del dólar en Bolivia: oficial (BCB) y paralelo (USDT/BOB)", "Serie diaria del tipo de cambio oficial publicado por el Banco Central de Bolivia y del precio del dólar en el mercado paralelo, medido con anuncios de USDT/BOB en Binance P2P.", '/', '/datos/tco.json', '2024-06-14', D.tco.fecha, ['tipo de cambio oficial', 'dólar paralelo', 'USDT/BOB', 'Bolivia']) }}
+{{ m.jsonld_faq(M.faq) }}
+{% endblock %}
+{% block cabecera %}
+{{ m.cabecera(M, [], '') }}
+{% endblock %}
+{% block contenido %}
+<div class="wrap">
+  <section class="figuras" aria-label="Cotizaciones de hoy">
+    {{ m.figura('Dólar paralelo · USDT/BOB', D.usdt.valor_txt, 'Bs', D.usdt.d7_txt ~ ' Bs' if D.usdt.d7_txt else None, D.usdt.d7_dir, D.usdt.d7_flecha, 'en 7 días', 'Binance P2P · ' ~ D.usdt.hora ~ ' del ' ~ D.usdt.fecha_corta, D.atrasado.get('usdt', False), 'var(--paralelo)') }}
+    {{ m.figura('Oficial BCB · venta', D.tco.venta_txt, 'Bs', D.tco.d7_txt ~ ' Bs' if D.tco.d7_txt else None, D.tco.d7_dir, D.tco.d7_flecha, 'en 7 días', ('Compra = venta' if D.tco.iguales else 'Compra Bs ' ~ D.tco.compra_txt) ~ ' · vigente el ' ~ D.tco.fecha_corta, D.atrasado.get('tco', False), 'var(--accent)') }}
+    {{ m.figura('Brecha paralelo vs. oficial', D.brecha.pct_txt ~ '%', '', D.brecha.d7_txt ~ ' pts' if D.brecha.d7_txt else None, D.brecha.d7_dir, D.brecha.d7_flecha, 'en 7 días', 'Diferencia: ' ~ D.brecha.bs_txt ~ ' Bs por dólar') }}
+    {{ m.figura('Bancos · promedio de compra', D.bancos.ppp_txt, 'Bs', None, 'igual', '', '', 'Ponderado por monto · ' ~ (D.bancos.fecha_corta or '—'), D.atrasado.get('bancos', False)) }}
+  </section>
+
+  <section class="seccion" aria-labelledby="hoy-t" style="margin-top:18px">
+    <h2 id="hoy-t" class="visually-hidden">Resumen de hoy</h2>
+    <p class="nota" style="font-size:15.5px;color:var(--ink)">
+      El <a href="{{ url('/dolar-paralelo/') }}">dólar paralelo</a> cotiza a <b>Bs {{ D.usdt.valor_txt }}</b> en Binance P2P (dato de las {{ D.usdt.hora }}){% if D.usdt.d7_txt %}, {{ 'por encima' if D.usdt.d7_dir == 'sube' else ('por debajo' if D.usdt.d7_dir == 'baja' else 'igual') }}{% if D.usdt.d7_dir != 'igual' %} de hace una semana ({{ D.usdt.d7_txt }} Bs){% else %} que hace una semana{% endif %}{% endif %}.
+      El <a href="{{ url('/tipo-de-cambio-oficial/') }}">tipo de cambio oficial</a> del BCB vigente para el {{ D.tco.fecha_larga }} es <b>Bs {{ D.tco.venta_txt }}</b>, así que la <a href="{{ url('/brecha-cambiaria/') }}">brecha</a> es de <b>{{ D.brecha.pct_txt }}%</b>.
+      {% if D.bancos.mejor %}En los bancos, el {{ D.bancos.fecha_larga }} quien más pagó por dólar fue <b>{{ D.bancos.mejor.nombre }}</b> (Bs {{ D.bancos.mejor.tasa_txt }}).{% endif %}
+    </p>
+    <div class="card">
+      <div class="sec-head" style="border:0;margin:0;padding:0 0 4px">
+        <h3 style="margin:0;font-size:14px;font-family:var(--font-mono);font-weight:500;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)">Paralelo en las últimas 24 horas</h3>
+        <span class="hint">{{ D.usdt.n24 }} mediciones{% if D.usdt.min24_txt %} · mín {{ D.usdt.min24_txt }} · máx {{ D.usdt.max24_txt }}{% endif %}</span>
+      </div>
+      <div class="grafico h110" id="g-intradia"><p class="sin-js">Cargando gráfico…</p></div>
+    </div>
+  </section>
+
+  {{ m.anuncio('superior') }}
+
+  <section class="seccion" aria-labelledby="ofi-par-t">
+    <div class="sec-head"><h2 id="ofi-par-t">Oficial vs. paralelo</h2><div class="controles" id="r-principal"></div></div>
+    <div class="card">
+      <div class="grafico h280" id="g-principal"><p class="sin-js">Cargando gráfico…</p></div>
+      <div class="leyenda" id="l-principal"></div>
+      <p class="pie">Entre el 1 de diciembre de 2025 y fines de junio de 2026 la línea azul muestra el <b>valor referencial</b> que publicaba el BCB, porque el tipo de cambio oficial seguía fijo en Bs 6,96. <a href="{{ url('/tipo-de-cambio-oficial/') }}">Más detalles</a>.</p>
+    </div>
+  </section>
+
+  <section class="seccion" aria-labelledby="conv-t">
+    <div class="sec-head"><h2 id="conv-t">Convierte dólares y bolivianos</h2><a class="hint" href="{{ url('/conversor/') }}">Conversor completo →</a></div>
+    {% include "_conversor.html" %}
+  </section>
+
+  {% if D.bancos.filas %}
+  <section class="seccion" aria-labelledby="ban-t">
+    <div class="sec-head"><h2 id="ban-t">¿Cuánto pagan los bancos por tu dólar?</h2><span class="hint">{{ D.bancos.fecha_larga }}</span></div>
+    <div class="tabla-wrap">
+      <table class="datos">
+        <caption>Los 5 bancos que más pagaron, en promedio, por los dólares que compraron a sus clientes. Excluye bancos con muy pocas operaciones. Fuente: BCB.</caption>
+        <thead><tr><th scope="col">Banco</th><th scope="col">Bs por USD</th><th scope="col">Vs. promedio</th></tr></thead>
+        <tbody>
+        {% for f in D.bancos.top %}
+          <tr><th scope="row">{{ f.nombre }}</th><td class="num">{{ f.tasa_txt }}</td><td class="num {{ 'baja' if f.vs_dir == 'sube' else ('sube' if f.vs_dir == 'baja' else 'igual') }}">{{ f.vs_txt }}</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <p class="pie"><a href="{{ url('/tipo-de-cambio-bancos/') }}">Ver los {{ D.bancos.n_bancos }} bancos, montos y evolución →</a></p>
+  </section>
+  {% endif %}
+
+  <section class="seccion" aria-labelledby="mas-t">
+    <div class="sec-head"><h2 id="mas-t">Más indicadores</h2></div>
+    <div class="tarjetas">
+      <a class="tarjeta" href="{{ url('/reservas-internacionales/') }}"><span class="t-et">Reservas internacionales netas</span><span class="t-val">$us {{ D.reservas.rin_txt }} MM</span><span class="t-ctx">Al {{ D.reservas.fecha_larga }}{% if D.reservas.d12_txt %} · {{ D.reservas.d12_pct_txt }}% en 12 meses{% endif %}</span><span class="t-ir">Ver reservas →</span></a>
+      <a class="tarjeta" href="{{ url('/balanza-cambiaria/') }}"><span class="t-et">Balanza cambiaria</span><span class="t-val">{{ D.balanza.flujo_txt }} MM</span><span class="t-ctx">Flujo neto de divisas en {{ D.balanza.mes }}</span><span class="t-ir">Ver balanza →</span></a>
+      <a class="tarjeta" href="{{ url('/brecha-cambiaria/') }}"><span class="t-et">Brecha cambiaria</span><span class="t-val">{{ D.brecha.pct_txt }}%</span><span class="t-ctx">Paralelo frente al oficial, hoy</span><span class="t-ir">Ver historia de la brecha →</span></a>
+      <a class="tarjeta" href="{{ url('/tipo-de-cambio-real/') }}"><span class="t-et">Tipo de cambio real (ITCR)</span><span class="t-val">{{ D.itcr.valor_txt }}</span><span class="t-ctx">{{ D.itcr.mes|capitalize }} · base dic-2022 = 100</span><span class="t-ir">Ver índice →</span></a>
+    </div>
+  </section>
+
+  {{ m.anuncio('medio') }}
+
+  <article class="seccion prosa">
+    {{ prosa | safe }}
+  </article>
+
+  {{ m.relacionados(articulos, 'Artículos recientes') }}
+
+  {% if D.noticias['items'] %}
+  <section class="seccion" aria-labelledby="not-t">
+    <div class="sec-head"><h2 id="not-t">En la prensa</h2>{% if D.noticias.fecha_larga %}<span class="hint">{{ D.noticias.fecha_larga }}</span>{% endif %}</div>
+    <ul class="noticias">
+      {% for n in D.noticias['items'] %}
+      <li><a href="{{ n.url }}" target="_blank" rel="noopener nofollow">{{ n.titulo }}</a><span class="medio">{{ n.medio }}</span></li>
+      {% endfor %}
+    </ul>
+    <p class="pie">Titulares de medios bolivianos seleccionados automáticamente por palabras clave (Google News). Los enlaces llevan a la nota original a través de Google News.</p>
+  </section>
+  {% endif %}
+
+  {{ m.suscripcion() }}
+  {{ m.faq(M.faq) }}
+  {{ m.compartir('Dólar hoy en Bolivia: paralelo Bs ' ~ D.usdt.valor_txt ~ ', oficial Bs ' ~ D.tco.venta_txt ~ '.', '/') }}
+  {{ m.anuncio('inferior') }}
+</div>
+{% endblock %}
+{% block js %}
+<script src="{{ estatico('/js/paginas.js') }}" defer></script>
+<script src="{{ estatico('/js/conversor.js') }}" defer></script>
+{% endblock %}

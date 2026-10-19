@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+{% block cabecera %}{{ m.cabecera(M, []) }}{% endblock %}
+{% block contenido %}
+<div class="wrap">
+  <section class="seccion prosa">
+    <p>La dirección que abriste no existe o cambió. Puede que la hayas encontrado en un enlace viejo.</p>
+    <p>Mientras tanto, estas son las cotizaciones de hoy:</p>
+    <ul>
+      <li>Dólar paralelo (USDT/BOB): <b>Bs {{ D.usdt.valor_txt }}</b> · <a href="{{ url('/dolar-paralelo/') }}">ver detalle</a></li>
+      <li>Oficial del BCB: <b>Bs {{ D.tco.venta_txt }}</b> · <a href="{{ url('/tipo-de-cambio-oficial/') }}">ver detalle</a></li>
+      <li><a href="{{ url('/tipo-de-cambio-bancos/') }}">Precio del dólar por banco</a></li>
+      <li><a href="{{ url('/conversor/') }}">Conversor de dólares a bolivianos</a></li>
+    </ul>
+    <p><a class="btn primario" href="{{ url('/') }}">Ir al inicio</a></p>
+  </section>
+</div>
+{% endblock %}

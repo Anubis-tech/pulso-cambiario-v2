@@ -1,0 +1,30 @@
+{% extends "dato.html" %}
+{% set migas = [('/reservas-internacionales/', 'Reservas internacionales')] %}
+{% block jsonld_extra %}
+{{ m.jsonld_dataset("Reservas internacionales netas del Banco Central de Bolivia por componente", "Reservas internacionales netas (RIN) del BCB en millones de dólares, con su composición en oro, divisas, derechos especiales de giro y tramo de reserva en el FMI.", '/reservas-internacionales/', '/datos/reservas.json', '2016-01-01', D.reservas.fecha, ['reservas internacionales netas', 'RIN', 'oro', 'divisas', 'Banco Central de Bolivia']) }}
+{% endblock %}
+{% block meta %}<span>Último dato: {{ D.reservas.fecha_larga }} · millones de dólares</span>{% endblock %}
+{% block figuras %}
+{{ m.figura('Reservas internacionales netas', D.reservas.rin_txt, 'MM USD', (D.reservas.d12_txt ~ ' MM (' ~ D.reservas.d12_pct_txt ~ '%)') if D.reservas.d12_txt is defined else None, 'baja' if (D.reservas.d12_dir is defined and D.reservas.d12_dir == 'sube') else 'sube', '', 'en 12 meses', 'Al ' ~ D.reservas.fecha_larga, D.atrasado.get('reservas', False)) }}
+{{ m.figura('Peso del oro', D.reservas.oro_pct_txt ~ '%', '', None, 'igual', '', '', 'del total de reservas', False, 'var(--oro)') }}
+{{ m.figura('Divisas', D.reservas.divisas_txt, 'MM USD', None, 'igual', '', '', 'Dólares y otras monedas', False, 'var(--divisas)') }}
+{{ m.figura('Máximo de la serie', D.reservas.pico_txt, 'MM USD', None, 'igual', '', '', D.reservas.pico_fecha) }}
+{% endblock %}
+{% block cuerpo %}
+<section class="seccion" aria-labelledby="hist-t">
+  <div class="sec-head"><h2 id="hist-t">Evolución y composición</h2><div class="controles" id="r-reservas"></div></div>
+  <div class="card"><div class="grafico h280" id="g-reservas"><p class="sin-js">Cargando gráfico…</p></div>
+  <div class="leyenda" id="l-reservas"></div>
+  <p class="pie">Millones de dólares. Fuente: BCB, "Reservas internacionales netas por componentes" y boletín semanal. La serie mensual "netas de obligaciones" se publica con un mes de rezago y no se grafica.</p></div>
+</section>
+{{ m.anuncio('superior', True) }}
+<section class="seccion" aria-labelledby="comp-t">
+  <div class="sec-head"><h2 id="comp-t">Composición al {{ D.reservas.fecha_larga }}</h2><a class="hint" href="{{ url('/datos/reservas.json') }}">Descargar datos (JSON)</a></div>
+  <div class="tabla-wrap"><table class="datos">
+    <thead><tr><th scope="col">Componente</th><th scope="col">Millones de USD</th><th scope="col">% del total</th></tr></thead>
+    <tbody>{% for c in D.reservas.comp %}<tr><th scope="row">{{ c.nombre }}</th><td class="num">{{ c.valor_txt }}</td><td class="num">{{ c.pct_txt }}%</td></tr>{% endfor %}</tbody>
+    <tfoot><tr class="destacada"><th scope="row">Reservas internacionales netas</th><td class="num">{{ D.reservas.rin_txt }}</td><td class="num">100%</td></tr></tfoot>
+  </table></div>
+</section>
+{% endblock %}
+{% block compartir %}{{ m.compartir('Reservas internacionales del BCB: $us ' ~ D.reservas.rin_txt ~ ' millones al ' ~ D.reservas.fecha_larga ~ '.', '/reservas-internacionales/') }}{% endblock %}

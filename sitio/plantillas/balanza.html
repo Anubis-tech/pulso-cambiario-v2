@@ -1,0 +1,29 @@
+{% extends "dato.html" %}
+{% set migas = [('/balanza-cambiaria/', 'Balanza cambiaria')] %}
+{% block jsonld_extra %}
+{{ m.jsonld_dataset("Balanza cambiaria de Bolivia: ingreso y egreso de divisas", "Ingreso, egreso y flujo neto mensual de divisas del Banco Central de Bolivia, en millones de dólares.", '/balanza-cambiaria/', '/datos/balanza.json', '2010-01-31', D.balanza.fecha, ['balanza cambiaria', 'divisas', 'Banco Central de Bolivia']) }}
+{% endblock %}
+{% block meta %}<span>Último mes publicado: {{ D.balanza.mes }} · millones de dólares</span>{% endblock %}
+{% block figuras %}
+{{ m.figura('Flujo neto del mes', D.balanza.flujo_txt, 'MM USD', None, 'igual', '', '', ('Superávit' if D.balanza.superavit else 'Déficit') ~ ' en ' ~ D.balanza.mes, D.atrasado.get('balanza', False)) }}
+{{ m.figura('Ingreso de divisas', D.balanza.ingreso_txt, 'MM USD', None, 'igual', '', '', D.balanza.mes, False, 'var(--ingreso)') }}
+{{ m.figura('Egreso de divisas', D.balanza.egreso_txt, 'MM USD', None, 'igual', '', '', D.balanza.mes, False, 'var(--egreso)') }}
+{{ m.figura('Acumulado 12 meses', D.balanza.suma12_txt, 'MM USD', None, 'igual', '', '', 'Suma del flujo neto') }}
+{% endblock %}
+{% block cuerpo %}
+<section class="seccion" aria-labelledby="hist-t">
+  <div class="sec-head"><h2 id="hist-t">Últimos 24 meses</h2></div>
+  <div class="card"><div class="grafico h260" id="g-balanza"><p class="sin-js">Cargando gráfico…</p></div>
+  <div class="leyenda" id="l-balanza"></div>
+  <p class="pie">Barras hacia arriba: divisas que ingresan. Hacia abajo: divisas que salen. Millones de dólares por mes. Pasa el dedo o el cursor sobre una barra para ver el valor.</p></div>
+</section>
+{{ m.anuncio('superior', True) }}
+<section class="seccion" aria-labelledby="tab-t">
+  <div class="sec-head"><h2 id="tab-t">Últimos 12 meses</h2><a class="hint" href="{{ url('/datos/balanza.json') }}">Descargar datos (JSON)</a></div>
+  <div class="tabla-wrap"><table class="datos">
+    <thead><tr><th scope="col">Mes</th><th scope="col">Ingreso</th><th scope="col">Egreso</th><th scope="col">Flujo neto</th></tr></thead>
+    <tbody>{% for f in D.balanza.ultimos %}<tr><th scope="row">{{ f.mes }}</th><td class="num">{{ f.ingreso_txt }}</td><td class="num">{{ f.egreso_txt }}</td><td class="num {{ 'baja' if f.dir == 'sube' else 'sube' }}">{{ f.flujo_txt }}</td></tr>{% endfor %}</tbody>
+  </table></div>
+</section>
+{% endblock %}
+{% block compartir %}{{ m.compartir('Balanza cambiaria de Bolivia en ' ~ D.balanza.mes ~ ': flujo neto de ' ~ D.balanza.flujo_txt ~ ' millones de dólares.', '/balanza-cambiaria/') }}{% endblock %}

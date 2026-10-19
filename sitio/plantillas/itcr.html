@@ -1,0 +1,21 @@
+{% extends "dato.html" %}
+{% set migas = [('/tipo-de-cambio-real/', 'Tipo de cambio real')] %}
+{% block jsonld_extra %}
+{{ m.jsonld_dataset("Índice de tipo de cambio real (ITCR) multilateral de Bolivia", "Índice de tipo de cambio efectivo y real multilateral publicado por el Banco Central de Bolivia, base diciembre de 2022 = 100.", '/tipo-de-cambio-real/', '/datos/itcr.json', '2000-01-31', D.itcr.fecha, ['tipo de cambio real', 'ITCR', 'competitividad', 'Bolivia']) }}
+{% endblock %}
+{% block meta %}<span>Último mes publicado: {{ D.itcr.mes }} · base diciembre de 2022 = 100</span>{% endblock %}
+{% block figuras %}
+{{ m.figura('ITCR multilateral', D.itcr.valor_txt, '', None, 'igual', '', '', D.itcr.mes|capitalize, D.atrasado.get('itcr', False), 'var(--accent)') }}
+{{ m.figura('Frente a diciembre de 2022', D.itcr.vs_base_txt ~ '%', '', None, 'igual', '', '', 'Base del índice = 100') }}
+{% if D.itcr.d12_txt %}{{ m.figura('Variación en 12 meses', D.itcr.d12_txt ~ '%', '', None, 'igual', '', '', 'Subida = depreciación real') }}{% endif %}
+{{ m.figura('Máximo de la serie', D.itcr.max_txt, '', None, 'igual', '', '', D.itcr.max_mes) }}
+{% endblock %}
+{% block cuerpo %}
+<section class="seccion" aria-labelledby="hist-t">
+  <div class="sec-head"><h2 id="hist-t">Evolución del índice</h2><div class="controles" id="r-itcr"></div></div>
+  <div class="card"><div class="grafico h260" id="g-itcr"><p class="sin-js">Cargando gráfico…</p></div>
+  <p class="pie">Fuente: BCB, "Índices de tipo de cambio real", columna multilateral. Datos mensuales desde enero de 2000.</p></div>
+</section>
+{{ m.anuncio('superior', True) }}
+{% endblock %}
+{% block compartir %}{{ m.compartir('Índice de tipo de cambio real de Bolivia: ' ~ D.itcr.valor_txt ~ ' (' ~ D.itcr.mes ~ ').', '/tipo-de-cambio-real/') }}{% endblock %}

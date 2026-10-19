@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+{% block jsonld %}
+{{ m.jsonld_migas(migas) }}
+{% block jsonld_extra %}{% endblock %}
+{{ m.jsonld_faq(M.faq) }}
+{% endblock %}
+{% block cabecera %}
+<div class="page-head">
+  <div class="wrap">
+    <p class="crumbs"><a href="{{ url('/') }}">Inicio</a>{% for r, t in migas %}<span aria-hidden="true">›</span>{% if not loop.last %}<a href="{{ url(r) }}">{{ t }}</a>{% else %}{{ t }}{% endif %}{% endfor %}</p>
+    <h1>{{ M.h1 }}</h1>
+    {% if M.get('dek') %}<p class="dek">{{ M.dek }}</p>{% endif %}
+    <p class="meta">{% block meta %}{% endblock %}</p>
+  </div>
+</div>
+{% endblock %}
+{% block contenido %}
+<div class="wrap">
+  <section class="figuras" aria-label="Cifras principales">
+    {% block figuras %}{% endblock %}
+  </section>
+  {% block cuerpo %}{% endblock %}
+  {{ m.anuncio('medio') }}
+  <article class="seccion prosa">
+    {{ prosa | safe }}
+  </article>
+  {% block despues_prosa %}{% endblock %}
+  {{ m.faq(M.faq) }}
+  {{ m.relacionados(articulos_rel) }}
+  {{ m.suscripcion() }}
+  {% block compartir %}{% endblock %}
+  {{ m.anuncio('inferior') }}
+</div>
+{% endblock %}
+{% block js %}
+<script src="{{ estatico('/js/paginas.js') }}" defer></script>
+{% endblock %}

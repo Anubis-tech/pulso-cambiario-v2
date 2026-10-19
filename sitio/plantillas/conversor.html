@@ -1,0 +1,35 @@
+{% extends "dato.html" %}
+{% set migas = [('/conversor/', 'Conversor')] %}
+{% block jsonld_extra %}
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Conversor de dólares a bolivianos","url":{{ abs_url('/conversor/')|tojson }},"applicationCategory":"FinanceApplication","operatingSystem":"Web","inLanguage":"es-BO","offers":{"@type":"Offer","price":"0","priceCurrency":"BOB"},"publisher":{"@type":"Organization","name":{{ S.nombre|tojson }}}}</script>
+{% endblock %}
+{% block meta %}<span>Tasas del {{ D.generado.fecha_larga }}: paralelo de las {{ D.usdt.hora }}, oficial vigente el {{ D.tco.fecha_corta }}</span>{% endblock %}
+{% block figuras %}
+{{ m.figura('Paralelo USDT/BOB', D.usdt.valor_txt, 'Bs', None, 'igual', '', '', 'Binance P2P · ' ~ D.usdt.hora, D.atrasado.get('usdt', False), 'var(--paralelo)') }}
+{{ m.figura('Oficial BCB', D.tco.venta_txt, 'Bs', None, 'igual', '', '', 'Vigente el ' ~ D.tco.fecha_corta, D.atrasado.get('tco', False), 'var(--accent)') }}
+{% endblock %}
+{% block cuerpo %}
+<section class="seccion" aria-labelledby="conv-t">
+  <div class="sec-head"><h2 id="conv-t">Calcula</h2></div>
+  {% include "_conversor.html" %}
+</section>
+{{ m.anuncio('superior', True) }}
+<section class="seccion" aria-labelledby="tab-t">
+  <div class="sec-head"><h2 id="tab-t">Tabla rápida: dólares a bolivianos</h2><span class="hint">{{ D.generado.fecha_larga }}</span></div>
+  <div class="tabla-wrap"><table class="datos">
+    <thead><tr><th scope="col">Dólares</th><th scope="col">Al paralelo (Bs)</th><th scope="col">Al oficial (Bs)</th></tr></thead>
+    <tbody>{% for usd in [1, 10, 20, 50, 100, 200, 500, 1000, 5000] %}<tr><th scope="row">$us {{ usd|num(0) }}</th><td class="num">{{ (usd * D.usdt.valor)|num }}</td><td class="num">{{ (usd * D.tco.venta)|num }}</td></tr>{% endfor %}</tbody>
+  </table></div>
+</section>
+<section class="seccion" aria-labelledby="tab2-t">
+  <div class="sec-head"><h2 id="tab2-t">Tabla rápida: bolivianos a dólares</h2></div>
+  <div class="tabla-wrap"><table class="datos">
+    <thead><tr><th scope="col">Bolivianos</th><th scope="col">Al paralelo (USD)</th><th scope="col">Al oficial (USD)</th></tr></thead>
+    <tbody>{% for bs in [100, 500, 1000, 2000, 5000, 10000, 50000] %}<tr><th scope="row">Bs {{ bs|num(0) }}</th><td class="num">{{ (bs / D.usdt.valor)|num }}</td><td class="num">{{ (bs / D.tco.venta)|num }}</td></tr>{% endfor %}</tbody>
+  </table></div>
+</section>
+{% endblock %}
+{% block compartir %}{{ m.compartir('Conversor de dólares a bolivianos con el tipo de cambio de hoy.', '/conversor/') }}{% endblock %}
+{% block js %}
+<script src="{{ estatico('/js/conversor.js') }}" defer></script>
+{% endblock %}

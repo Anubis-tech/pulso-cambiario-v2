@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+{% block jsonld %}{{ m.jsonld_migas([('/articulos/', 'Artículos')]) }}{% endblock %}
+{% block cabecera %}{{ m.cabecera(M, [('/articulos/', 'Artículos')]) }}{% endblock %}
+{% block contenido %}
+<div class="wrap">
+  <section class="seccion">
+    <div class="tarjetas">
+      {% for a in lista %}
+      <a class="tarjeta" href="{{ url(a.ruta) }}">
+        <span class="t-et">{{ a.fecha_txt }} · {{ a.minutos }} min de lectura</span>
+        <span class="t-val" style="font-size:20px;line-height:1.25;display:block">{{ a.h1 }}</span>
+        <span class="t-ctx">{{ a.resumen }}</span>
+        <span class="t-ir">Leer →</span>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+  {{ m.anuncio('medio') }}
+  {{ m.suscripcion() }}
+</div>
+{% endblock %}

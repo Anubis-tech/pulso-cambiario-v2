@@ -1,0 +1,33 @@
+{% extends "dato.html" %}
+{% set migas = [('/dolar-paralelo/', 'Dólar paralelo')] %}
+{% block jsonld_extra %}
+{{ m.jsonld_dataset("Dólar paralelo en Bolivia (USDT/BOB, Binance P2P)", "Precio del dólar en el mercado paralelo boliviano, medido como la mediana de los 10 primeros anuncios de venta de USDT por bolivianos en Binance P2P, varias veces al día.", '/dolar-paralelo/', '/datos/usdt.json', '2023-09-21', D.usdt.fecha, ['dólar paralelo', 'USDT/BOB', 'Binance P2P', 'Bolivia'], 'Binance P2P', 'https://p2p.binance.com/') }}
+{% endblock %}
+{% block meta %}<span><span class="live-dot" aria-hidden="true"></span>Última medición: {{ D.usdt.hora }} del {{ D.usdt.fecha_larga }} (hora de Bolivia)</span>{% endblock %}
+{% block figuras %}
+{{ m.figura('Dólar paralelo · USDT/BOB', D.usdt.valor_txt, 'Bs', D.usdt.d7_txt ~ ' Bs' if D.usdt.d7_txt else None, D.usdt.d7_dir, D.usdt.d7_flecha, 'en 7 días', 'Binance P2P · mediana de 10 anuncios', D.atrasado.get('usdt', False), 'var(--paralelo)') }}
+{{ m.figura('Rango de las últimas 24 horas', (D.usdt.min24_txt ~ ' – ' ~ D.usdt.max24_txt) if D.usdt.min24_txt else '—', 'Bs', None, 'igual', '', '', D.usdt.n24 ~ ' mediciones') }}
+{{ m.figura('Cambio en 30 días', D.usdt.d30_txt ~ ' Bs' if D.usdt.d30_txt is defined else '—', '', (D.usdt.d30_pct_txt ~ '%') if D.usdt.d30_pct_txt is defined else None, D.usdt.d30_dir if D.usdt.d30_dir is defined else 'igual', '', '', '') }}
+{{ m.figura('Oficial BCB, para comparar', D.tco.venta_txt, 'Bs', None, 'igual', '', '', 'Brecha: ' ~ D.brecha.pct_txt ~ '%', False, 'var(--accent)') }}
+{% endblock %}
+{% block cuerpo %}
+<section class="seccion" aria-labelledby="intra-t">
+  <div class="sec-head"><h2 id="intra-t">Movimiento reciente</h2><div class="controles" id="r-intradia"></div></div>
+  <div class="card"><div class="grafico h220" id="g-intradia"><p class="sin-js">Cargando gráfico…</p></div>
+  <p class="pie">Cada punto es una medición exitosa. Se intenta medir cada 15 minutos, pero puede haber huecos de varias horas (ver la metodología). Hora de Bolivia.</p></div>
+</section>
+{{ m.anuncio('superior', True) }}
+<section class="seccion" aria-labelledby="hist-t">
+  <div class="sec-head"><h2 id="hist-t">Histórico diario</h2><div class="controles" id="r-paralelo"></div></div>
+  <div class="card"><div class="grafico h260" id="g-paralelo"><p class="sin-js">Cargando gráfico…</p></div>
+  <p class="pie">Último valor de cada día. Datos desde septiembre de 2023.</p></div>
+</section>
+<section class="seccion" aria-labelledby="tab-t">
+  <div class="sec-head"><h2 id="tab-t">Últimos 10 días</h2><a class="hint" href="{{ url('/datos/usdt.json') }}">Descargar datos (JSON)</a></div>
+  <div class="tabla-wrap"><table class="datos">
+    <thead><tr><th scope="col">Fecha</th><th scope="col">USDT/BOB (Bs)</th></tr></thead>
+    <tbody>{% for f in D.usdt.ultimos %}<tr><th scope="row">{{ f.fecha_corta }}</th><td class="num">{{ f.valor_txt }}</td></tr>{% endfor %}</tbody>
+  </table></div>
+</section>
+{% endblock %}
+{% block compartir %}{{ m.compartir('Dólar paralelo en Bolivia: Bs ' ~ D.usdt.valor_txt ~ ' (USDT/BOB, ' ~ D.usdt.hora ~ ').', '/dolar-paralelo/') }}{% endblock %}

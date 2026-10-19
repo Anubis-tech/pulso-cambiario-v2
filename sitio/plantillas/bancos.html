@@ -1,0 +1,110 @@
+{% extends "dato.html" %}
+{% set migas = [('/tipo-de-cambio-bancos/', 'Tipo de cambio por banco')] %}
+{% block css %}<link rel="stylesheet" href="{{ estatico('/css/bancos.css') }}">{% endblock %}
+{% block jsonld_extra %}
+{{ m.jsonld_dataset("Compras de dólares por banco en Bolivia: precio y monto", "Precio promedio ponderado y monto de las compras diarias de dólares de cada banco del sistema financiero boliviano, según la publicación del Banco Central de Bolivia.", '/tipo-de-cambio-bancos/', '/datos/bancos.json', '2025-06-26', D.bancos.fecha, ['tipo de cambio por banco', 'compra de dólares', 'bancos de Bolivia', 'precio promedio ponderado']) }}
+{% endblock %}
+{% block meta %}<span>Datos del {{ D.bancos.fecha_larga }} · fuente: Banco Central de Bolivia</span>{% endblock %}
+{% block figuras %}
+{{ m.figura('Promedio ponderado del sistema', D.bancos.ppp_txt, 'Bs', None, 'igual', '', '', 'Por dólar, ' ~ D.bancos.fecha_corta, D.atrasado.get('bancos', False), 'var(--ingreso)') }}
+{% if D.bancos.mejor %}{{ m.figura('Banco que más pagó', D.bancos.mejor.tasa_txt, 'Bs', None, 'igual', '', '', D.bancos.mejor.nombre) }}{% endif %}
+{% if D.bancos.peor %}{{ m.figura('Banco que menos pagó', D.bancos.peor.tasa_txt, 'Bs', None, 'igual', '', '', D.bancos.peor.nombre) }}{% endif %}
+{{ m.figura('Monto comprado en el día', ('$us ' ~ D.bancos.monto_txt ~ ' MM') if D.bancos.monto_txt else '—', '', None, 'igual', '', '', (D.bancos.n_txt ~ ' operaciones') if D.bancos.n_txt else '') }}
+{% endblock %}
+{% block cuerpo %}
+<section class="seccion" aria-labelledby="tabla-t">
+  <div class="sec-head"><h2 id="tabla-t">Precio por banco, {{ D.bancos.fecha_larga }}</h2><a class="hint" href="{{ url('/datos/bancos.json') }}">Descargar datos (JSON)</a></div>
+  <div class="tabla-wrap"><table class="datos">
+    <caption>Precio promedio al que cada banco compró dólares a sus clientes ese día, ordenado de mayor a menor. Si vendes dólares, te conviene el banco que paga más.</caption>
+    <thead><tr><th scope="col">Banco</th><th scope="col">Bs por USD</th><th scope="col">Vs. promedio</th><th scope="col">Monto (USD)</th><th scope="col">Participación</th><th scope="col">Operaciones</th></tr></thead>
+    <tbody>
+    {% for f in D.bancos.filas %}
+      <tr><th scope="row">{{ f.nombre }}{% if f.pequeno %} <span title="Banco PyME o de poca participación: su precio se basa en pocas operaciones">†</span>{% endif %}</th>
+      <td class="num">{{ f.tasa_txt }}</td>
+      <td class="num {{ 'baja' if f.vs_dir == 'sube' else ('sube' if f.vs_dir == 'baja' else 'igual') }}">{{ f.vs_txt }}</td>
+      <td class="num">{{ f.monto_txt }}</td><td class="num">{{ f.part_txt }}{% if f.part_txt != '—' %}%{% endif %}</td><td class="num">{{ f.n_txt }}</td></tr>
+    {% endfor %}
+    </tbody>
+    <tfoot><tr class="destacada"><th scope="row">Promedio del sistema</th><td class="num">{{ D.bancos.ppp_txt }}</td><td></td><td class="num">{{ ('$us ' ~ D.bancos.monto_txt ~ ' MM') if D.bancos.monto_txt else '—' }}</td><td class="num">100%</td><td class="num">{{ D.bancos.n_txt or '—' }}</td></tr></tfoot>
+  </table></div>
+  <p class="pie">† Banco PyME o con muy pocas operaciones: su precio puede moverse mucho con una sola operación grande. "Vs. promedio" en verde: el banco pagó más que el promedio del sistema ese día.</p>
+</section>
+
+{{ m.anuncio('superior', True) }}
+
+<div class="app-bancos" id="app-bancos">
+  <div class="sec-head" style="margin-top:28px"><h2>Compara bancos en el tiempo</h2><span class="hint" id="asof"></span></div>
+  <div class="spotlight" id="spotlight">
+    <p class="spotlight-headline" id="spHead">Cargando la herramienta interactiva…</p>
+    <div class="spotlight-grid">
+      <div class="spotlight-figure"><div class="s-label">Monto comprado</div><div class="s-row"><div class="s-value" id="spMonto">—</div></div><div class="s-context" id="spMontoCtx"></div></div>
+      <div class="spotlight-figure"><div class="s-label">Precio promedio ponderado</div><div class="s-row"><div class="s-value" id="spPpp">—</div><div id="spPppChip"></div></div><div class="s-context" id="spPppCtx"></div></div>
+      <div class="spotlight-figure"><div class="s-label" id="spHLLbl">Banco que pagó más y que pagó menos</div><div id="spHL"></div><div class="s-context" id="spHLCtx"></div></div>
+    </div>
+  </div>
+  <div class="filters">
+    <div class="filters-inner">
+      <div class="frow">
+        <span class="flabel">Período</span>
+        <div class="controls" id="quick" role="group" aria-label="Período">
+          <button type="button" class="pill" data-range="sem" aria-pressed="false">Semana</button>
+          <button type="button" class="pill" data-range="15d" aria-pressed="false">15 días</button>
+          <button type="button" class="pill" data-range="30d" aria-pressed="false">1 mes</button>
+          <button type="button" class="pill" data-range="mes" aria-pressed="false">Mes en curso</button>
+          <button type="button" class="pill" data-range="ant" aria-pressed="false">Mes anterior</button>
+        </div>
+        <div class="fgroup" hidden><label for="fFrom" class="hint">Desde</label><input type="date" id="fFrom"><label for="fTo" class="hint">hasta</label><input type="date" id="fTo"></div>
+        <div class="controls" id="gran" role="group" aria-label="Agrupar por" hidden>
+          <button type="button" class="pill active" data-gran="dia" aria-pressed="true">Día</button>
+          <button type="button" class="pill" data-gran="semana" aria-pressed="false">Semana</button>
+          <button type="button" class="pill" data-gran="mes" aria-pressed="false">Mes</button>
+        </div>
+      </div>
+      <div class="frow">
+        <span class="flabel">Bancos</span>
+        <div class="grow">
+          <div class="bank-row" id="chips"></div>
+          <div class="fmeta"><button type="button" class="linkbtn" data-pick="top3">Los 3 que más compraron</button><span id="chipHint"></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <section aria-labelledby="b1">
+    <div class="sec-head"><h2 id="b1">Precio promedio ponderado por día</h2><span class="hint" id="hintRange1"></span></div>
+    <p class="context-note">Bs por USD. La línea del sistema financiero siempre aparece. Cada banco que elijas suma su propia línea, hasta 3.</p>
+    <div class="card"><div class="chart-wrap"><canvas id="cLine" role="img" aria-label="Precio promedio ponderado por día"></canvas><div class="empty" id="eLine"></div></div><div class="legend" id="legLine"></div></div>
+    <div class="kpis" id="kpiRow"></div>
+  </section>
+  <section aria-labelledby="b2">
+    <div class="sec-head"><h2 id="b2">Monto comprado por día</h2><span class="hint">USD, todo el sistema</span></div>
+    <p class="context-note">Tienen color los bancos que elegiste y los 3 que más compraron en el período. El resto va como "Otros".</p>
+    <div class="card"><div class="chart-wrap"><canvas id="cBar" role="img" aria-label="Monto comprado por día"></canvas><div class="empty" id="eBar"></div></div><div class="legend" id="legBar"></div></div>
+  </section>
+  <section aria-labelledby="b3">
+    <div class="sec-head"><h2 id="b3">Volumen y precio frente al mercado</h2><span class="hint">Todos los bancos del período</span></div>
+    <div class="card">
+      <p class="context-note" style="margin-bottom:12px">Más arriba: el banco pagó más que el promedio del mercado esos mismos días (verde). Más abajo: pagó menos (rojo). El tamaño es el número de operaciones.</p>
+      <div class="chart-wrap tall"><canvas id="cBub" role="img" aria-label="Monto comprado contra diferencia con el mercado, por banco"></canvas><div class="empty" id="eBub"></div></div>
+    </div>
+  </section>
+  <section aria-labelledby="b4">
+    <div class="sec-head"><h2 id="b4">Detalle por banco</h2><span class="hint">Toca un encabezado para ordenar</span></div>
+    <div class="card"><div class="tablewrap"><table id="tbl"></table></div></div>
+    <details class="metodo">
+      <summary>Cómo se calcula</summary>
+      <ul>
+        <li><b>Precio promedio ponderado (PPP)</b> = Σ(precio × monto) ÷ Σ monto. Un día en que el banco compró USD 26 millones pesa más que uno en que compró USD 1.000.</li>
+        <li><b>Vs. mercado</b> = PPP del banco menos el PPP de todos los bancos en los mismos días, ponderado por el monto del banco. Así se compara a los bancos sin que influya en qué días operó cada uno.</li>
+        <li><b>Períodos:</b> se cuentan desde el último dato disponible, no desde hoy.</li>
+        <li>Diciembre de 2025 tiene precio pero no monto, así que queda fuera de los cálculos ponderados. Las transacciones existen desde <span id="nFrom"></span>, con huecos.</li>
+        <li>† Banco PyME o de poca relevancia, o con muestra delgada en el período (menos de 0,2% del monto del mercado o datos en menos de la mitad de los días).</li>
+      </ul>
+    </details>
+  </section>
+</div>
+{% endblock %}
+{% block compartir %}{{ m.compartir('Tipo de cambio por banco en Bolivia: promedio Bs ' ~ D.bancos.ppp_txt ~ ' (' ~ (D.bancos.fecha_corta or '') ~ ').', '/tipo-de-cambio-bancos/') }}{% endblock %}
+{% block js %}
+<script src="{{ estatico('/js/chart-4.4.1.umd.min.js') }}" defer></script>
+<script src="{{ estatico('/js/bancos.js') }}" defer></script>
+{% endblock %}

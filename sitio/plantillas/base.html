@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="es-BO" data-base="{{ base }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="{{ csp }}">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>{{ M.titulo }}</title>
+<meta name="description" content="{{ M.descripcion }}">
+{% if not indexable %}
+<meta name="robots" content="noindex, nofollow">
+{% elif M.noindex is defined and M.noindex %}
+<meta name="robots" content="noindex, follow">
+{% else %}
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+{% endif %}
+<link rel="canonical" href="{{ canonical }}">
+<meta name="theme-color" content="#0a0a0a">
+<link rel="icon" href="{{ url('/favicon.svg') }}" type="image/svg+xml">
+<link rel="apple-touch-icon" href="{{ url('/apple-touch-icon.png') }}">
+<link rel="manifest" href="{{ url('/manifest.webmanifest') }}">
+<link rel="preload" href="{{ url('/fuentes/archivo-latin-800-normal.woff2') }}" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{{ url('/fuentes/ibm-plex-sans-latin-400-normal.woff2') }}" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="{{ estatico('/css/estilos.css') }}">
+{% block css %}{% endblock %}
+<meta property="og:type" content="{{ 'article' if M.tipo_og is defined and M.tipo_og == 'article' else 'website' }}">
+<meta property="og:site_name" content="{{ S.nombre }}">
+<meta property="og:locale" content="es_BO">
+<meta property="og:title" content="{{ M.og_titulo if M.og_titulo is defined else M.titulo }}">
+<meta property="og:description" content="{{ M.descripcion }}">
+<meta property="og:url" content="{{ canonical }}">
+<meta property="og:image" content="{{ abs_url(M.og) }}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{{ M.h1 if M.h1 is defined else M.titulo }}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ M.og_titulo if M.og_titulo is defined else M.titulo }}">
+<meta name="twitter:description" content="{{ M.descripcion }}">
+<meta name="twitter:image" content="{{ abs_url(M.og) }}">
+{% if produccion and S.busqueda.bing %}<meta name="msvalidate.01" content="{{ S.busqueda.bing }}">{% endif %}
+{% block jsonld %}{% endblock %}
+{% if analitica %}
+{% if analitica.proveedor == 'ga4' %}
+<script async src="https://www.googletagmanager.com/gtag/js?id={{ analitica.id }}"></script>
+<script src="{{ estatico('/js/analitica.js') }}" data-ga4="{{ analitica.id }}"></script>
+{% elif analitica.proveedor == 'cloudflare' %}
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "{{ analitica.id }}"}'></script>
+{% elif analitica.proveedor == 'plausible' %}
+<script defer data-domain="{{ analitica.id }}" src="https://plausible.io/js/script.js"></script>
+{% endif %}
+{% endif %}
+{% if anuncios_activos %}
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-{{ S.adsense.id_editor }}" crossorigin="anonymous"></script>
+{% endif %}
+</head>
+<body data-pagina="{{ clave if clave is defined else 'otra' }}" data-asof="{{ D.generado.fecha }}">
+<a class="skip" href="#contenido">Saltar al contenido</a>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="{{ url('/') }}" aria-label="{{ S.nombre }}, inicio">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" fill="#0a0a0a"/><path d="M4 18h6l3-9 4 15 3-10h8" fill="none" stroke="#2a78d6" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/></svg>
+      {{ S.nombre }}
+    </a>
+    <nav class="nav" aria-label="Secciones">
+      {% set nav = [('/', 'Dólar hoy'), ('/dolar-paralelo/', 'Paralelo'), ('/tipo-de-cambio-oficial/', 'Oficial'), ('/tipo-de-cambio-bancos/', 'Bancos'), ('/conversor/', 'Conversor'), ('/brecha-cambiaria/', 'Brecha'), ('/reservas-internacionales/', 'Reservas'), ('/articulos/', 'Artículos')] %}
+      {% for r, t in nav %}<a href="{{ url(r) }}"{% if ruta == r or (r == '/articulos/' and ruta.startswith('/articulos/')) %} aria-current="page"{% endif %}>{{ t }}</a>{% endfor %}
+    </nav>
+  </div>
+</header>
+{% if not produccion %}
+<div class="aviso" style="margin:0;border-left:0;border-right:0;text-align:center;font-size:13px;padding:6px 12px">Versión de prueba (2.0). Esta página no aparece en Google. El sitio oficial sigue siendo <a href="https://elpulsoeconomico.com/">elpulsoeconomico.com</a>.</div>
+{% endif %}
+{% block cabecera %}{% endblock %}
+<main id="contenido">
+{% block contenido %}{% endblock %}
+</main>
+<footer class="sitefoot">
+  <div class="wrap">
+    <div class="foot-cols">
+      <nav aria-label="Datos">
+        <h2>Datos</h2>
+        <ul>
+          <li><a href="{{ url('/') }}">Dólar hoy en Bolivia</a></li>
+          <li><a href="{{ url('/dolar-paralelo/') }}">Dólar paralelo</a></li>
+          <li><a href="{{ url('/tipo-de-cambio-oficial/') }}">Tipo de cambio oficial</a></li>
+          <li><a href="{{ url('/tipo-de-cambio-bancos/') }}">Tipo de cambio por banco</a></li>
+          <li><a href="{{ url('/brecha-cambiaria/') }}">Brecha cambiaria</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="Más datos">
+        <h2>Economía</h2>
+        <ul>
+          <li><a href="{{ url('/reservas-internacionales/') }}">Reservas internacionales</a></li>
+          <li><a href="{{ url('/balanza-cambiaria/') }}">Balanza cambiaria</a></li>
+          <li><a href="{{ url('/tipo-de-cambio-real/') }}">Tipo de cambio real</a></li>
+          <li><a href="{{ url('/conversor/') }}">Conversor USD ↔ Bs</a></li>
+          <li><a href="{{ url('/articulos/') }}">Artículos</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="El sitio">
+        <h2>El sitio</h2>
+        <ul>
+          <li><a href="{{ url('/acerca/') }}">Acerca de</a></li>
+          <li><a href="{{ url('/metodologia/') }}">Metodología y fuentes</a></li>
+          <li><a href="{{ url('/preguntas-frecuentes/') }}">Preguntas frecuentes</a></li>
+          <li><a href="{{ url('/alertas/') }}">Recibir la cotización</a></li>
+          <li><a href="{{ url('/widget/') }}">Widget para tu sitio</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="Legal">
+        <h2>Legal y contacto</h2>
+        <ul>
+          <li><a href="{{ url('/contacto/') }}">Contacto</a></li>
+          <li><a href="{{ url('/anunciate/') }}">Anúnciate</a></li>
+          <li><a href="{{ url('/privacidad/') }}">Política de privacidad</a></li>
+          <li><a href="{{ url('/terminos/') }}">Términos y aviso legal</a></li>
+        </ul>
+      </nav>
+    </div>
+    <p class="foot-legal"><b>Aviso:</b> la información de {{ S.nombre }} es referencial, se obtiene de fuentes públicas (Banco Central de Bolivia y Binance P2P) y puede contener demoras o errores. No es asesoría financiera ni una oferta de compra o venta de divisas. {{ S.nombre }} no es una entidad financiera ni una casa de cambio. © {{ anio }} {{ S.nombre }}.</p>
+  </div>
+</footer>
+<script src="{{ estatico('/js/comun.js') }}" defer></script>
+{% block js %}{% endblock %}
+{% if anuncios_activos %}<script src="{{ estatico('/js/anuncios.js') }}" defer></script>{% endif %}
+</body>
+</html>

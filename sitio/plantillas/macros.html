@@ -1,0 +1,117 @@
+{# ---------- Encabezado de página con migas de pan ---------- #}
+{% macro cabecera(M, migas, meta_html='') %}
+<div class="page-head">
+  <div class="wrap">
+    {% if migas %}
+    <p class="crumbs"><a href="{{ url('/') }}">Inicio</a>{% for r, t in migas %}<span aria-hidden="true">›</span>{% if not loop.last %}<a href="{{ url(r) }}">{{ t }}</a>{% else %}{{ t }}{% endif %}{% endfor %}</p>
+    {% endif %}
+    <h1>{{ M.h1 }}</h1>
+    {% if M.get('dek') %}<p class="dek">{{ M.dek }}</p>{% endif %}
+    {% if meta_html %}<p class="meta">{{ meta_html }}</p>{% endif %}
+  </div>
+</div>
+{% endmacro %}
+
+{# ---------- JSON-LD de migas de pan ---------- #}
+{% macro jsonld_migas(migas) %}
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":{{ abs_url('/')|tojson }}}{% for r, t in migas %},{"@type":"ListItem","position":{{ loop.index + 1 }},"name":{{ t|tojson }},"item":{{ abs_url(r)|tojson }}}{% endfor %}]}</script>
+{% endmacro %}
+
+{# ---------- JSON-LD de un conjunto de datos (Dataset) ---------- #}
+{% macro jsonld_dataset(nombre, descripcion, ruta, archivo, desde, hasta, variables, fuente_nombre='Banco Central de Bolivia', fuente_url='https://www.bcb.gob.bo/') %}
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Dataset","name":{{ nombre|tojson }},"description":{{ descripcion|tojson }},"url":{{ abs_url(ruta)|tojson }},"inLanguage":"es-BO","isAccessibleForFree":true,"keywords":{{ variables|tojson }},"temporalCoverage":{{ (desde ~ '/' ~ hasta)|tojson }},"spatialCoverage":{"@type":"Place","name":"Bolivia"},"variableMeasured":{{ variables|tojson }},"dateModified":{{ D.generado.iso|tojson }},"creator":{"@type":"Organization","name":{{ S.nombre|tojson }},"url":{{ abs_url('/')|tojson }}},"isBasedOn":{"@type":"CreativeWork","name":{{ fuente_nombre|tojson }},"url":{{ fuente_url|tojson }}},"distribution":[{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":{{ abs_url(archivo)|tojson }}}]}</script>
+{% endmacro %}
+
+{# ---------- JSON-LD de preguntas frecuentes ---------- #}
+{% macro jsonld_faq(preguntas) %}
+{% if preguntas %}
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{% for q in preguntas %}{"@type":"Question","name":{{ q.p|tojson }},"acceptedAnswer":{"@type":"Answer","text":{{ q.r_texto|tojson }}}}{% if not loop.last %},{% endif %}{% endfor %}]}</script>
+{% endif %}
+{% endmacro %}
+
+{# ---------- Cifra principal ---------- #}
+{% macro figura(etiqueta, valor, unidad='', delta=None, delta_dir='igual', delta_flecha='', delta_ctx='', ctx='', atrasado=False, color=None, ancha=False) %}
+<div class="figura{% if ancha %} ancha{% endif %}">
+  <p class="f-label">{% if color %}<span class="sw" style="background:{{ color }}"></span>{% endif %}{{ etiqueta }}</p>
+  <p class="f-valor">{{ valor }}{% if unidad %}<small>{{ unidad }}</small>{% endif %}</p>
+  {% if delta %}<p class="f-delta {{ delta_dir }}">{{ delta_flecha }} {{ delta }} {{ delta_ctx }}</p>{% endif %}
+  {% if ctx %}<p class="f-ctx">{{ ctx }}</p>{% endif %}
+  {% if atrasado %}<span class="atrasado">Dato atrasado: la fuente no respondió en las últimas horas</span>{% endif %}
+</div>
+{% endmacro %}
+
+{# ---------- Espacio publicitario ---------- #}
+{% macro anuncio(posicion, horizontal=False) %}
+{% if anuncios_activos %}
+<div class="ad{% if horizontal %} horizontal{% endif %}" aria-label="Publicidad">
+  <ins class="adsbygoogle" data-ad-client="ca-{{ S.adsense.id_editor }}"{% if S.adsense.slots[posicion] %} data-ad-slot="{{ S.adsense.slots[posicion] }}"{% endif %} data-ad-format="auto" data-full-width-responsive="true"></ins>
+</div>
+{% elif not produccion %}
+<div class="ad{% if horizontal %} horizontal{% endif %}" aria-hidden="true"><div class="ad-marcador">Espacio publicitario · {{ posicion }}</div></div>
+{% endif %}
+{% endmacro %}
+
+{# ---------- Botones para compartir ---------- #}
+{% macro compartir(texto, ruta) %}
+{% set enlace = abs_url(ruta) %}
+<div class="compartir">
+  <span class="et">Compartir</span>
+  <a class="btn whatsapp" href="https://wa.me/?text={{ (texto ~ ' ' ~ enlace) | urlencode }}" target="_blank" rel="noopener">WhatsApp</a>
+  <a class="btn" href="https://t.me/share/url?url={{ enlace | urlencode }}&amp;text={{ texto | urlencode }}" target="_blank" rel="noopener">Telegram</a>
+  <a class="btn" href="https://x.com/intent/post?text={{ texto | urlencode }}&amp;url={{ enlace | urlencode }}" target="_blank" rel="noopener">X</a>
+  <button type="button" class="btn" data-copiar="{{ enlace }}">Copiar enlace</button>
+</div>
+{% endmacro %}
+
+{# ---------- Preguntas frecuentes ---------- #}
+{% macro faq(preguntas, titulo='Preguntas frecuentes') %}
+{% if preguntas %}
+<section class="seccion faq" aria-labelledby="faq-t">
+  <div class="sec-head"><h2 id="faq-t">{{ titulo }}</h2></div>
+  {% for q in preguntas %}
+  <details{% if loop.first %} open{% endif %}>
+    <summary>{{ q.p }}</summary>
+    <div class="resp">{{ q.r_html | safe }}</div>
+  </details>
+  {% endfor %}
+</section>
+{% endif %}
+{% endmacro %}
+
+{# ---------- Artículos relacionados ---------- #}
+{% macro relacionados(lista, titulo='Para entender mejor') %}
+{% if lista %}
+<section class="seccion" aria-labelledby="rel-t">
+  <div class="sec-head"><h2 id="rel-t">{{ titulo }}</h2></div>
+  <div class="tarjetas">
+    {% for a in lista %}
+    <a class="tarjeta" href="{{ url(a.ruta) }}">
+      <span class="t-et">Artículo · {{ a.minutos }} min</span>
+      <span class="t-val" style="font-size:19px;line-height:1.25;display:block">{{ a.h1 }}</span>
+      <span class="t-ctx">{{ a.resumen }}</span>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+{% endmacro %}
+
+{# ---------- Bloque de suscripción ---------- #}
+{% macro suscripcion() %}
+<section class="seccion suscripcion" aria-labelledby="sus-t">
+  <h2 id="sus-t">Recibe el dólar del día</h2>
+  <p class="nota" style="margin:0">Un mensaje por día con el oficial, el paralelo y la brecha. Gratis y sin publicidad intrusiva.</p>
+  {% if S.suscripcion.formulario_accion %}
+  <form action="{{ S.suscripcion.formulario_accion }}" method="post" target="_blank">
+    <label class="visually-hidden" for="sus-correo">Tu correo</label>
+    <input type="email" id="sus-correo" name="email" required placeholder="tu@correo.com" autocomplete="email">
+    <button class="btn primario" type="submit">Suscribirme</button>
+  </form>
+  {% endif %}
+  <p style="margin:0;display:flex;gap:8px;flex-wrap:wrap">
+    {% if S.suscripcion.telegram %}<a class="btn" href="{{ S.suscripcion.telegram }}" rel="noopener" target="_blank">Canal de Telegram</a>{% endif %}
+    {% if S.suscripcion.whatsapp %}<a class="btn whatsapp" href="{{ S.suscripcion.whatsapp }}" rel="noopener" target="_blank">Canal de WhatsApp</a>{% endif %}
+    {% if not (S.suscripcion.formulario_accion or S.suscripcion.telegram or S.suscripcion.whatsapp) %}<span class="pie" style="margin:0">Próximamente: alerta diaria por correo, Telegram y WhatsApp. <a href="{{ url('/alertas/') }}">Más información</a>.</span>{% endif %}
+  </p>
+</section>
+{% endmacro %}

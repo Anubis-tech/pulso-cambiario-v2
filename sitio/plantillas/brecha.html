@@ -1,0 +1,28 @@
+{% extends "dato.html" %}
+{% set migas = [('/brecha-cambiaria/', 'Brecha cambiaria')] %}
+{% block jsonld_extra %}
+{{ m.jsonld_dataset("Brecha cambiaria en Bolivia: dólar paralelo frente al oficial", "Diferencia porcentual diaria entre el precio del dólar paralelo (USDT/BOB en Binance P2P) y el tipo de cambio oficial de venta del Banco Central de Bolivia.", '/brecha-cambiaria/', '/datos/brecha.json', '2024-06-14', D.usdt.fecha, ['brecha cambiaria', 'dólar paralelo', 'tipo de cambio oficial', 'Bolivia']) }}
+{% endblock %}
+{% block meta %}<span>Paralelo de las {{ D.usdt.hora }} frente al oficial vigente el {{ D.tco.fecha_corta }}</span>{% endblock %}
+{% block figuras %}
+{{ m.figura('Brecha hoy', D.brecha.pct_txt ~ '%', '', D.brecha.d7_txt ~ ' pts' if D.brecha.d7_txt else None, D.brecha.d7_dir, D.brecha.d7_flecha, 'en 7 días', 'Diferencia: ' ~ D.brecha.bs_txt ~ ' Bs por dólar', False, 'var(--paralelo)') }}
+{{ m.figura('Paralelo USDT/BOB', D.usdt.valor_txt, 'Bs', None, 'igual', '', '', 'Binance P2P · ' ~ D.usdt.hora) }}
+{{ m.figura('Oficial BCB · venta', D.tco.venta_txt, 'Bs', None, 'igual', '', '', 'Vigente el ' ~ D.tco.fecha_corta) }}
+{% if D.brecha.max_txt %}{{ m.figura('Brecha máxima registrada', D.brecha.max_txt ~ '%', '', None, 'igual', '', '', D.brecha.max_fecha) }}{% endif %}
+{% endblock %}
+{% block cuerpo %}
+<section class="seccion" aria-labelledby="hist-t">
+  <div class="sec-head"><h2 id="hist-t">Evolución de la brecha</h2><div class="controles" id="r-brecha"></div></div>
+  <div class="card"><div class="grafico h260" id="g-brecha"><p class="sin-js">Cargando gráfico…</p></div>
+  <p class="pie">Brecha = (paralelo − oficial de venta) ÷ oficial de venta. En el tramo sombreado (1-dic-2025 a fines de junio de 2026) se compara contra el valor referencial del BCB, no contra el oficial fijo de Bs 6,96.</p></div>
+</section>
+{{ m.anuncio('superior', True) }}
+<section class="seccion" aria-labelledby="tab-t">
+  <div class="sec-head"><h2 id="tab-t">Brecha promedio por mes</h2><a class="hint" href="{{ url('/datos/brecha.json') }}">Descargar datos (JSON)</a></div>
+  <div class="tabla-wrap"><table class="datos">
+    <thead><tr><th scope="col">Mes</th><th scope="col">Brecha promedio</th></tr></thead>
+    <tbody>{% for f in D.brecha.meses %}<tr><th scope="row">{{ f.mes }}</th><td class="num">{{ f.pct_txt }}%</td></tr>{% endfor %}</tbody>
+  </table></div>
+</section>
+{% endblock %}
+{% block compartir %}{{ m.compartir('Brecha cambiaria en Bolivia: ' ~ D.brecha.pct_txt ~ '% (paralelo Bs ' ~ D.usdt.valor_txt ~ ' vs. oficial Bs ' ~ D.tco.venta_txt ~ ').', '/brecha-cambiaria/') }}{% endblock %}

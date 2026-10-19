@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="es-BO">
+<head>
+<meta charset="utf-8">
+<title>{{ M.titulo }}</title>
+<meta name="robots" content="noindex, follow">
+<link rel="canonical" href="{{ abs_url(M.destino) }}">
+<meta http-equiv="refresh" content="0; url={{ url(M.destino) }}">
+</head>
+<body>
+<p>Esta página se mudó a <a href="{{ url(M.destino) }}">{{ abs_url(M.destino) }}</a>.</p>
+</body>
+</html>

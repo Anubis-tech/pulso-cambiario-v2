@@ -1,0 +1,21 @@
+<form class="conversor card" id="conversor" novalidate>
+  <div class="conv-fila">
+    <div class="campo">
+      <label for="conv-monto">Monto en <span id="conv-unidad">Dólares (USD)</span></label>
+      <input id="conv-monto" name="monto" inputmode="decimal" autocomplete="off" value="100">
+    </div>
+    <div class="campo">
+      <label for="conv-dir">Convertir</label>
+      <select id="conv-dir" name="de">
+        <option value="usd-bob">Dólares → Bolivianos</option>
+        <option value="bob-usd">Bolivianos → Dólares</option>
+      </select>
+    </div>
+  </div>
+  <div class="conv-res" aria-live="polite">
+    <div data-tasa="{{ D.usdt.valor }}"><div class="r-et">Al paralelo (USDT/BOB)</div><div class="r-val">—</div><div class="r-tasa">Tasa Bs {{ D.usdt.valor_txt }} · {{ D.usdt.hora }}</div></div>
+    <div data-tasa="{{ D.tco.venta }}"><div class="r-et">Al oficial del BCB</div><div class="r-val">—</div><div class="r-tasa">Tasa Bs {{ D.tco.venta_txt }} · {{ D.tco.fecha_corta }}</div></div>
+    {% if D.bancos.ppp %}<div data-tasa="{{ D.bancos.ppp }}"><div class="r-et">Bancos · precio de compra</div><div class="r-val">—</div><div class="r-tasa">Tasa Bs {{ D.bancos.ppp_txt }} · {{ D.bancos.fecha_corta }}</div></div>{% endif %}
+  </div>
+  <p class="pie" style="margin:0">Cálculo referencial. "Bancos · precio de compra" es lo que pagaron en promedio los bancos al comprar dólares a sus clientes: sirve si vas a <b>vender</b> dólares; si vas a comprarlos en un banco, el precio de venta suele ser más alto. El monto que recibas en una casa de cambio, un banco o una plataforma puede variar por comisiones, montos mínimos y el momento de la operación.</p>
+</form>

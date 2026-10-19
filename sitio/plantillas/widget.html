@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+{% set migas = [(ruta, 'Widget')] %}
+{% block jsonld %}{{ m.jsonld_migas(migas) }}{% endblock %}
+{% block cabecera %}{{ m.cabecera(M, migas) }}{% endblock %}
+{% block contenido %}
+<div class="wrap">
+  <article class="seccion prosa">
+    {{ prosa | safe }}
+  </article>
+  <section class="seccion" aria-labelledby="prev-t">
+    <div class="sec-head"><h2 id="prev-t">Así se ve</h2></div>
+    <div class="embed-box">
+      <div class="e-fila"><span class="e-et">Dólar paralelo</span><span class="e-val">Bs {{ D.usdt.valor_txt }}</span></div>
+      <div class="e-fila"><span class="e-et">Oficial BCB</span><span class="e-val">Bs {{ D.tco.venta_txt }}</span></div>
+      <p class="e-pie">Actualizado {{ D.usdt.hora }} · {{ D.usdt.fecha_corta }} · Fuente: <a href="{{ abs_url('/') }}">{{ S.nombre }}</a></p>
+    </div>
+  </section>
+  <section class="seccion" aria-labelledby="cod-t">
+    <div class="sec-head"><h2 id="cod-t">Código para copiar</h2></div>
+    {% set codigo = '<iframe src="' ~ abs_url('/embed/cotizacion/') ~ '" title="Cotización del dólar en Bolivia" width="100%" height="170" style="border:0;max-width:420px" loading="lazy"></iframe>\n<p style="font-size:12px;margin:4px 0 0">Datos: <a href="' ~ abs_url('/') ~ '">' ~ S.nombre ~ ', dólar hoy en Bolivia</a></p>' %}
+    <label class="visually-hidden" for="codigo-widget">Código del widget</label>
+    <textarea class="codigo" id="codigo-widget" readonly>{{ codigo }}</textarea>
+    <p><button type="button" class="btn primario" data-copiar="{{ codigo }}">Copiar código</button></p>
+    <p class="pie">El widget se actualiza solo. Pedimos mantener el enlace de la segunda línea: es la forma en que el widget se mantiene gratuito.</p>
+  </section>
+</div>
+{% endblock %}
