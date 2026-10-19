@@ -73,7 +73,11 @@ SEARCH_QUERY = (
     '("tipo de cambio" OR dolar OR dólar OR BCB OR "banco central" OR '
     'reservas OR FMI OR "banco mundial" OR "deuda externa" OR subvencion OR '
     'subvención OR subsidio OR divisas OR USDT OR cambiario OR devaluacion OR '
-    'devaluación)'
+    'devaluación) '
+    # v2: solo notas de los últimos 7 días. Sin este operador, Google News
+    # ordena por relevancia y devolvía notas de hace meses (por ejemplo, con
+    # cotizaciones que ya no rigen).
+    'when:7d'
 )
 RSS_URL = (
     "https://news.google.com/rss/search?q=" + quote(SEARCH_QUERY) +
@@ -81,6 +85,7 @@ RSS_URL = (
 )
 OUT_PATH = "noticias.json"
 MAX_ITEMS = 5
+MAX_EDAD_DIAS = 7  # v2: se descarta cualquier nota más vieja que esto
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
@@ -262,6 +267,12 @@ def main():
 
         if not title_raw or not link:
             continue
+        # v2: sin fecha o demasiado vieja, no se publica.
+        if pub_date is None:
+            continue
+        pub_utc = pub_date if pub_date.tzinfo else pub_date.replace(tzinfo=timezone.utc)
+        if (datetime.now(timezone.utc) - pub_utc).days > MAX_EDAD_DIAS:
+            continue
 
         title = clean_title(title_raw, source_name)
         if not matches_keywords(title):
@@ -285,7 +296,8 @@ def main():
             "source": source_name or "Google News",
             "url": link,
             "image": image,
-            "_pub_date": pub_date or datetime.min,
+            "published": pub_utc.strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "_pub_date": pub_utc,
         })
 
     candidates.sort(key=lambda c: c["_pub_date"], reverse=True)

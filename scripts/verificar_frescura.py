@@ -60,8 +60,11 @@ def ultimo_dato(data, noticias):
     bancos = [s[-1]["date"] for s in (data.get("banks") or {}).values() if s]
     if bancos:
         res["bancos"] = fecha(max(bancos))
-    if noticias and noticias.get("updated"):
-        res["noticias"] = fecha(noticias["updated"])
+    publicadas = [i["published"] for i in (noticias or {}).get("items", []) if i.get("published")]
+    if publicadas:
+        # La frescura se mide por la nota más reciente, no por la fecha en que
+        # corrió el script (la v1 marcaba "hoy" aunque las notas fueran viejas).
+        res["noticias"] = datetime.strptime(max(publicadas), "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
     return res
 
 
