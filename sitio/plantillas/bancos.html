@@ -12,23 +12,7 @@
 {{ m.figura('Monto comprado en el día', ('$us ' ~ D.bancos.monto_txt ~ ' MM') if D.bancos.monto_txt else '—', '', None, 'igual', '', '', (D.bancos.n_txt ~ ' operaciones') if D.bancos.n_txt else '') }}
 {% endblock %}
 {% block cuerpo %}
-<section class="seccion" aria-labelledby="tabla-t">
-  <div class="sec-head"><h2 id="tabla-t">Precio por banco, {{ D.bancos.fecha_larga }}</h2><a class="hint" href="{{ url('/datos/bancos.json') }}">Descargar datos (JSON)</a></div>
-  <div class="tabla-wrap"><table class="datos">
-    <caption>Precio promedio al que cada banco compró dólares a sus clientes ese día, ordenado de mayor a menor. Si vendes dólares, te conviene el banco que paga más.</caption>
-    <thead><tr><th scope="col">Banco</th><th scope="col">Bs por USD</th><th scope="col">Vs. promedio</th><th scope="col">Monto (USD)</th><th scope="col">Participación</th><th scope="col">Operaciones</th></tr></thead>
-    <tbody>
-    {% for f in D.bancos.filas %}
-      <tr><th scope="row">{{ f.nombre }}{% if f.motivo %} <span title="{{ f.motivo|capitalize }}: su precio puede depender de muy pocas operaciones">†</span><small style="display:block;font-weight:400;color:var(--muted)">{{ f.motivo|capitalize }}</small>{% endif %}</th>
-      <td class="num">{{ f.tasa_txt }}</td>
-      <td class="num {{ 'baja' if f.vs_dir == 'sube' else ('sube' if f.vs_dir == 'baja' else 'igual') }}">{{ f.vs_txt }}</td>
-      <td class="num">{{ f.monto_txt }}</td><td class="num">{{ f.part_txt }}{% if f.part_txt != '—' %}%{% endif %}</td><td class="num">{{ f.n_txt }}</td></tr>
-    {% endfor %}
-    </tbody>
-    <tfoot><tr class="destacada"><th scope="row">Promedio del sistema</th><td class="num">{{ D.bancos.ppp_txt }}</td><td></td><td class="num">{{ ('$us ' ~ D.bancos.monto_txt ~ ' MM') if D.bancos.monto_txt else '—' }}</td><td class="num">100%</td><td class="num">{{ D.bancos.n_txt or '—' }}</td></tr></tfoot>
-  </table></div>
-  <p class="pie">† Banco PyME o que compró muy poco ese día (menos de 0,2% del total): su precio puede depender de una o dos operaciones, por eso no entra en "el que más pagó" ni en "menor precio". "Vs. promedio" en verde: el banco pagó más que el promedio ese día.</p>
-</section>
+
 
 {{ m.anuncio('superior', True) }}
 
@@ -88,8 +72,32 @@
     </div>
   </section>
   <section aria-labelledby="b4">
-    <div class="sec-head"><h2 id="b4">Detalle por banco</h2><span class="hint">Toca un encabezado para ordenar</span></div>
-    <div class="card"><div class="tablewrap"><table id="tbl"></table></div></div>
+    <div class="sec-head"><h2 id="b4">Detalle por banco</h2><a class="hint" href="{{ url('/datos/bancos.json') }}">Descargar datos (JSON)</a></div>
+    <div class="card detalle">
+      <div class="controls det-tabs" role="group" aria-label="Qué detalle ver">
+        <button type="button" class="pill active" data-det="dia" aria-pressed="true">Último día ({{ D.bancos.fecha_corta }})</button>
+        <button type="button" class="pill" data-det="periodo" aria-pressed="false">Período elegido arriba</button>
+      </div>
+      <div class="det-panel" data-panel="dia">
+        <div class="tablewrap"><table class="datos">
+    <thead><tr><th scope="col">Banco</th><th scope="col">Bs por USD</th><th scope="col">Vs. promedio</th><th scope="col">Monto (USD)</th><th scope="col">Participación</th><th scope="col">Operaciones</th></tr></thead>
+    <tbody>
+    {% for f in D.bancos.filas %}
+      <tr><th scope="row">{{ f.nombre }}{% if f.motivo %} <span title="{{ f.motivo|capitalize }}: su precio puede depender de muy pocas operaciones">†</span>{% endif %}</th>
+      <td class="num">{{ f.tasa_txt }}</td>
+      <td class="num {{ 'baja' if f.vs_dir == 'sube' else ('sube' if f.vs_dir == 'baja' else 'igual') }}">{{ f.vs_txt }}</td>
+      <td class="num">{{ f.monto_txt }}</td><td class="num">{{ f.part_txt }}{% if f.part_txt != '—' %}%{% endif %}</td><td class="num">{{ f.n_txt }}</td></tr>
+    {% endfor %}
+    </tbody>
+    <tfoot><tr class="destacada"><th scope="row">Promedio del sistema</th><td class="num">{{ D.bancos.ppp_txt }}</td><td></td><td class="num">{{ ('$us ' ~ D.bancos.monto_txt ~ ' MM') if D.bancos.monto_txt else '—' }}</td><td class="num">100%</td><td class="num">{{ D.bancos.n_txt or '—' }}</td></tr></tfoot>
+  </table></div>
+        <p class="pie">† Banco PyME o que compró muy poco ese día (menos de 0,2% del total): su precio puede depender de una o dos operaciones, por eso no entra en "el que más pagó" ni en "menor precio". "Vs. promedio" en verde: el banco pagó más que el promedio ese día.</p>
+      </div>
+      <div class="det-panel" data-panel="periodo" hidden>
+        <p class="pie" style="margin:0 0 10px">Toca un encabezado para ordenar.</p>
+        <div class="tablewrap"><table id="tbl"></table></div>
+      </div>
+    </div>
     <details class="metodo">
       <summary>Cómo se calcula</summary>
       <ul>
@@ -105,5 +113,6 @@
 {% endblock %}
 {% block compartir %}{{ m.compartir('Tipo de cambio por banco en Bolivia: promedio Bs ' ~ D.bancos.ppp_txt ~ ' (' ~ (D.bancos.fecha_corta or '') ~ ').', '/tipo-de-cambio-bancos/') }}{% endblock %}
 {% block js %}
+<script src="{{ estatico('/js/detalle-bancos.js') }}" defer></script>
 <script src="{{ estatico('/js/cargar-bancos.js') }}" data-chart="{{ estatico('/js/chart-4.4.1.umd.min.js') }}" data-app="{{ estatico('/js/bancos.js') }}" defer></script>
 {% endblock %}

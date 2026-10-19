@@ -483,3 +483,12 @@ body[data-pagina="conversor"] .figuras .figura:first-child{ --tema:var(--paralel
 .calc-rapida{ animation:subir 460ms var(--curva) 250ms both; }
 .figuras .figura{ animation:subir 460ms var(--curva) both; }
 .figuras .figura:nth-child(2){ animation-delay:60ms; } .figuras .figura:nth-child(3){ animation-delay:120ms; } .figuras .figura:nth-child(4){ animation-delay:180ms; }
+
+/* Cuadro "Detalle por banco": tabla del último día dentro de la misma tarjeta */
+.detalle .det-tabs{ display:flex; gap:8px; flex-wrap:wrap; margin:0 0 14px; }
+.detalle table.datos{ font-size:14px; }
+.detalle table.datos caption{ caption-side:top; padding:0 0 10px; }
+.detalle .pie{ margin-top:10px; }
+.detalle table.datos th,.detalle table.datos td{ padding:9px 10px; }
+.detalle table.datos tfoot td,.detalle table.datos tfoot th{ border-top:1px solid var(--border-2); }
+@media (max-width:560px){ .detalle table.datos th:nth-child(4),.detalle table.datos td:nth-child(4),.detalle table.datos th:nth-child(5),.detalle table.datos td:nth-child(5){ display:none; } .detalle table.datos{ font-size:13.5px; } .detalle table.datos th,.detalle table.datos td{ padding:8px 6px; } }
