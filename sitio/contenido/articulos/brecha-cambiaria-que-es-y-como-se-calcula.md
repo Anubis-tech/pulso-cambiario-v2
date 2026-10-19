@@ -1,7 +1,7 @@
 ---
 h1: "Brecha cambiaria: qué es, cómo se calcula y qué pasó en Bolivia"
 titulo_corto: "Brecha cambiaria: qué es y cómo se calcula"
-titulo: "Brecha cambiaria en Bolivia: qué es, cómo se calcula y su historia | Pulso Económico"
+titulo: "Brecha cambiaria: qué es y cómo se calcula | Pulso Económico"
 descripcion: "Qué es la brecha cambiaria, la fórmula para calcularla con un ejemplo, qué indica una brecha alta y cómo pasó en Bolivia de más de 160% en 2025 a casi cero en 2026."
 resumen: "La fórmula, un ejemplo con números y la historia de una brecha que pasó de 160% a casi cero."
 fecha: 2026-10-18

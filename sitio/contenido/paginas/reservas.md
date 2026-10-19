@@ -1,5 +1,5 @@
 ---
-titulo: "Reservas internacionales de Bolivia hoy: $us {{ D.reservas.rin_txt }} millones | Pulso Económico"
+titulo: "Reservas del BCB hoy: $us {{ D.reservas.rin_txt }} millones | Pulso Económico"
 og_titulo: "Reservas internacionales del BCB"
 descripcion: "Reservas internacionales netas del BCB al {{ D.reservas.fecha_larga }}: {{ D.reservas.rin_txt }} millones de dólares. Composición en oro y divisas, evolución desde 2016 y qué significan."
 h1: "Reservas internacionales del BCB"

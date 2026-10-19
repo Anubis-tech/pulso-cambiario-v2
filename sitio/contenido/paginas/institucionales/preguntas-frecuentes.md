@@ -1,7 +1,7 @@
 ---
 slug: preguntas-frecuentes
 titulo: "Preguntas frecuentes sobre el dólar en Bolivia | Pulso Económico"
-descripcion: "Respuestas claras a las preguntas más comunes sobre el dólar en Bolivia: oficial, paralelo, bancos, brecha, horarios del BCB y cómo usar los datos de Pulso Económico."
+descripcion: "Respuestas claras sobre el dólar en Bolivia: oficial, paralelo, bancos, brecha, horarios del BCB y cómo usar los datos de Pulso Económico."
 h1: "Preguntas frecuentes"
 dek: "Lo que más nos preguntan sobre el dólar en Bolivia y sobre este sitio."
 titulo_corto: "Preguntas frecuentes"

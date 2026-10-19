@@ -1,7 +1,7 @@
 ---
 titulo: "Índice de tipo de cambio real de Bolivia (ITCR) | Pulso Económico"
 og_titulo: "Tipo de cambio real de Bolivia (ITCR)"
-descripcion: "Índice de tipo de cambio real multilateral de Bolivia en {{ D.itcr.mes }}: {{ D.itcr.valor_txt }} (base diciembre de 2022 = 100). Qué mide, cómo se interpreta y su evolución desde 2000."
+descripcion: "Índice de tipo de cambio real de Bolivia en {{ D.itcr.mes }}: {{ D.itcr.valor_txt }} (base dic-2022 = 100). Qué mide, cómo leerlo y su evolución desde 2000."
 h1: "Índice de tipo de cambio real (ITCR)"
 dek: "Una medida de cuán caros o baratos son los precios de Bolivia frente a los de sus socios comerciales, ajustada por inflación."
 faq:

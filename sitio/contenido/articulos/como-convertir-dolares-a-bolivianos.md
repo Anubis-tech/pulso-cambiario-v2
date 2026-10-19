@@ -1,8 +1,8 @@
 ---
 h1: "Cómo convertir dólares a bolivianos (y qué tipo de cambio usar)"
 titulo_corto: "Cómo convertir dólares a bolivianos"
-titulo: "Cómo convertir dólares a bolivianos: fórmula, ejemplos y qué tipo de cambio usar | Pulso Económico"
-descripcion: "La fórmula para convertir dólares a bolivianos y bolivianos a dólares, ejemplos con el tipo de cambio de hoy y una guía para saber si usar el oficial, el paralelo o el de tu banco."
+titulo: "Cómo convertir dólares a bolivianos | Pulso Económico"
+descripcion: "La fórmula para convertir dólares a bolivianos y al revés, ejemplos con el cambio de hoy y cuándo usar el oficial, el paralelo o el de tu banco."
 resumen: "La fórmula, ejemplos con el cambio de hoy y una guía para elegir entre el oficial, el paralelo y el de tu banco."
 fecha: 2026-10-18
 actualizado: 2026-10-18

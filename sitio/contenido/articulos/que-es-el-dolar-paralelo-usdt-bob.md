@@ -1,7 +1,7 @@
 ---
 h1: "Dólar paralelo en Bolivia: qué es el USDT/BOB y cómo leer su precio"
 titulo_corto: "Qué es el dólar paralelo (USDT/BOB)"
-titulo: "Qué es el dólar paralelo en Bolivia y por qué se mide con USDT | Pulso Económico"
+titulo: "Qué es el dólar paralelo (USDT/BOB) | Pulso Económico"
 descripcion: "Por qué el precio del USDT en Binance P2P se convirtió en la referencia del dólar paralelo en Bolivia, cómo se calcula, qué tan confiable es y qué no te dice."
 resumen: "Por qué una criptomoneda terminó marcando el precio del dólar paralelo, y qué tan confiable es como referencia."
 fecha: 2026-10-18

@@ -1,8 +1,8 @@
 ---
 h1: "Reservas internacionales del BCB: qué son, de qué están hechas y por qué importan"
 titulo_corto: "Reservas internacionales: qué son"
-titulo: "Reservas internacionales de Bolivia: qué son y por qué importan | Pulso Económico"
-descripcion: "Qué son las reservas internacionales netas del Banco Central de Bolivia, sus componentes (oro, divisas, DEG), cómo evolucionaron desde 2016 y por qué hoy dependen tanto del precio del oro."
+titulo: "Reservas internacionales de Bolivia: qué son | Pulso Económico"
+descripcion: "Qué son las reservas internacionales netas del BCB, sus componentes (oro, divisas, DEG), cómo cayeron desde 2016 y por qué dependen del precio del oro."
 resumen: "Oro, divisas y DEG: qué hay en las reservas del BCB y por qué hoy dependen tanto del precio del oro."
 fecha: 2026-10-18
 actualizado: 2026-10-18

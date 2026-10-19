@@ -1,7 +1,7 @@
 ---
-titulo: "Tipo de cambio por banco en Bolivia: cuánto paga cada banco por el dólar | Pulso Económico"
+titulo: "Tipo de cambio por banco en Bolivia hoy | Pulso Económico"
 og_titulo: "Tipo de cambio por banco en Bolivia"
-descripcion: "Precio al que cada banco de Bolivia compró dólares el {{ D.bancos.fecha_larga }}: promedio del sistema Bs {{ D.bancos.ppp_txt }}{% if D.bancos.mejor %}; el que más pagó, {{ D.bancos.mejor.nombre }} (Bs {{ D.bancos.mejor.tasa_txt }}){% endif %}. Montos y evolución."
+descripcion: "Cuánto pagó cada banco por el dólar el {{ D.bancos.fecha_larga }}: promedio del sistema Bs {{ D.bancos.ppp_txt }}. Montos, comparación y evolución por banco."
 h1: "Tipo de cambio por banco en Bolivia"
 dek: "Cuánto pagó cada banco por los dólares que compró a sus clientes, cuánto compró y cómo se compara con el resto del sistema. Datos del Banco Central de Bolivia."
 faq:

@@ -1,5 +1,5 @@
 ---
-titulo: "Brecha cambiaria en Bolivia hoy: {{ D.brecha.pct_txt }}% (paralelo vs. oficial) | Pulso Económico"
+titulo: "Brecha cambiaria en Bolivia hoy: {{ D.brecha.pct_txt }}% | Pulso Económico"
 og_titulo: "Brecha cambiaria en Bolivia"
 descripcion: "La brecha entre el dólar paralelo (Bs {{ D.usdt.valor_txt }}) y el oficial del BCB (Bs {{ D.tco.venta_txt }}) es de {{ D.brecha.pct_txt }}%. Historia de la brecha desde 2024 y promedio mensual."
 h1: "Brecha cambiaria en Bolivia"

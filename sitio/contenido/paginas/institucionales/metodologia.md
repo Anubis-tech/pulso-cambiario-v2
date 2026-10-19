@@ -1,7 +1,7 @@
 ---
 slug: metodologia
 titulo: "Metodología y fuentes de datos | Pulso Económico"
-descripcion: "De dónde salen los datos de Pulso Económico, cada cuánto se actualizan, cómo se calculan el dólar paralelo, la brecha y el promedio de los bancos, y cuáles son sus límites."
+descripcion: "De dónde salen los datos de Pulso Económico, cada cuánto se actualizan, cómo se calculan el paralelo, la brecha y el promedio de bancos, y sus límites."
 h1: "Metodología y fuentes"
 dek: "Cómo se obtiene, se controla y se calcula cada cifra del sitio, y qué no se puede concluir de ella."
 titulo_corto: "Metodología"

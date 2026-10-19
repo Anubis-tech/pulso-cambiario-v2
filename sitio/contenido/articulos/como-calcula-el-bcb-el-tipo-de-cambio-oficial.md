@@ -1,8 +1,8 @@
 ---
 h1: "Cómo calcula el BCB el tipo de cambio oficial desde 2026"
 titulo_corto: "Cómo se calcula el tipo de cambio oficial"
-titulo: "Cómo calcula el BCB el tipo de cambio oficial (RD 142/2026), explicado | Pulso Económico"
-descripcion: "Del 6,96 fijo al régimen flexible: qué operaciones usa el Banco Central de Bolivia para calcular el tipo de cambio oficial, qué es la mediana ponderada, a qué hora se publica y qué cambió con la RD 142/2026."
+titulo: "Cómo calcula el BCB el tipo de cambio oficial | Pulso Económico"
+descripcion: "Del 6,96 fijo al régimen flexible: qué operaciones usa el BCB para el tipo de cambio oficial, qué es la mediana ponderada y qué cambió con la RD 142/2026."
 resumen: "Qué operaciones entran, qué es la mediana ponderada por monto y por qué el oficial ahora cambia todos los días."
 fecha: 2026-10-18
 actualizado: 2026-10-18

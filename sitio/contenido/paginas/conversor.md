@@ -1,5 +1,5 @@
 ---
-titulo: "Convertir dólares a bolivianos hoy (y bolivianos a dólares) | Pulso Económico"
+titulo: "Convertir dólares a bolivianos hoy | Pulso Económico"
 og_titulo: "Conversor de dólares a bolivianos"
 descripcion: "Conversor de dólares a bolivianos con el tipo de cambio de hoy: paralelo Bs {{ D.usdt.valor_txt }}, oficial Bs {{ D.tco.venta_txt }} y promedio de los bancos. Tablas rápidas de 1 a 5.000 dólares."
 h1: "Convertir dólares a bolivianos"
