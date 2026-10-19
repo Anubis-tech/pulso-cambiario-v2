@@ -269,3 +269,57 @@ textarea.codigo{ width:100%; min-height:110px; font-family:var(--font-mono); fon
 
 @media (prefers-reduced-motion: reduce){ *{ animation:none!important; transition:none!important; } }
 @media print{ .topbar,.ad,.compartir,.sitefoot,.controles{ display:none!important; } .page-head{ background:none; color:#000; } }
+
+/* =========================================================================
+   Portada v2.1: una sola cifra protagonista, lenguaje de bolsillo
+   ========================================================================= */
+.hero-dolar{ background:var(--head-bg); color:var(--head-ink); border-bottom:4px solid var(--paralelo); }
+.hero-dolar .wrap{ padding-top:16px; padding-bottom:18px; }
+.hero-dolar h1{ font-family:var(--font-mono); font-weight:500; font-size:12.5px; text-transform:uppercase; letter-spacing:.07em; color:#e3a900; margin:0 0 6px; }
+.hero-dolar .titular{ font-family:var(--font-display); font-weight:800; font-size:clamp(19px,4.6vw,26px); line-height:1.2; margin:0 0 12px; text-wrap:balance; }
+.cifra-grande{ display:flex; flex-wrap:wrap; align-items:baseline; gap:4px 14px; margin:0; }
+.cifra-grande .et{ width:100%; font-family:var(--font-mono); font-size:12px; text-transform:uppercase; letter-spacing:.05em; color:var(--head-muted); }
+.cifra-grande .v{ font-family:var(--font-display); font-weight:800; font-size:clamp(58px,17vw,104px); line-height:.95; letter-spacing:-.02em; font-variant-numeric:tabular-nums; }
+.cifra-grande .v small{ font-size:.42em; color:var(--head-muted); margin-right:6px; letter-spacing:0; }
+.cifra-grande .d{ font-weight:600; font-size:16px; }
+.hero-dolar .d.sube{ color:#ff8f87; } .hero-dolar .d.baja{ color:#5fd37a; } .hero-dolar .d.igual{ color:var(--head-muted); }
+.oficial-linea{ margin:10px 0 0; font-size:16px; color:var(--head-ink); }
+.oficial-linea b{ font-family:var(--font-display); font-size:22px; }
+.oficial-linea span{ color:var(--head-muted); font-size:14px; }
+.hero-dolar .sub{ margin:8px 0 0; color:var(--head-muted); font-size:14.5px; max-width:60ch; }
+.hero-dolar .hora{ font-family:var(--font-mono); font-size:12px; color:var(--head-muted); margin:10px 0 0; }
+.calc-rapida{ margin:14px 0 0; background:#1b1b1b; border:1px solid #333; padding:10px 12px; display:flex; flex-wrap:wrap; align-items:center; gap:6px 10px; font-size:16px; }
+.calc-rapida label{ color:var(--head-muted); }
+.calc-rapida input{ font:inherit; font-family:var(--font-mono); font-size:20px; width:7.5ch; padding:6px 8px; border:1px solid #555; background:#000; color:#fff; min-height:44px; }
+.calc-rapida .res{ display:flex; flex-wrap:wrap; gap:4px 14px; width:100%; }
+.calc-rapida .res b{ font-family:var(--font-display); font-size:22px; color:#fff; }
+.calc-rapida .res > span{ color:var(--head-muted); font-size:14px; }
+.calc-rapida .res b span{ color:inherit; font-size:inherit; }
+.chips{ display:flex; gap:8px; overflow-x:auto; padding:12px 0 2px; margin:0 -16px; padding-left:16px; padding-right:16px; scrollbar-width:none; }
+.chips::-webkit-scrollbar{ display:none; }
+.chip{ flex:none; border:1px solid var(--border); background:var(--surface); padding:8px 12px; font-size:14px; color:var(--ink); text-decoration:none; white-space:nowrap; }
+.chip b{ font-family:var(--font-mono); }
+.chip:hover{ border-color:var(--ink-2); }
+.destacado{ border-left:4px solid var(--accent); background:var(--surface-2); padding:12px 14px; margin:16px 0 0; font-size:15.5px; }
+.destacado b.cifra{ font-family:var(--font-display); font-size:22px; }
+.destacado.manana{ border-left-color:#e3a900; }
+.podio{ display:grid; gap:0; border:1px solid var(--border); }
+.podio-fila{ display:grid; grid-template-columns:28px 1fr auto; gap:4px 10px; align-items:baseline; padding:12px 14px; border-bottom:1px solid var(--border); }
+.podio-fila:last-child{ border-bottom:0; }
+.podio-fila .pos{ font-family:var(--font-display); font-weight:800; font-size:20px; color:var(--muted); }
+.podio-fila .nom{ font-weight:600; }
+.podio-fila .nom small{ display:block; font-weight:400; color:var(--muted); font-size:13px; }
+.podio-fila .rec{ text-align:right; font-family:var(--font-display); font-weight:800; font-size:22px; font-variant-numeric:tabular-nums; }
+.podio-fila .rec small{ font-family:var(--font-ui); font-weight:400; font-size:12px; color:var(--muted); display:block; }
+.monto-linea{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; font-size:16px; margin:0 0 10px; }
+.monto-linea input{ font:inherit; font-family:var(--font-mono); font-size:19px; width:8ch; padding:6px 8px; border:1px solid var(--rule); background:var(--surface); color:var(--ink); min-height:44px; }
+.compartir-grande{ background:var(--head-bg); color:var(--head-ink); padding:18px 16px; display:grid; gap:12px; grid-template-columns:auto 1fr; align-items:center; }
+.compartir-grande img{ width:108px; height:auto; border:1px solid #333; }
+.compartir-grande h2{ font-family:var(--font-display); font-size:20px; margin:0 0 4px; }
+.compartir-grande p{ margin:0 0 10px; color:var(--head-muted); font-size:14px; }
+.compartir-grande .btn{ border-color:#444; }
+.compartir-grande .acciones{ display:flex; gap:8px; flex-wrap:wrap; }
+@media (max-width:420px){ .compartir-grande{ grid-template-columns:1fr; } .compartir-grande img{ width:150px; } }
+details.leer-mas{ border-top:1px solid var(--border); padding-top:10px; }
+details.leer-mas > summary{ cursor:pointer; font-family:var(--font-display); font-weight:800; font-size:19px; }
+.ultima[hidden]{ display:none; }

@@ -5,7 +5,7 @@
 {% endblock %}
 {% block meta %}<span>Vigente el {{ D.tco.fecha_larga }} · el BCB publica el nuevo valor cada día hábil a las 23:30</span>{% endblock %}
 {% block figuras %}
-{{ m.figura('Oficial BCB · venta', D.tco.venta_txt, 'Bs', D.tco.d7_txt ~ ' Bs' if D.tco.d7_txt else None, D.tco.d7_dir, D.tco.d7_flecha, 'en 7 días', 'Vigente el ' ~ D.tco.fecha_corta, D.atrasado.get('tco', False), 'var(--accent)') }}
+{{ m.figura('Oficial ' ~ ('para el ' ~ D.tco.dia_txt if D.tco.es_de_manana else 'hoy'), D.tco.venta_txt, 'Bs', (D.tco.ayer.texto|capitalize) if D.tco.ayer is defined else None, D.tco.ayer.dir if D.tco.ayer is defined else 'igual', '', '', 'Vigente el ' ~ D.tco.fecha_corta, D.atrasado.get('tco', False), 'var(--accent)') }}
 {{ m.figura('Oficial BCB · compra', D.tco.compra_txt, 'Bs', None, 'igual', '', '', 'Un solo valor desde la RD 142/2026 (fines de sep-2026)' if D.tco.iguales else '') }}
 {{ m.figura('Cambio en 30 días', D.tco.d30_txt ~ ' Bs' if D.tco.d30_txt is defined else '—', '', (D.tco.d30_pct_txt ~ '%') if D.tco.d30_pct_txt is defined else None, D.tco.d30_dir if D.tco.d30_dir is defined else 'igual', '', '', '') }}
 {{ m.figura('Paralelo, para comparar', D.usdt.valor_txt, 'Bs', None, 'igual', '', '', 'Brecha: ' ~ D.brecha.pct_txt ~ '%', False, 'var(--paralelo)') }}

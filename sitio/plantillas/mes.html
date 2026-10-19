@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+{% set migas = [('/dolar-bolivia/', 'Mes a mes'), (mm.ruta, mm.nombre|capitalize)] %}
+{% block jsonld %}{{ m.jsonld_migas(migas) }}{% endblock %}
+{% block cabecera %}{{ m.cabecera(M, migas) }}{% endblock %}
+{% block contenido %}
+<div class="wrap">
+  <section class="figuras" aria-label="Resumen del mes">
+    {{ m.figura('Paralelo al cierre' if mm.en_curso is not defined else 'Paralelo al último dato', mm.fin_txt, 'Bs', mm.cambio_txt ~ '% en el mes', mm.cambio_dir, '', '', mm.fin_fecha, False, 'var(--paralelo)') }}
+    {{ m.figura('Más alto del mes', mm.max_txt, 'Bs', None, 'igual', '', '', mm.max_fecha) }}
+    {{ m.figura('Más bajo del mes', mm.min_txt, 'Bs', None, 'igual', '', '', mm.min_fecha) }}
+    {% if mm.of_fin_txt %}{{ m.figura('Oficial / referencial BCB' if mm.referencial else 'Oficial BCB', mm.of_fin_txt, 'Bs', None, 'igual', '', '', 'Empezó el mes en Bs ' ~ mm.of_ini_txt, False, 'var(--accent)') }}{% endif %}
+  </section>
+
+  <section class="seccion prosa">
+    <ul>
+      <li>El paralelo empezó el mes en <b>Bs {{ mm.ini_txt }}</b> y {{ 'terminó' if mm.en_curso is not defined else 'va' }} en <b>Bs {{ mm.fin_txt }}</b> ({{ mm.cambio_txt }}%).</li>
+      <li>Su precio más alto fue Bs {{ mm.max_txt }} ({{ mm.max_fecha }}) y el más bajo, Bs {{ mm.min_txt }} ({{ mm.min_fecha }}).</li>
+      {% if mm.of_fin_txt %}<li>El {{ 'valor referencial del BCB' if mm.referencial else 'oficial del BCB' }} pasó de Bs {{ mm.of_ini_txt }} a Bs {{ mm.of_fin_txt }}{% if mm.referencial %} (el oficial legal seguía en Bs 6,96){% endif %}.</li>{% endif %}
+      {% if mm.brecha_prom_txt %}<li>La brecha entre paralelo y {{ 'referencial' if mm.referencial else 'oficial' }} promedió {{ mm.brecha_prom_txt }}%.</li>{% endif %}
+      {% if mm.mejor_banco %}<li>El banco que más pagó por el dólar en el mes, en promedio, fue <b>{{ mm.mejor_banco.nombre }}</b> (Bs {{ mm.mejor_banco.ppp_txt }}), entre los bancos con volumen relevante.</li>{% endif %}
+    </ul>
+  </section>
+
+  {{ m.anuncio('superior', True) }}
+
+  <section class="seccion" aria-labelledby="dias-t">
+    <div class="sec-head"><h2 id="dias-t">Día por día</h2></div>
+    <div class="tabla-wrap"><table class="datos">
+      <thead><tr><th scope="col">Fecha</th><th scope="col">Paralelo (Bs)</th><th scope="col">{{ 'Referencial' if mm.referencial else 'Oficial' }} (Bs)</th><th scope="col">Brecha</th></tr></thead>
+      <tbody>{% for d in mm.dias %}<tr><th scope="row">{{ d.fecha_corta }}</th><td class="num">{{ d.paralelo_txt }}</td><td class="num">{{ d.oficial_txt }}</td><td class="num">{{ d.brecha_txt }}</td></tr>{% endfor %}</tbody>
+    </table></div>
+    <p class="pie">Paralelo: último valor del día del USDT/BOB en Binance P2P. {{ 'Referencial: valor que publicaba el BCB con operaciones de los bancos.' if mm.referencial else 'Oficial: valor vigente ese día según el BCB.' }} <a href="{{ url('/metodologia/') }}">Cómo medimos</a>.</p>
+  </section>
+
+  <nav class="seccion" aria-label="Otros meses" style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
+    {% if mm.anterior %}<a class="btn" href="{{ url(mm.anterior.ruta) }}">← {{ mm.anterior.nombre|capitalize }}</a>{% else %}<span></span>{% endif %}
+    <a class="btn" href="{{ url('/dolar-bolivia/') }}">Todos los meses</a>
+    {% if mm.siguiente %}<a class="btn" href="{{ url(mm.siguiente.ruta) }}">{{ mm.siguiente.nombre|capitalize }} →</a>{% endif %}
+  </nav>
+  {{ m.compartir('El dólar en Bolivia en ' ~ mm.nombre ~ ': ' ~ mm.titular ~ '.', mm.ruta) }}
+  {{ m.suscripcion() }}
+  {{ m.anuncio('inferior') }}
+</div>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+{% set migas = [('/dolar-bolivia/', 'Mes a mes')] %}
+{% block jsonld %}{{ m.jsonld_migas(migas) }}{% endblock %}
+{% block cabecera %}{{ m.cabecera(M, migas) }}{% endblock %}
+{% block contenido %}
+<div class="wrap">
+  <section class="seccion">
+    <div class="tabla-wrap"><table class="datos">
+      <caption>Paralelo = USDT/BOB en Binance P2P (último valor de cada día). Toca un mes para ver el detalle.</caption>
+      <thead><tr><th scope="col">Mes</th><th scope="col">Cierre paralelo</th><th scope="col">Cambio en el mes</th><th scope="col">Brecha prom.</th></tr></thead>
+      <tbody>
+      {% for mm in meses %}
+        <tr><th scope="row"><a href="{{ url(mm.ruta) }}">{{ mm.nombre|capitalize }}</a>{% if mm.en_curso is defined %} <small>(en curso)</small>{% endif %}</th>
+        <td class="num">Bs {{ mm.fin_txt }}</td><td class="num {{ mm.cambio_dir }}">{{ mm.cambio_txt }}%</td><td class="num">{{ (mm.brecha_prom_txt ~ '%') if mm.brecha_prom_txt else '—' }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table></div>
+  </section>
+  {{ m.anuncio('medio') }}
+  {{ m.suscripcion() }}
+</div>
+{% endblock %}

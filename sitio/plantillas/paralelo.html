@@ -5,16 +5,16 @@
 {% endblock %}
 {% block meta %}<span><span class="live-dot" aria-hidden="true"></span>Última medición: {{ D.usdt.hora }} del {{ D.usdt.fecha_larga }} (hora de Bolivia)</span>{% endblock %}
 {% block figuras %}
-{{ m.figura('Dólar paralelo · USDT/BOB', D.usdt.valor_txt, 'Bs', D.usdt.d7_txt ~ ' Bs' if D.usdt.d7_txt else None, D.usdt.d7_dir, D.usdt.d7_flecha, 'en 7 días', 'Binance P2P · mediana de 10 anuncios', D.atrasado.get('usdt', False), 'var(--paralelo)') }}
-{{ m.figura('Rango de las últimas 24 horas', (D.usdt.min24_txt ~ ' – ' ~ D.usdt.max24_txt) if D.usdt.min24_txt else '—', 'Bs', None, 'igual', '', '', D.usdt.n24 ~ ' mediciones') }}
+{{ m.figura('Paralelo hoy', D.usdt.valor_txt, 'Bs', D.usdt.ayer.texto if D.usdt.ayer is defined else None, D.usdt.ayer.dir if D.usdt.ayer is defined else 'igual', '', '', 'Dato de las ' ~ D.usdt.hora, D.atrasado.get('usdt', False), 'var(--paralelo)') }}
+{{ m.figura('Hoy se movió entre', (D.usdt.min24_txt ~ ' y ' ~ D.usdt.max24_txt) if D.usdt.min24_txt else '—', 'Bs', None, 'igual', '', '', 'Últimas 24 horas') }}
 {{ m.figura('Cambio en 30 días', D.usdt.d30_txt ~ ' Bs' if D.usdt.d30_txt is defined else '—', '', (D.usdt.d30_pct_txt ~ '%') if D.usdt.d30_pct_txt is defined else None, D.usdt.d30_dir if D.usdt.d30_dir is defined else 'igual', '', '', '') }}
-{{ m.figura('Oficial BCB, para comparar', D.tco.venta_txt, 'Bs', None, 'igual', '', '', 'Brecha: ' ~ D.brecha.pct_txt ~ '%', False, 'var(--accent)') }}
+{{ m.figura('Oficial (BCB)', D.tco.venta_txt, 'Bs', None, 'igual', '', '', 'En el paralelo pagas ' ~ D.brecha.bs_txt.lstrip('+') ~ ' Bs más por dólar' if D.brecha.pct > 0 else 'El paralelo está por debajo del oficial', False, 'var(--accent)') }}
 {% endblock %}
 {% block cuerpo %}
 <section class="seccion" aria-labelledby="intra-t">
   <div class="sec-head"><h2 id="intra-t">Movimiento reciente</h2><div class="controles" id="r-intradia"></div></div>
   <div class="card"><div class="grafico h220" id="g-intradia"><p class="sin-js">Cargando gráfico…</p></div>
-  <p class="pie">Cada punto es una medición exitosa. Se intenta medir cada 15 minutos, pero puede haber huecos de varias horas (ver la metodología). Hora de Bolivia.</p></div>
+  <p class="pie">Hora de Bolivia · <a href="{{ url('/metodologia/') }}">Cómo medimos</a></p></div>
 </section>
 {{ m.anuncio('superior', True) }}
 <section class="seccion" aria-labelledby="hist-t">

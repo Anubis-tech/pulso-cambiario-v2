@@ -3,7 +3,7 @@ titulo: "Dólar paralelo hoy en Bolivia: Bs {{ D.usdt.valor_txt }} (USDT/BOB) | 
 og_titulo: "Dólar paralelo en Bolivia hoy"
 descripcion: "Precio del dólar paralelo en Bolivia hoy: Bs {{ D.usdt.valor_txt }} según USDT/BOB en Binance P2P ({{ D.usdt.hora }}). Gráfico de 24 horas, histórico desde 2023 y comparación con el oficial."
 h1: "Dólar paralelo en Bolivia hoy"
-dek: "Precio del USDT en bolivianos en Binance P2P, la referencia más usada del mercado paralelo. La hora de la última medición aparece junto a la cifra."
+dek: "Hoy el dólar paralelo está a Bs {{ D.usdt.valor_txt }}. Lo medimos con el precio del USDT en Binance, la referencia que usa la gente."
 faq:
   - p: "¿A cuánto está el dólar paralelo hoy?"
     r: "A las {{ D.usdt.hora }} del {{ D.usdt.fecha_larga }} (hora de Bolivia), el USDT cotiza a **Bs {{ D.usdt.valor_txt }}** en Binance P2P.{% if D.usdt.min24_txt %} En las últimas 24 horas se movió entre Bs {{ D.usdt.min24_txt }} y Bs {{ D.usdt.max24_txt }}.{% endif %}"

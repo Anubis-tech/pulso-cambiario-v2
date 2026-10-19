@@ -62,8 +62,8 @@
       {{ S.nombre }}
     </a>
     <nav class="nav" aria-label="Secciones">
-      {% set nav = [('/', 'Dólar hoy'), ('/dolar-paralelo/', 'Paralelo'), ('/tipo-de-cambio-oficial/', 'Oficial'), ('/tipo-de-cambio-bancos/', 'Bancos'), ('/conversor/', 'Conversor'), ('/brecha-cambiaria/', 'Brecha'), ('/reservas-internacionales/', 'Reservas'), ('/articulos/', 'Artículos')] %}
-      {% for r, t in nav %}<a href="{{ url(r) }}"{% if ruta == r or (r == '/articulos/' and ruta.startswith('/articulos/')) %} aria-current="page"{% endif %}>{{ t }}</a>{% endfor %}
+      {% set nav = [('/', 'Dólar hoy'), ('/tipo-de-cambio-bancos/', 'Bancos'), ('/conversor/', 'Conversor'), ('/dolar-paralelo/', 'Paralelo'), ('/tipo-de-cambio-oficial/', 'Oficial'), ('/dolar-bolivia/', 'Mes a mes'), ('/articulos/', 'Artículos')] %}
+      {% for r, t in nav %}<a href="{{ url(r) }}"{% if ruta == r or (r != '/' and ruta.startswith(r)) %} aria-current="page"{% endif %}>{{ t }}</a>{% endfor %}
     </nav>
   </div>
 </header>
@@ -85,6 +85,8 @@
           <li><a href="{{ url('/tipo-de-cambio-oficial/') }}">Tipo de cambio oficial</a></li>
           <li><a href="{{ url('/tipo-de-cambio-bancos/') }}">Tipo de cambio por banco</a></li>
           <li><a href="{{ url('/brecha-cambiaria/') }}">Brecha cambiaria</a></li>
+          <li><a href="{{ url('/dolar-bolivia/') }}">El dólar mes a mes</a></li>
+          <li><a href="{{ url('/100-dolares-en-bolivianos/') }}">100 dólares en bolivianos</a></li>
         </ul>
       </nav>
       <nav aria-label="Más datos">

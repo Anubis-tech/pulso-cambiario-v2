@@ -305,10 +305,22 @@ def calcular(data, noticias, estado):
     }
 
     # --- Noticias ---
+    # Solo titulares con fecha y de los últimos 7 días: un titular viejo con
+    # una cotización que ya no rige confunde más de lo que informa. Si no hay
+    # ninguno reciente, la sección no se muestra.
     items = []
+    ahora_utc = datetime.now(timezone.utc)
     for it_n in (noticias or {}).get("items", [])[:6]:
-        if it_n.get("title") and it_n.get("url", "").startswith("http"):
-            items.append({"titulo": it_n["title"], "url": it_n["url"], "medio": (it_n.get("source") or "").strip(" |-·")})
+        pub = it_n.get("published")
+        if not (it_n.get("title") and it_n.get("url", "").startswith("http") and pub):
+            continue
+        t_pub = datetime.strptime(pub, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+        dias = (ahora_utc.astimezone(BOLIVIA).date() - t_pub.astimezone(BOLIVIA).date()).days
+        if dias > 7:
+            continue
+        cuando = "hoy" if dias <= 0 else ("ayer" if dias == 1 else f"hace {dias} días")
+        items.append({"titulo": it_n["title"], "url": it_n["url"], "medio": (it_n.get("source") or "").strip(" |-·"),
+                      "cuando": cuando})
     D["noticias"] = {"items": items, "fecha_larga": fecha_larga(noticias["updated"]) if noticias and noticias.get("updated") else None}
 
     # --- Frescura ---
@@ -320,6 +332,193 @@ def calcular(data, noticias, estado):
     D["generado"] = {"iso": ahora.isoformat(timespec="minutes"), "fecha_larga": fecha_larga(ahora.date().isoformat()),
                      "hora": ahora.strftime("%H:%M"), "fecha": ahora.date().isoformat()}
     return D
+
+
+DIAS = ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"]
+DIAS_C = ["lun", "mar", "mié", "jue", "vie", "sáb", "dom"]
+
+
+def dia_txt(iso, corto=False):
+    d = date.fromisoformat(iso[:10])
+    if corto:
+        return f"{DIAS_C[d.weekday()]} {d.day} {MESES_C[d.month - 1]}"
+    return f"{DIAS[d.weekday()]} {d.day}"
+
+
+def centavos_txt(delta):
+    """0,04 -> '4 centavos'; 1,25 -> 'Bs 1,25'."""
+    c = round(abs(delta) * 100)
+    if c == 0:
+        return "nada"
+    if c < 100:
+        return f"{c} centavo" + ("s" if c != 1 else "")
+    return f"Bs {num(abs(delta))}"
+
+
+def enriquecer(D, data):
+    """Todo lo que hace la portada más humana: comparación contra ayer, titular
+    del día por reglas fijas, el oficial de mañana, 'hace un año' y el podio de
+    bancos en plata concreta. Las cifras salen de los mismos datos; solo cambia
+    cómo se cuentan."""
+    hoy = D["generado"]["fecha"]
+    diario = sorted(data["usdt"], key=lambda r: r["date"])
+    tco = sorted([r for r in data["tco"] if r.get("tco_venta_bcb") is not None], key=lambda r: r["date"])
+    u, t = D["usdt"], D["tco"]
+
+    # Paralelo contra el cierre del día anterior
+    previo = next((r for r in reversed(diario) if r["date"] < u["fecha"]), None)
+    if previo:
+        dlt = u["valor"] - previo["usdt_bob"]
+        pct = dlt / previo["usdt_bob"] * 100
+        u["ayer"] = {"valor_txt": num(previo["usdt_bob"]), "fecha": previo["date"], "delta": dlt, "pct": pct,
+                     "dir": direccion(dlt, 0.005), "flecha": flecha(dlt, 0.005),
+                     "texto": ("Sin cambios desde ayer" if abs(dlt) < 0.005 else
+                               f"{'Sube' if dlt > 0 else 'Baja'} {centavos_txt(dlt)} desde ayer")}
+    # Oficial contra el valor vigente el día anterior
+    if len(tco) > 1:
+        prev = tco[-2]
+        dlt = t["venta"] - prev["tco_venta_bcb"]
+        t["ayer"] = {"delta": dlt, "dir": direccion(dlt, 0.005), "flecha": flecha(dlt, 0.005),
+                     "texto": ("igual que el día anterior" if abs(dlt) < 0.005 else
+                               f"{'sube' if dlt > 0 else 'baja'} {centavos_txt(dlt)}")}
+    # ¿Ya salió el oficial del próximo día hábil? (el BCB lo publica a las 23:30)
+    t["es_de_manana"] = t["fecha"] > hoy
+    t["dia_txt"] = dia_txt(t["fecha"])
+
+    # Máximos y mínimos del mes
+    ult30 = [r["usdt_bob"] for r in diario if r["date"] >= resta_dias(u["fecha"], 30) and r["date"] < u["fecha"]]
+    record = None
+    if ult30:
+        if u["valor"] > max(ult30) + 0.004:
+            record = "max"
+        elif u["valor"] < min(ult30) - 0.004:
+            record = "min"
+
+    # Titular del día con reglas fijas (no hay texto inventado: solo umbrales)
+    pct = u.get("ayer", {}).get("pct", 0.0)
+    dlt = u.get("ayer", {}).get("delta", 0.0)
+    v = u["valor_txt"]
+    if record == "max":
+        tit = f"El paralelo toca su precio más alto del mes: Bs {v}"
+    elif record == "min":
+        tit = f"El paralelo toca su precio más bajo del mes: Bs {v}"
+    elif abs(pct) < 0.5:
+        tit = f"El paralelo sigue quieto: Bs {v}" if abs(dlt) >= 0.005 else f"El paralelo no se mueve: Bs {v}"
+    elif abs(pct) <= 2:
+        tit = f"El paralelo {'sube' if dlt > 0 else 'baja'} {centavos_txt(dlt)} hoy: Bs {v}"
+    else:
+        tit = f"Fuerte {'subida' if dlt > 0 else 'baja'} del paralelo: Bs {v} ({num(pct, 1, True)}% hoy)"
+    brecha_bs = u["valor"] - t["venta"]
+    if abs(D["brecha"]["pct"]) < 0.5:
+        sub = f"Oficial y paralelo casi iguales: {centavos_txt(brecha_bs)} de diferencia."
+    elif brecha_bs > 0:
+        sub = f"En el paralelo pagas {centavos_txt(brecha_bs)} más por dólar que al oficial (Bs {t['venta_txt']}). En $us 1.000 son Bs {num(brecha_bs * 1000, 0)}."
+    else:
+        sub = f"Hoy el paralelo está {centavos_txt(brecha_bs)} por debajo del oficial (Bs {t['venta_txt']})."
+    D["titular"] = {"texto": tit, "corto": tit.split(": Bs")[0], "sub": sub, "record": record}
+
+    # Hace un año
+    hace1 = en_o_antes(diario, resta_dias(u["fecha"], 365), "usdt_bob")
+    if hace1:
+        tv = en_o_antes(tco, hace1["date"], "tco_venta_bcb")
+        D["hace_un_anio"] = {
+            "fecha_larga": fecha_larga(hace1["date"]), "paralelo_txt": num(hace1["usdt_bob"]),
+            "oficial_txt": num(tv["tco_venta_bcb"]) if tv else None,
+            "brecha_txt": num((hace1["usdt_bob"] / tv["tco_venta_bcb"] - 1) * 100, 0) if tv else None,
+            "cambio_txt": num((u["valor"] / hace1["usdt_bob"] - 1) * 100, 0, True),
+        }
+    else:
+        D["hace_un_anio"] = None
+
+    # Bancos: motivo de exclusión y podio "¿dónde vender?"
+    b = D["bancos"]
+    total = sum(f["monto"] or 0 for f in b["filas"])
+    for f in b["filas"]:
+        motivo = None
+        if f["pequeno"]:
+            motivo = "banco PyME con pocas operaciones"
+        elif total and (f["monto"] or 0) < 0.002 * total:
+            motivo = "compró muy poco ese día"
+        f["motivo"] = motivo
+        f["relevante"] = motivo is None
+    b["podio"] = [{"nombre": f["nombre"], "tasa": f["tasa"], "tasa_txt": f["tasa_txt"],
+                   "recibe_txt": num(f["tasa"] * 500, 0)} for f in b["top"][:3]]
+    if len(b["top"]) >= 2:
+        b["dif500_txt"] = num((b["top"][0]["tasa"] - b["top"][-1]["tasa"]) * 500, 0)
+    b["dia_txt"] = dia_txt(b["fecha"]) if b["fecha"] else None
+
+    # Texto para compartir
+    flecha_u = u.get("ayer", {}).get("flecha", "")
+    D["compartir"] = {
+        "texto": f"Dólar hoy ({dia_txt(u['fecha'], True)}, {u['hora']}): paralelo Bs {v} {flecha_u if flecha_u != '=' else ''}/ oficial Bs {t['venta_txt']}."
+                 + (f" ¿Dónde vender? {b['top'][0]['nombre']} pagó Bs {b['top'][0]['tasa_txt']}." if b["top"] else ""),
+        "param": "?d=" + u["fecha"].replace("-", "") + u["hora"].replace(":", ""),
+    }
+    return D
+
+
+def resumenes_mensuales(data):
+    """Un resumen por mes con datos reales (máximo, mínimo, recorrido del
+    oficial, brecha promedio y banco que más pagó). Da una fecha fija de
+    regreso (el inicio de cada mes) y apunta a búsquedas como
+    'dólar octubre 2026 Bolivia'."""
+    diario = sorted(data["usdt"], key=lambda r: r["date"])
+    tco = {r["date"]: r["tco_venta_bcb"] for r in data["tco"] if r.get("tco_venta_bcb") is not None}
+    meses_disp = sorted({r["date"][:7] for r in diario if r["date"] >= "2024-06"})
+    bancos = data.get("banks") or {}
+    salida = []
+    for ym in meses_disp:
+        y, mth = int(ym[:4]), int(ym[5:7])
+        nombre = f"{MESES[mth - 1]} de {y}"
+        filas = [r for r in diario if r["date"].startswith(ym)]
+        if len(filas) < 3:
+            continue
+        ini, fin = filas[0], filas[-1]
+        mx = max(filas, key=lambda r: r["usdt_bob"])
+        mn = min(filas, key=lambda r: r["usdt_bob"])
+        cambio = (fin["usdt_bob"] / ini["usdt_bob"] - 1) * 100
+        of = [(r["date"], tco[r["date"]]) for r in filas if r["date"] in tco]
+        brechas = [(r["usdt_bob"] / tco[r["date"]] - 1) * 100 for r in filas if r["date"] in tco]
+        # Banco que más pagó en el mes (promedio ponderado por monto, solo bancos con volumen)
+        acum = {}
+        for nb, serie in bancos.items():
+            for r in serie:
+                if r["date"].startswith(ym) and r.get("rate") and r.get("monto"):
+                    a = acum.setdefault(nb, [0.0, 0.0])
+                    a[0] += r["rate"] * r["monto"]
+                    a[1] += r["monto"]
+        total_m = sum(a[1] for a in acum.values())
+        candidatos = [(nb, a[0] / a[1], a[1]) for nb, a in acum.items()
+                      if a[1] >= 0.002 * total_m and nb not in BANCOS_PEQUENOS] if total_m else []
+        mejor = max(candidatos, key=lambda c: c[1]) if candidatos else None
+        verbo = "subió" if cambio > 0.25 else ("bajó" if cambio < -0.25 else "casi no se movió")
+        titular = (f"En {nombre} el paralelo {verbo}" +
+                   (f" {num(abs(cambio), 1)}%: de Bs {num(ini['usdt_bob'])} a Bs {num(fin['usdt_bob'])}" if verbo != "casi no se movió" else f": cerró en Bs {num(fin['usdt_bob'])}"))
+        slug = f"{MESES[mth - 1]}-{y}"
+        salida.append({
+            "ym": ym, "nombre": nombre, "slug": slug, "ruta": f"/dolar-bolivia/{slug}/",
+            "titular": titular, "cambio_txt": num(cambio, 1, True), "cambio_dir": direccion(cambio, 0.25),
+            "ini_txt": num(ini["usdt_bob"]), "fin_txt": num(fin["usdt_bob"]), "fin_fecha": fecha_larga(fin["date"]),
+            "max_txt": num(mx["usdt_bob"]), "max_fecha": fecha_larga(mx["date"]),
+            "min_txt": num(mn["usdt_bob"]), "min_fecha": fecha_larga(mn["date"]),
+            "of_ini_txt": num(of[0][1]) if of else None, "of_fin_txt": num(of[-1][1]) if of else None,
+            "brecha_prom_txt": num(sum(brechas) / len(brechas), 1) if brechas else None,
+            "mejor_banco": {"nombre": NOMBRE_BANCO.get(mejor[0], mejor[0]), "ppp_txt": num(mejor[1])} if mejor else None,
+            "referencial": "2025-12" <= ym <= "2026-06",
+            "dias": [{"fecha_corta": fecha_corta(r["date"]), "paralelo_txt": num(r["usdt_bob"]),
+                      "oficial_txt": num(tco[r["date"]]) if r["date"] in tco else "—",
+                      "brecha_txt": (num((r["usdt_bob"] / tco[r["date"]] - 1) * 100, 1) + "%") if r["date"] in tco else "—"}
+                     for r in reversed(filas)],
+            "ultimo_dia": fin["date"],
+        })
+    salida.reverse()  # más reciente primero
+    for i, m in enumerate(salida):
+        m["siguiente"] = salida[i - 1] if i > 0 else None
+        m["anterior"] = salida[i + 1] if i + 1 < len(salida) else None
+    if salida and salida[0]["ym"] == datetime.now(BOLIVIA).strftime("%Y-%m"):
+        salida[0]["en_curso"] = True
+        salida[0]["titular"] = salida[0]["titular"].replace("En ", "En lo que va de ", 1).replace(" de Bs ", " desde Bs ", 1).replace(" a Bs ", " hasta Bs ", 1)
+    return salida
 
 
 def series_para_graficos(data):
@@ -511,6 +710,49 @@ def generar_og(sitio, clave, titulo, cifra=None, sub=None):
     return f"/img/og/{clave}.png"
 
 
+def generar_hoy(sitio, D):
+    """'El dólar de hoy' como imagen para mandar por WhatsApp o subir a estados:
+    cuadrada (1080x1350) y vertical (1080x1920). Se regenera en cada corrida."""
+    from PIL import Image, ImageDraw, ImageFont
+    f = RAIZ / "herramientas" / "fuentes-og"
+    F = lambda n, t: ImageFont.truetype(str(f / n), t)  # noqa: E731
+    u, t, b = D["usdt"], D["tco"], D["bancos"]
+    for nombre, (W, H) in (("hoy-cuadrado", (1080, 1350)), ("hoy-estado", (1080, 1920))):
+        im = Image.new("RGB", (W, H), (10, 10, 10))
+        dr = ImageDraw.Draw(im)
+        x = 80
+        y = 110 if H == 1350 else 260
+        dr.text((x, y), "DÓLAR HOY EN BOLIVIA", font=F("IBMPlexMono-Medium.ttf", 40), fill=(227, 169, 0))
+        y += 70
+        dr.text((x, y), f"{dia_txt(u['fecha']).capitalize()} de {MESES[int(u['fecha'][5:7]) - 1]} · {u['hora']}", font=F("IBMPlexSans-Regular.ttf", 40), fill=(200, 200, 200))
+        y += 120
+        dr.text((x, y), "Paralelo (USDT)", font=F("IBMPlexSans-SemiBold.ttf", 46), fill=(240, 122, 69))
+        y += 60
+        dr.text((x - 6, y), f"Bs {u['valor_txt']}", font=F("Archivo-ExtraBold.ttf", 210), fill=(255, 255, 255))
+        y += 250
+        ay = u.get("ayer")
+        if ay:
+            col = {"sube": (255, 123, 114), "baja": (53, 195, 90), "igual": (200, 200, 200)}[ay["dir"]]
+            dr.text((x, y), ay["texto"], font=F("IBMPlexSans-SemiBold.ttf", 44), fill=col)
+            y += 110
+        dr.line([(x, y), (W - x, y)], fill=(70, 70, 70), width=3)
+        y += 50
+        dr.text((x, y), "Oficial BCB", font=F("IBMPlexSans-SemiBold.ttf", 46), fill=(75, 147, 234))
+        dr.text((W - x, y), f"Bs {t['venta_txt']}", font=F("Archivo-ExtraBold.ttf", 64), fill=(255, 255, 255), anchor="ra")
+        y += 110
+        if b.get("podio"):
+            p = b["podio"][0]
+            dr.text((x, y), "Banco que más pagó", font=F("IBMPlexSans-SemiBold.ttf", 46), fill=(44, 191, 149))
+            dr.text((W - x, y), f"Bs {p['tasa_txt']}", font=F("Archivo-ExtraBold.ttf", 64), fill=(255, 255, 255), anchor="ra")
+            y += 64
+            dr.text((x, y), f"{p['nombre']} · {b['fecha_corta']}", font=F("IBMPlexSans-Regular.ttf", 36), fill=(170, 170, 170))
+        dr.rectangle([0, H - 150, W, H], fill=(42, 120, 214))
+        dr.text((W // 2, H - 75), "elpulsoeconomico.com", font=F("Archivo-ExtraBold.ttf", 54), fill=(255, 255, 255), anchor="mm")
+        ruta = sitio.salida / "img" / f"{nombre}.png"
+        ruta.parent.mkdir(parents=True, exist_ok=True)
+        im.save(ruta, optimize=True)
+
+
 def generar_iconos(sitio):
     from PIL import Image, ImageDraw
     for tam, nombre in ((180, "apple-touch-icon.png"), (192, "icono-192.png"), (512, "icono-512.png")):
@@ -534,7 +776,7 @@ def construir(datos_dir, salida, entorno=None, base=None):
     noticias = json.loads((datos_dir / "noticias.json").read_text(encoding="utf-8")) if (datos_dir / "noticias.json").exists() else None
     estado = json.loads((datos_dir / "estado.json").read_text(encoding="utf-8")) if (datos_dir / "estado.json").exists() else {}
 
-    D = calcular(data, noticias, estado)
+    D = enriquecer(calcular(data, noticias, estado), data)
     series = series_para_graficos(data)
 
     if salida.exists():
@@ -556,7 +798,10 @@ def construir(datos_dir, salida, entorno=None, base=None):
     }
     s.escribir("/datos/resumen.json", json.dumps(resumen, ensure_ascii=False, indent=1))
     # Compatibilidad: la v1 publicaba estos dos archivos en la raíz.
-    s.escribir("/data.json", json.dumps(data, ensure_ascii=False, separators=(",", ":")))
+    # Sin las series "forecast" y "garch": ningún script las actualiza y un
+    # pronóstico viejo publicado como dato es un riesgo de credibilidad.
+    publico = {k: v for k, v in data.items() if k not in ("forecast", "garch")}
+    s.escribir("/data.json", json.dumps(publico, ensure_ascii=False, separators=(",", ":")))
     if noticias:
         s.escribir("/noticias.json", json.dumps(noticias, ensure_ascii=False, indent=2))
 
@@ -575,6 +820,7 @@ def construir(datos_dir, salida, entorno=None, base=None):
         "sitio": generar_og(s, "sitio", "Dólar, reservas y mercado cambiario de Bolivia", None, "Datos actualizados del BCB y del mercado paralelo"),
     }
     generar_iconos(s)
+    generar_hoy(s, D)
 
     # --- Páginas de datos (texto en sitio/contenido/paginas/<clave>.md) ---
     def md_pagina(clave):
@@ -615,12 +861,41 @@ def construir(datos_dir, salida, entorno=None, base=None):
         articulos.append(meta)
     articulos.sort(key=lambda a: str(a["fecha"]), reverse=True)
 
+    meses = resumenes_mensuales(data)
     for ruta, plantilla, clave, prio, freq in paginas_datos:
         meta, prosa = md_pagina(clave)
         meta["og"] = og.get(clave, og["sitio"])
         rel = [a for a in articulos if clave in (a.get("relacionado_con") or [])]
-        s.pagina(ruta, plantilla, meta, {"prosa": prosa, "clave": clave, "articulos_rel": rel, "articulos": articulos[:4]},
-                 cambia=freq, prioridad=prio)
+        s.pagina(ruta, plantilla, meta, {"prosa": prosa, "clave": clave, "articulos_rel": rel, "articulos": articulos[:4],
+                                         "meses": meses}, cambia=freq, prioridad=prio)
+
+    # --- Resúmenes mensuales ---
+    s.pagina("/dolar-bolivia/", "meses.html", {
+        "titulo": "El dólar en Bolivia mes a mes | Pulso Económico",
+        "descripcion": "Resumen de cada mes del dólar en Bolivia desde junio de 2024: máximo, mínimo y cierre del paralelo, el oficial, la brecha y el banco que más pagó.",
+        "h1": "El dólar en Bolivia, mes a mes", "dek": "Cómo cerró cada mes el paralelo, el oficial y los bancos.", "og": og["sitio"]},
+        {"meses": meses}, cambia="daily", prioridad=0.6)
+    for mm in meses:
+        meta_m = {"titulo": f"Dólar en Bolivia: {mm['nombre']} | Pulso Económico",
+                  "descripcion": f"{mm['titular']}. Máximo Bs {mm['max_txt']} ({mm['max_fecha']}), mínimo Bs {mm['min_txt']}"
+                                 + (f", brecha promedio {mm['brecha_prom_txt']}%." if mm['brecha_prom_txt'] else "."),
+                  "h1": f"El dólar en Bolivia en {mm['nombre']}", "dek": mm["titular"] + ".", "og": og["sitio"],
+                  "titulo_corto": mm["nombre"].capitalize()}
+        if len(meta_m["descripcion"]) > 160:
+            meta_m["descripcion"] = meta_m["descripcion"][:157].rsplit(" ", 1)[0] + "…"
+        s.pagina(mm["ruta"], "mes.html", meta_m, {"mm": mm}, cambia="daily" if mm.get("en_curso") else "monthly",
+                 prioridad=0.5, lastmod=mm["ultimo_dia"])
+
+    # --- Páginas de montos típicos (búsquedas como "100 dólares en bolivianos") ---
+    for monto in (100, 500, 1000):
+        ruta_m = f"/{monto}-dolares-en-bolivianos/"
+        m_txt = num(monto, 0)
+        meta_m = {"titulo": f"{m_txt} dólares en bolivianos hoy: Bs {num(monto * D['usdt']['valor'], 0)} | Pulso Económico",
+                  "descripcion": f"{m_txt} dólares son Bs {num(monto * D['usdt']['valor'], 0)} al paralelo y Bs {num(monto * D['tco']['venta'], 0)} al oficial del BCB. Cuánto te paga cada banco por $us {m_txt}.",
+                  "h1": f"{m_txt} dólares en bolivianos", "og": og["conversor"], "titulo_corto": f"$us {m_txt} en bolivianos"}
+        diario = sorted(data["usdt"], key=lambda r: r["date"])[-30:]
+        hist = [{"fecha_corta": fecha_corta(r["date"]), "bs_txt": num(monto * r["usdt_bob"], 0)} for r in reversed(diario)]
+        s.pagina(ruta_m, "monto.html", meta_m, {"monto": monto, "m_txt": m_txt, "hist": hist}, cambia="hourly", prioridad=0.6)
 
     # --- Artículos ---
     meta_idx = {"titulo": "Artículos: dólar, tipo de cambio y economía de Bolivia, explicados",

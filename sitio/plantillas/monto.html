@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+{% set migas = [('/conversor/', 'Conversor'), (ruta, '$us ' ~ m_txt ~ ' en bolivianos')] %}
+{% block jsonld %}
+{{ m.jsonld_migas(migas) }}
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":{{ ('¿Cuántos bolivianos son ' ~ m_txt ~ ' dólares hoy?')|tojson }},"acceptedAnswer":{"@type":"Answer","text":{{ (m_txt ~ ' dólares son Bs ' ~ (monto * D.usdt.valor)|num(0) ~ ' al dólar paralelo (Bs ' ~ D.usdt.valor_txt ~ ') y Bs ' ~ (monto * D.tco.venta)|num(0) ~ ' al oficial del BCB (Bs ' ~ D.tco.venta_txt ~ ').')|tojson }}}}]}</script>
+{% endblock %}
+{% block cabecera %}
+<section class="hero-dolar" aria-labelledby="h-monto">
+  <div class="wrap">
+    <p class="crumbs"><a href="{{ url('/') }}">Inicio</a><span aria-hidden="true">›</span><a href="{{ url('/conversor/') }}">Conversor</a></p>
+    <h1 id="h-monto">{{ M.h1 }}</h1>
+    <p class="cifra-grande"><span class="et">Al paralelo (USDT, {{ D.usdt.hora }})</span><span class="v"><small>Bs</small>{{ (monto * D.usdt.valor)|num(0) }}</span></p>
+    <p class="oficial-linea">Al oficial (BCB): <b>Bs {{ (monto * D.tco.venta)|num(0) }}</b> <span>· tasa Bs {{ D.tco.venta_txt }}</span></p>
+    <p class="sub">Con el paralelo a Bs {{ D.usdt.valor_txt }} y el oficial a Bs {{ D.tco.venta_txt }}. Si cambias en un banco, mira abajo cuánto paga cada uno.</p>
+  </div>
+</section>
+{% endblock %}
+{% block contenido %}
+<div class="wrap">
+  <section class="seccion" aria-labelledby="bancos-t">
+    <div class="sec-head"><h2 id="bancos-t">Si vendes $us {{ m_txt }} en un banco</h2><span class="hint">{{ D.bancos.fecha_larga }}</span></div>
+    <div class="tabla-wrap"><table class="datos">
+      <caption>Lo que habrías recibido al precio promedio que pagó cada banco (dato del BCB). Solo bancos con volumen relevante.</caption>
+      <thead><tr><th scope="col">Banco</th><th scope="col">Bs por USD</th><th scope="col">Recibirías (Bs)</th></tr></thead>
+      <tbody>{% for f in D.bancos.filas if f.relevante %}<tr><th scope="row">{{ f.nombre }}</th><td class="num">{{ f.tasa_txt }}</td><td class="num">{{ (monto * f.tasa)|num(0) }}</td></tr>{% endfor %}</tbody>
+    </table></div>
+  </section>
+  {{ m.anuncio('superior', True) }}
+  <section class="seccion" aria-labelledby="hist-t">
+    <div class="sec-head"><h2 id="hist-t">$us {{ m_txt }} al paralelo, últimos 30 días</h2></div>
+    <div class="tabla-wrap"><table class="datos">
+      <thead><tr><th scope="col">Fecha</th><th scope="col">Bolivianos</th></tr></thead>
+      <tbody>{% for h in hist %}<tr><th scope="row">{{ h.fecha_corta }}</th><td class="num">Bs {{ h.bs_txt }}</td></tr>{% endfor %}</tbody>
+    </table></div>
+  </section>
+  <p class="seccion"><a class="btn primario" href="{{ url('/conversor/') }}?monto={{ monto }}">Calcular otro monto</a>
+  {% for x in [100, 500, 1000] if x != monto %} <a class="btn" href="{{ url('/' ~ x ~ '-dolares-en-bolivianos/') }}">$us {{ x|num(0) }}</a>{% endfor %}</p>
+  {{ m.compartir(m_txt ~ ' dólares hoy son Bs ' ~ (monto * D.usdt.valor)|num(0) ~ ' al paralelo y Bs ' ~ (monto * D.tco.venta)|num(0) ~ ' al oficial.', ruta) }}
+  {{ m.suscripcion() }}
+  {{ m.anuncio('inferior') }}
+</div>
+{% endblock %}

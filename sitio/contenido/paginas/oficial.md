@@ -3,7 +3,7 @@ titulo: "Tipo de cambio oficial hoy en Bolivia: Bs {{ D.tco.venta_txt }} (BCB) |
 og_titulo: "Tipo de cambio oficial del BCB hoy"
 descripcion: "Tipo de cambio oficial del BCB vigente el {{ D.tco.fecha_larga }}: Bs {{ D.tco.venta_txt }}. Cómo se calcula desde la RD 142/2026 e histórico."
 h1: "Tipo de cambio oficial del BCB hoy"
-dek: "El valor que publica el Banco Central de Bolivia cada día hábil, cómo se calcula y cómo ha cambiado desde que dejó de ser fijo."
+dek: "El oficial del BCB está en Bs {{ D.tco.venta_txt }}. Cambia cada día hábil y el nuevo valor sale a las 23:30."
 faq:
   - p: "¿Cuál es el tipo de cambio oficial hoy?"
     r: "El tipo de cambio oficial vigente para el {{ D.tco.fecha_larga }} es **Bs {{ D.tco.venta_txt }}** por dólar{% if not D.tco.iguales %} para la venta y Bs {{ D.tco.compra_txt }} para la compra{% endif %}."

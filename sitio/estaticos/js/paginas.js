@@ -32,7 +32,7 @@
         { key: "paralelo", label: "Paralelo USDT/BOB", color: "var(--paralelo)", width: 2 }
       ];
       var g = null;
-      PE.rangos("r-principal", rangosFecha([[30, "d", "30 días"], [3, "m", "3 meses"], [12, "m", "1 año"], [0, "", "Todo"]]), 1, function (op) {
+      PE.rangos("r-principal", rangosFecha([[30, "d", "30 días"], [3, "m", "3 meses"], [12, "m", "1 año"], [0, "", "Todo"]]), 0, function (op) {
         var data = PE.desde(filas, op.desde);
         if (!g) g = new PE.Lineas("g-principal", { series: series, data: data, titulo: "Dólar oficial y paralelo", sombras: tco.tramos, yFormat: fmt2 });
         else g.actualizar({ data: data });

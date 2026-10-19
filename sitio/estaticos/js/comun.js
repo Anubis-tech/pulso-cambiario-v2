@@ -86,7 +86,7 @@
     var vals = [];
     data.forEach(function (r) { o.series.forEach(function (s) { if (r[s.key] != null) vals.push(r[s.key]); }); });
     var yMin = Math.min.apply(null, vals), yMax = Math.max.apply(null, vals);
-    var pad = (yMax - yMin) * 0.08 || Math.abs(yMax) * 0.02 || 1;
+    var pad = Math.max((yMax - yMin) * 0.08, Math.abs(yMax) * 0.004) || 1;
     yMin -= pad; yMax += pad;
     if (o.zeroBaseline) yMin = Math.min(0, yMin);
     var n = data.length;

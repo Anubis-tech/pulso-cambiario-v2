@@ -6,31 +6,61 @@
 {{ m.jsonld_faq(M.faq) }}
 {% endblock %}
 {% block cabecera %}
-{{ m.cabecera(M, [], '') }}
+{% set ay = D.usdt.ayer if D.usdt.ayer is defined else None %}
+<section class="hero-dolar" aria-labelledby="h-dolar">
+  <div class="wrap">
+    <h1 id="h-dolar">Dólar hoy en Bolivia</h1>
+    <p class="titular">{{ D.titular.corto }}</p>
+    <p class="cifra-grande" data-paralelo-valor="{{ D.usdt.valor }}" data-paralelo-ts="{{ D.usdt.ts }}">
+      <span class="et">Paralelo (USDT en Binance)</span>
+      <span class="v"><small>Bs</small>{{ D.usdt.valor_txt }}</span>
+      {% if ay %}<span class="d {{ ay.dir }}">{% if ay.dir == 'sube' %}▲ {% elif ay.dir == 'baja' %}▼ {% endif %}{{ ay.texto }}</span>{% endif %}
+    </p>
+    <p class="oficial-linea">Oficial (BCB): <b>Bs {{ D.tco.venta_txt }}</b> <span>· {{ 'para el ' ~ D.tco.dia_txt if D.tco.es_de_manana else 'hoy' }}{% if D.tco.ayer is defined %}, {{ D.tco.ayer.texto }}{% endif %}</span></p>
+    <p class="sub">{{ D.titular.sub }}</p>
+    <div class="calc-rapida" data-calc="usd">
+      <label for="tengo">Tengo</label>
+      <input id="tengo" inputmode="decimal" autocomplete="off" value="100" aria-label="Monto en dólares">
+      <span>dólares</span>
+      <div class="res" aria-live="polite">
+        <span>→ <b>Bs <span data-tasa="{{ D.usdt.valor }}">{{ (100 * D.usdt.valor)|num(0) }}</span></b> al paralelo</span>
+        <span>· <b>Bs <span data-tasa="{{ D.tco.venta }}">{{ (100 * D.tco.venta)|num(0) }}</span></b> al oficial</span>
+      </div>
+    </div>
+    <p class="hora"><span class="live-dot" aria-hidden="true"></span>Paralelo: dato de las {{ D.usdt.hora }} (<span data-hace="{{ D.usdt.ts }}">{{ D.usdt.fecha_corta }}</span>){% if D.atrasado.get('usdt', False) %} · <span class="atrasado">dato atrasado</span>{% endif %} · <a href="{{ url('/metodologia/') }}" style="color:inherit">Cómo medimos</a></p>
+  </div>
+</section>
 {% endblock %}
 {% block contenido %}
 <div class="wrap">
-  <section class="figuras" aria-label="Cotizaciones de hoy">
-    {{ m.figura('Dólar paralelo · USDT/BOB', D.usdt.valor_txt, 'Bs', D.usdt.d7_txt ~ ' Bs' if D.usdt.d7_txt else None, D.usdt.d7_dir, D.usdt.d7_flecha, 'en 7 días', 'Binance P2P · ' ~ D.usdt.hora ~ ' del ' ~ D.usdt.fecha_corta, D.atrasado.get('usdt', False), 'var(--paralelo)') }}
-    {{ m.figura('Oficial BCB · venta', D.tco.venta_txt, 'Bs', D.tco.d7_txt ~ ' Bs' if D.tco.d7_txt else None, D.tco.d7_dir, D.tco.d7_flecha, 'en 7 días', ('Compra = venta' if D.tco.iguales else 'Compra Bs ' ~ D.tco.compra_txt) ~ ' · vigente el ' ~ D.tco.fecha_corta, D.atrasado.get('tco', False), 'var(--accent)') }}
-    {{ m.figura('Brecha paralelo vs. oficial', D.brecha.pct_txt ~ '%', '', D.brecha.d7_txt ~ ' pts' if D.brecha.d7_txt else None, D.brecha.d7_dir, D.brecha.d7_flecha, 'en 7 días', 'Diferencia: ' ~ D.brecha.bs_txt ~ ' Bs por dólar') }}
-    {{ m.figura('Bancos · promedio de compra', D.bancos.ppp_txt, 'Bs', None, 'igual', '', '', 'Ponderado por monto · ' ~ (D.bancos.fecha_corta or '—'), D.atrasado.get('bancos', False)) }}
-  </section>
+  <nav class="chips" aria-label="Datos rápidos">
+    <a class="chip" href="{{ url('/brecha-cambiaria/') }}">Brecha <b>{{ D.brecha.pct_txt }}%</b></a>
+    {% if D.bancos.podio %}<a class="chip" href="{{ url('/tipo-de-cambio-bancos/') }}">Banco que más pagó <b>Bs {{ D.bancos.podio[0].tasa_txt }}</b></a>{% endif %}
+    <a class="chip" href="{{ url('/tipo-de-cambio-bancos/') }}">Promedio bancos <b>Bs {{ D.bancos.ppp_txt }}</b></a>
+    <a class="chip" href="{{ url('/reservas-internacionales/') }}">Reservas <b>$us {{ D.reservas.rin_txt }} MM</b></a>
+  </nav>
 
-  <section class="seccion" aria-labelledby="hoy-t" style="margin-top:18px">
-    <h2 id="hoy-t" class="visually-hidden">Resumen de hoy</h2>
-    <p class="nota" style="font-size:15.5px;color:var(--ink)">
-      El <a href="{{ url('/dolar-paralelo/') }}">dólar paralelo</a> cotiza a <b>Bs {{ D.usdt.valor_txt }}</b> en Binance P2P (dato de las {{ D.usdt.hora }}){% if D.usdt.d7_txt %}, {{ 'por encima' if D.usdt.d7_dir == 'sube' else ('por debajo' if D.usdt.d7_dir == 'baja' else 'igual') }}{% if D.usdt.d7_dir != 'igual' %} de hace una semana ({{ D.usdt.d7_txt }} Bs){% else %} que hace una semana{% endif %}{% endif %}.
-      El <a href="{{ url('/tipo-de-cambio-oficial/') }}">tipo de cambio oficial</a> del BCB vigente para el {{ D.tco.fecha_larga }} es <b>Bs {{ D.tco.venta_txt }}</b>, así que la <a href="{{ url('/brecha-cambiaria/') }}">brecha</a> es de <b>{{ D.brecha.pct_txt }}%</b>.
-      {% if D.bancos.mejor %}En los bancos, el {{ D.bancos.fecha_larga }} quien más pagó por dólar fue <b>{{ D.bancos.mejor.nombre }}</b> (Bs {{ D.bancos.mejor.tasa_txt }}).{% endif %}
-    </p>
-    <div class="card">
-      <div class="sec-head" style="border:0;margin:0;padding:0 0 4px">
-        <h3 style="margin:0;font-size:14px;font-family:var(--font-mono);font-weight:500;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)">Paralelo en las últimas 24 horas</h3>
-        <span class="hint">{{ D.usdt.n24 }} mediciones{% if D.usdt.min24_txt %} · mín {{ D.usdt.min24_txt }} · máx {{ D.usdt.max24_txt }}{% endif %}</span>
-      </div>
-      <div class="grafico h110" id="g-intradia"><p class="sin-js">Cargando gráfico…</p></div>
+  {% if D.tco.es_de_manana %}
+  <p class="destacado manana"><b>Ya salió el oficial para el {{ D.tco.dia_txt }}:</b> <b class="cifra">Bs {{ D.tco.venta_txt }}</b>{% if D.tco.ayer is defined %} ({{ D.tco.ayer.texto }} frente al anterior){% endif %}. El BCB lo publica a las 23:30; la prensa lo cuenta mañana.</p>
+  {% endif %}
+  <p class="destacado ultima" id="ultima-visita" hidden></p>
+
+  {% if D.bancos.podio %}
+  <section class="seccion" aria-labelledby="vender-t" data-calc="vender">
+    <div class="sec-head"><h2 id="vender-t">¿Dónde vender tus dólares?</h2><a class="hint" href="{{ url('/tipo-de-cambio-bancos/') }}">Los {{ D.bancos.n_bancos }} bancos →</a></div>
+    <p class="monto-linea"><label for="vendo">Si vendes</label> <span>$us</span> <input id="vendo" inputmode="decimal" autocomplete="off" value="500"> <span>en un banco, recibirías:</span></p>
+    <div class="podio">
+      {% for p in D.bancos.podio %}
+      <div class="podio-fila"><span class="pos">{{ loop.index }}</span><span class="nom">{{ p.nombre }}<small>pagó Bs {{ p.tasa_txt }} por dólar</small></span><span class="rec">Bs <span data-tasa="{{ p.tasa }}">{{ p.recibe_txt }}</span><small>aprox.</small></span></div>
+      {% endfor %}
     </div>
+    <p class="pie">Precio promedio que pagó cada banco el {{ D.bancos.dia_txt }} (dato del BCB, el último publicado). Lo que te paguen a ti puede variar según el monto y el canal.{% if S.responsable.declaracion_intereses %} {{ S.responsable.declaracion_intereses }}{% endif %}</p>
+  </section>
+  {% endif %}
+
+  <section class="seccion" aria-labelledby="hoy-t">
+    <div class="sec-head"><h2 id="hoy-t">El paralelo hoy</h2>{% if D.usdt.min24_txt %}<span class="hint">Entre Bs {{ D.usdt.min24_txt }} y {{ D.usdt.max24_txt }}</span>{% endif %}</div>
+    <div class="card"><div class="grafico h110" id="g-intradia"><p class="sin-js">Cargando gráfico…</p></div></div>
   </section>
 
   {{ m.anuncio('superior') }}
@@ -38,72 +68,66 @@
   <section class="seccion" aria-labelledby="ofi-par-t">
     <div class="sec-head"><h2 id="ofi-par-t">Oficial vs. paralelo</h2><div class="controles" id="r-principal"></div></div>
     <div class="card">
-      <div class="grafico h280" id="g-principal"><p class="sin-js">Cargando gráfico…</p></div>
+      <div class="grafico h260" id="g-principal"><p class="sin-js">Cargando gráfico…</p></div>
       <div class="leyenda" id="l-principal"></div>
-      <p class="pie">Entre el 1 de diciembre de 2025 y fines de junio de 2026 la línea azul muestra el <b>valor referencial</b> que publicaba el BCB, porque el tipo de cambio oficial seguía fijo en Bs 6,96. <a href="{{ url('/tipo-de-cambio-oficial/') }}">Más detalles</a>.</p>
     </div>
   </section>
 
-  <section class="seccion" aria-labelledby="conv-t">
-    <div class="sec-head"><h2 id="conv-t">Convierte dólares y bolivianos</h2><a class="hint" href="{{ url('/conversor/') }}">Conversor completo →</a></div>
-    {% include "_conversor.html" %}
+  <section class="seccion compartir-grande" aria-labelledby="mandar-t">
+    <img src="{{ url('/img/hoy-cuadrado.png') }}?v={{ D.compartir.param[3:] }}" alt="Imagen con el dólar de hoy: paralelo Bs {{ D.usdt.valor_txt }}, oficial Bs {{ D.tco.venta_txt }}" width="108" height="135" loading="lazy">
+    <div>
+      <h2 id="mandar-t">Manda el dólar de hoy</h2>
+      <p>La imagen del día, lista para tu grupo de WhatsApp o tu estado.</p>
+      <div class="acciones">
+        <button type="button" class="btn whatsapp" data-compartir-hoy data-img="{{ url('/img/hoy-cuadrado.png') }}" data-texto="{{ D.compartir.texto }}" data-url="{{ abs_url('/') }}{{ D.compartir.param }}">Mandar por WhatsApp</button>
+        <a class="btn" href="{{ url('/img/hoy-estado.png') }}" download="dolar-hoy-estado.png">Imagen para estados</a>
+      </div>
+    </div>
   </section>
 
-  {% if D.bancos.filas %}
-  <section class="seccion" aria-labelledby="ban-t">
-    <div class="sec-head"><h2 id="ban-t">¿Cuánto pagan los bancos por tu dólar?</h2><span class="hint">{{ D.bancos.fecha_larga }}</span></div>
-    <div class="tabla-wrap">
-      <table class="datos">
-        <caption>Los 5 bancos que más pagaron, en promedio, por los dólares que compraron a sus clientes. Excluye bancos con muy pocas operaciones. Fuente: BCB.</caption>
-        <thead><tr><th scope="col">Banco</th><th scope="col">Bs por USD</th><th scope="col">Vs. promedio</th></tr></thead>
-        <tbody>
-        {% for f in D.bancos.top %}
-          <tr><th scope="row">{{ f.nombre }}</th><td class="num">{{ f.tasa_txt }}</td><td class="num {{ 'baja' if f.vs_dir == 'sube' else ('sube' if f.vs_dir == 'baja' else 'igual') }}">{{ f.vs_txt }}</td></tr>
-        {% endfor %}
-        </tbody>
-      </table>
-    </div>
-    <p class="pie"><a href="{{ url('/tipo-de-cambio-bancos/') }}">Ver los {{ D.bancos.n_bancos }} bancos, montos y evolución →</a></p>
+  {{ m.suscripcion() }}
+
+  {% if D.hace_un_anio %}
+  <section class="seccion" aria-labelledby="anio-t">
+    <div class="sec-head"><h2 id="anio-t">Hace un año</h2></div>
+    <p class="destacado" style="margin:0">El {{ D.hace_un_anio.fecha_larga }} el paralelo estaba a <b>Bs {{ D.hace_un_anio.paralelo_txt }}</b>{% if D.hace_un_anio.oficial_txt %}, el oficial a Bs {{ D.hace_un_anio.oficial_txt }} y la brecha en {{ D.hace_un_anio.brecha_txt }}%{% endif %}. Hoy el paralelo está {{ D.hace_un_anio.cambio_txt.lstrip('+−') }}% {{ 'más caro' if D.hace_un_anio.cambio_txt.startswith('+') else 'más barato' }}.</p>
   </section>
   {% endif %}
-
-  <section class="seccion" aria-labelledby="mas-t">
-    <div class="sec-head"><h2 id="mas-t">Más indicadores</h2></div>
-    <div class="tarjetas">
-      <a class="tarjeta" href="{{ url('/reservas-internacionales/') }}"><span class="t-et">Reservas internacionales netas</span><span class="t-val">$us {{ D.reservas.rin_txt }} MM</span><span class="t-ctx">Al {{ D.reservas.fecha_larga }}{% if D.reservas.d12_txt %} · {{ D.reservas.d12_pct_txt }}% en 12 meses{% endif %}</span><span class="t-ir">Ver reservas →</span></a>
-      <a class="tarjeta" href="{{ url('/balanza-cambiaria/') }}"><span class="t-et">Balanza cambiaria</span><span class="t-val">{{ D.balanza.flujo_txt }} MM</span><span class="t-ctx">Flujo neto de divisas en {{ D.balanza.mes }}</span><span class="t-ir">Ver balanza →</span></a>
-      <a class="tarjeta" href="{{ url('/brecha-cambiaria/') }}"><span class="t-et">Brecha cambiaria</span><span class="t-val">{{ D.brecha.pct_txt }}%</span><span class="t-ctx">Paralelo frente al oficial, hoy</span><span class="t-ir">Ver historia de la brecha →</span></a>
-      <a class="tarjeta" href="{{ url('/tipo-de-cambio-real/') }}"><span class="t-et">Tipo de cambio real (ITCR)</span><span class="t-val">{{ D.itcr.valor_txt }}</span><span class="t-ctx">{{ D.itcr.mes|capitalize }} · base dic-2022 = 100</span><span class="t-ir">Ver índice →</span></a>
-    </div>
-  </section>
-
-  {{ m.anuncio('medio') }}
-
-  <article class="seccion prosa">
-    {{ prosa | safe }}
-  </article>
-
-  {{ m.relacionados(articulos, 'Artículos recientes') }}
 
   {% if D.noticias['items'] %}
   <section class="seccion" aria-labelledby="not-t">
-    <div class="sec-head"><h2 id="not-t">En la prensa</h2>{% if D.noticias.fecha_larga %}<span class="hint">{{ D.noticias.fecha_larga }}</span>{% endif %}</div>
+    <div class="sec-head"><h2 id="not-t">Lo que dice la prensa</h2><span class="hint">Últimos 7 días</span></div>
     <ul class="noticias">
       {% for n in D.noticias['items'] %}
-      <li><a href="{{ n.url }}" target="_blank" rel="noopener nofollow">{{ n.titulo }}</a><span class="medio">{{ n.medio }}</span></li>
+      <li><a href="{{ n.url }}" target="_blank" rel="noopener nofollow">{{ n.titulo }}</a><span class="medio">{{ n.medio }} · {{ n.cuando }}</span></li>
       {% endfor %}
     </ul>
-    <p class="pie">Titulares de medios bolivianos seleccionados automáticamente por palabras clave (Google News). Los enlaces llevan a la nota original a través de Google News.</p>
   </section>
   {% endif %}
 
-  {{ m.suscripcion() }}
+  {{ m.anuncio('medio') }}
   {{ m.faq(M.faq) }}
-  {{ m.compartir('Dólar hoy en Bolivia: paralelo Bs ' ~ D.usdt.valor_txt ~ ', oficial Bs ' ~ D.tco.venta_txt ~ '.', '/') }}
+
+  <section class="seccion" aria-labelledby="mas-t">
+    <div class="sec-head"><h2 id="mas-t">Más datos</h2></div>
+    <div class="tarjetas">
+      {% if meses %}<a class="tarjeta" href="{{ url(meses[0].ruta) }}"><span class="t-et">Resumen del mes</span><span class="t-val">{{ meses[0].nombre|capitalize }}</span><span class="t-ctx">Máximo, mínimo y el banco que más pagó</span><span class="t-ir">Ver resumen →</span></a>{% endif %}
+      <a class="tarjeta" href="{{ url('/reservas-internacionales/') }}"><span class="t-et">Reservas del BCB</span><span class="t-val">$us {{ D.reservas.rin_txt }} MM</span><span class="t-ctx">Al {{ D.reservas.fecha_larga }}{% if D.reservas.d12_txt is defined %} · {{ D.reservas.d12_pct_txt }}% en 12 meses{% endif %}</span><span class="t-ir">Ver reservas →</span></a>
+      <a class="tarjeta" href="{{ url('/balanza-cambiaria/') }}"><span class="t-et">Dólares que entraron y salieron</span><span class="t-val">{{ D.balanza.flujo_txt }} MM</span><span class="t-ctx">Balanza cambiaria de {{ D.balanza.mes }}</span><span class="t-ir">Ver balanza →</span></a>
+      <a class="tarjeta" href="{{ url('/tipo-de-cambio-real/') }}"><span class="t-et">Tipo de cambio real</span><span class="t-val">{{ D.itcr.valor_txt }}</span><span class="t-ctx">{{ D.itcr.mes|capitalize }} · base dic-2022 = 100</span><span class="t-ir">Ver índice →</span></a>
+    </div>
+  </section>
+
+  {{ m.relacionados(articulos, 'Para entender el dólar') }}
+
+  <details class="seccion leer-mas">
+    <summary>Cómo leer estas cifras</summary>
+    <div class="prosa">{{ prosa | safe }}</div>
+  </details>
   {{ m.anuncio('inferior') }}
 </div>
 {% endblock %}
 {% block js %}
+<script src="{{ estatico('/js/vivo.js') }}" defer></script>
 <script src="{{ estatico('/js/paginas.js') }}" defer></script>
-<script src="{{ estatico('/js/conversor.js') }}" defer></script>
 {% endblock %}

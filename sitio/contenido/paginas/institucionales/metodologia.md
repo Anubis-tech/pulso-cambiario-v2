@@ -19,7 +19,7 @@ faq: []
 | Reservas internacionales netas | BCB: boletín semanal y planilla por componentes | Cada 3 horas | Días o semanas |
 | Balanza cambiaria | BCB, planilla mensual | Cada 3 horas | Semanas |
 | Tipo de cambio real (ITCR) | BCB, planilla mensual | Cada 3 horas | Semanas |
-| Titulares de prensa | Google News, filtrado a medios bolivianos | Cada 3 horas | Horas |
+| Titulares de prensa | Google News, filtrado a medios bolivianos y a notas de los últimos 7 días | Cada 3 horas | Horas |
 
 Las consultas las ejecuta un proceso automático en GitHub Actions. Los horarios son aproximados: GitHub puede demorar algunas ejecuciones varios minutos.
 
