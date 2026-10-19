@@ -72,6 +72,21 @@ jobs:
         run: python ../scripts/verificar_frescura.py
         continue-on-error: true
 
+      - name: Generar el sitio
+        env:
+          # "preview" (por defecto) o "produccion". Se cambia en
+          # Settings > Secrets and variables > Actions > Variables.
+          SITIO_ENTORNO: ${{ vars.SITIO_ENTORNO || 'preview' }}
+        run: python scripts/construir.py --datos datos --salida _site
+
+      - name: Publicar en Telegram (solo si está configurado y en producción)
+        if: github.event_name == 'schedule' && vars.SITIO_ENTORNO == 'produccion'
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CANAL: ${{ secrets.TELEGRAM_CANAL }}
+        run: python scripts/publicar_telegram.py --datos datos --sitio _site
+        continue-on-error: true
+
       - name: Guardar los datos en la rama "datos"
         working-directory: datos
         run: |
@@ -87,13 +102,6 @@ jobs:
               echo "Reintentando el guardado ($i)..."; sleep 5
             done
           fi
-
-      - name: Generar el sitio
-        env:
-          # "preview" (por defecto) o "produccion". Se cambia en
-          # Settings > Secrets and variables > Actions > Variables.
-          SITIO_ENTORNO: ${{ vars.SITIO_ENTORNO || 'preview' }}
-        run: python scripts/construir.py --datos datos --salida _site
 
       - name: Preparar GitHub Pages
         uses: actions/configure-pages@v5
