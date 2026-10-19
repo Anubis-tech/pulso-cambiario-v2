@@ -1,0 +1,130 @@
+name: Actualizar datos y publicar
+
+# Un solo flujo para todo (la v1 tenía tres que competían entre sí):
+#   1. Descarga datos nuevos (paralelo y TCO siempre; BCB y noticias cada 3 h).
+#   2. Revisa si algún dato está atrasado.
+#   3. Guarda los datos en la rama "datos" (la rama main queda solo con código).
+#   4. Genera el sitio con las cifras escritas en el HTML.
+#   5. Lo publica en GitHub Pages.
+#   6. Si hubo un dato atrasado nuevo, marca la corrida en rojo: GitHub manda
+#      un correo al dueño del repo (máximo un aviso por problema y por día).
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  push:
+    branches: [main]
+    paths-ignore:
+      - "*.md"          # documentos de la raíz (README, DECISIONES, etc.)
+      - "revision/**"   # capturas y reportes de la comparación
+  workflow_dispatch:
+    inputs:
+      solo_publicar:
+        description: "Publicar sin descargar datos nuevos"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages-v2
+  cancel-in-progress: false
+
+jobs:
+  construir:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write   # solo para guardar los datos en la rama "datos"
+    outputs:
+      atrasado: ${{ steps.frescura.outcome == 'failure' }}
+    steps:
+      - name: Descargar el código (rama main)
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Descargar los datos (rama datos)
+        uses: actions/checkout@v4
+        with:
+          ref: datos
+          path: datos
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      - name: Actualizar datos
+        if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && !inputs.solo_publicar)
+        working-directory: datos
+        run: python ../scripts/actualizar.py --auto
+        continue-on-error: true   # una fuente caída no debe impedir publicar el resto
+
+      - name: Revisar si hay datos atrasados
+        id: frescura
+        working-directory: datos
+        run: python ../scripts/verificar_frescura.py
+        continue-on-error: true
+
+      - name: Guardar los datos en la rama "datos"
+        working-directory: datos
+        run: |
+          git config user.name "pulso-economico-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Sin cambios en los datos."
+          else
+            git commit -q -m "Datos: actualización automática ($(date -u +%Y-%m-%dT%H:%MZ))"
+            for i in 1 2 3; do
+              git pull -q --rebase origin datos && git push -q origin HEAD:datos && break
+              echo "Reintentando el guardado ($i)..."; sleep 5
+            done
+          fi
+
+      - name: Generar el sitio
+        env:
+          # "preview" (por defecto) o "produccion". Se cambia en
+          # Settings > Secrets and variables > Actions > Variables.
+          SITIO_ENTORNO: ${{ vars.SITIO_ENTORNO || 'preview' }}
+        run: python scripts/construir.py --datos datos --salida _site
+
+      - name: Preparar GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Empaquetar el sitio
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  publicar:
+    needs: construir
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publicar en GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  avisar:
+    needs: [construir, publicar]
+    if: needs.construir.outputs.atrasado == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Datos atrasados
+        run: |
+          echo "::error::Hay datos atrasados. El sitio se publicó igual, con avisos de 'dato atrasado'."
+          echo "Revisa el paso 'Revisar si hay datos atrasados' del trabajo 'construir'."
+          exit 1
