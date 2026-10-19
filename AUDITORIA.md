@@ -49,6 +49,7 @@ Tres workflows de GitHub Actions:
 
 **Puntos débiles:**
 
+- **"Cada 15 minutos" no se cumple.** En los 30 días previos a esta auditoría hubo **170 mediciones exitosas del paralelo**, cuando a 15 minutos deberían ser unas 2.880. Eso da entre 4 y 8 por día, separadas típicamente (mediana) por **unas 4 horas**, con huecos de hasta 9,5 horas. Hay dos causas probables, y desde aquí no se pueden separar porque no tengo acceso a los registros de Actions de la v1. La primera es que GitHub demora y omite ejecuciones programadas frecuentes. La segunda es que Binance devuelve listas vacías a servidores de centros de datos (el propio código de la v1 lo menciona). Mientras tanto, el pie de página promete actualización "en vivo cada 15 minutos".
 - **Fallas silenciosas.** Si una fuente falla, el workflow igual termina "en verde" (el código lo hace a propósito). Nadie se entera si, por ejemplo, el TCO deja de actualizarse durante una semana.
 - **El repositorio crece sin parar.** Cada actualización hace commit de un `data.json` de 389 KB, hasta 96 veces por día. Git comprime las diferencias, pero el historial crece indefinidamente y mezcla cambios de código con ruido automático.
 - **Horario del TCO.** Desde la RD 142/2026 el BCB publica el TCO a las 23:30. El workflow de 3 horas lo recoge recién en la corrida de las 02:00 (hora Bolivia).
@@ -154,7 +155,7 @@ Requisitos oficiales de elegibilidad ([AdSense, "Eligibility requirements"](http
 5. **Sin imagen para compartir.** WhatsApp es el canal natural en Bolivia y hoy la vista previa sale pobre.
 6. **El dato banco por banco está poco explotado.** Es lo único que la competencia no tiene, y está escondido como "sección 02".
 7. **Sin conversor de moneda**, que es una búsqueda de alto volumen.
-8. **Fallas silenciosas del pipeline.** Si una fuente muere, nadie se entera.
+8. **Fallas silenciosas del pipeline y frecuencia real del paralelo de unas 4 horas, cuando se promete cada 15 minutos.** Si una fuente muere, nadie se entera.
 9. **Afirmación inexacta sobre las fuentes.** El TCO viene de una API de terceros y no "directamente del BCB". Para un sitio financiero, la credibilidad es el activo principal.
 10. **Sin favicon, sin 404 y sin datos estructurados.** Son detalles menores, pero suman en la percepción de calidad, tanto de Google como de los usuarios.
 
