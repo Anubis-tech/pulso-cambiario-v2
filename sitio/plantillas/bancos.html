@@ -105,6 +105,5 @@
 {% endblock %}
 {% block compartir %}{{ m.compartir('Tipo de cambio por banco en Bolivia: promedio Bs ' ~ D.bancos.ppp_txt ~ ' (' ~ (D.bancos.fecha_corta or '') ~ ').', '/tipo-de-cambio-bancos/') }}{% endblock %}
 {% block js %}
-<script src="{{ estatico('/js/chart-4.4.1.umd.min.js') }}" defer></script>
-<script src="{{ estatico('/js/bancos.js') }}" defer></script>
+<script src="{{ estatico('/js/cargar-bancos.js') }}" data-chart="{{ estatico('/js/chart-4.4.1.umd.min.js') }}" data-app="{{ estatico('/js/bancos.js') }}" defer></script>
 {% endblock %}

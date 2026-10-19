@@ -111,7 +111,7 @@
   <p style="margin:0;display:flex;gap:8px;flex-wrap:wrap">
     {% if S.suscripcion.telegram %}<a class="btn" href="{{ S.suscripcion.telegram }}" rel="noopener" target="_blank">Canal de Telegram</a>{% endif %}
     {% if S.suscripcion.whatsapp %}<a class="btn whatsapp" href="{{ S.suscripcion.whatsapp }}" rel="noopener" target="_blank">Canal de WhatsApp</a>{% endif %}
-    {% if not (S.suscripcion.formulario_accion or S.suscripcion.telegram or S.suscripcion.whatsapp) %}<span class="pie" style="margin:0">Próximamente: alerta diaria por correo, Telegram y WhatsApp. <a href="{{ url('/alertas/') }}">Más información</a>.</span>{% endif %}
+    {% if not (S.suscripcion.formulario_accion or S.suscripcion.telegram or S.suscripcion.whatsapp) %}<span class="pie" style="margin:0">Próximamente: alerta diaria por correo, Telegram y WhatsApp. <a href="{{ url('/alertas/') }}">Cómo funcionarán las alertas</a>.</span>{% endif %}
   </p>
 </section>
 {% endmacro %}
