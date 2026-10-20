@@ -13,7 +13,7 @@ faq: []
 
 Personas y empresas en Bolivia que siguen el tipo de cambio para decidir: comerciantes que importan, familias que reciben remesas, profesionales que cobran o pagan en dólares, estudiantes de economía y periodistas. Es una audiencia con una intención clara (dinero, cambio, finanzas) y que vuelve cada día.
 
-*[Pendiente: completar con las cifras reales de audiencia (visitas mensuales, porcentaje desde Bolivia, porcentaje desde el celular) cuando haya al menos 3 meses de datos de medición. No publicar cifras estimadas.]*
+Si te interesa anunciar, escríbenos y te enviamos las cifras de audiencia actualizadas: visitas mensuales, porcentaje desde Bolivia y desde el celular.
 
 ## Formatos disponibles
 
@@ -33,4 +33,6 @@ Personas y empresas en Bolivia que siguen el tipo de cambio para decidir: comerc
 
 ## Contacto comercial
 
-{% if S.contacto.correo_publicidad %}Escribe a **{{ S.contacto.correo_publicidad }}** con el nombre de tu empresa, el objetivo de la campaña y las fechas tentativas.{% else %}*[Pendiente: correo comercial, en `config/sitio.json`, campo "correo_publicidad".]*{% endif %}
+Escríbenos con el nombre de tu empresa, el objetivo de la campaña y las fechas tentativas.
+
+{{ boton_correo("Ver correo comercial") }}

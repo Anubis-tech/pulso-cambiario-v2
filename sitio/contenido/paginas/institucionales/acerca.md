@@ -18,15 +18,7 @@ Nació de una necesidad concreta. Desde 2023 el precio del dólar se volvió una
 
 ## Quién está detrás
 
-{% if S.responsable.nombre %}
-El sitio lo hace **{{ S.responsable.nombre }}**{% if S.responsable.ciudad %}, desde {{ S.responsable.ciudad }}{% endif %}. {{ S.responsable.descripcion }}
-{% if S.responsable.linkedin %}
-
-Perfil profesional: [{{ S.responsable.linkedin }}]({{ S.responsable.linkedin }}).
-{% endif %}
-{% else %}
-*[Pendiente: nombre del responsable, trayectoria y por qué es una fuente confiable en estos temas. Se completa en `config/sitio.json`.]*
-{% endif %}
+Pulso Económico es un sitio independiente hecho en Santa Cruz de la Sierra, Bolivia. Reúne en un solo lugar los datos públicos del dólar y del mercado cambiario, los procesa de forma automática y los explica en lenguaje simple. Para escribirnos, ve a [Contacto]({{ url('/contacto/') }}).
 
 ## Independencia
 

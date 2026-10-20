@@ -22,6 +22,7 @@ Uso:
 import argparse
 import hashlib
 import html
+import base64
 import json
 import os
 import re
@@ -626,7 +627,18 @@ class Sitio:
         self.env.filters["fecha_larga"] = fecha_larga
         self.env.filters["fecha_corta"] = fecha_corta
         self.env.globals.update(url=self.url, abs_url=self.abs_url, estatico=self.estatico)
+        self.env.globals["boton_correo"] = self.boton_correo
         self.versiones = {}
+
+    def boton_correo(self, texto="Ver correo de contacto"):
+        """Botón que revela el correo al tocarlo. El correo nunca aparece en texto plano en
+        el HTML (los robots que recolectan correos no lo encuentran)."""
+        from markupsafe import Markup
+        c = os.environ.get("CONTACTO_CORREO", "").strip()
+        cod = base64.b64encode(c[::-1].encode()).decode() if c else self.cfg.get("contacto", {}).get("correo_codificado", "")
+        if not cod:
+            return Markup("")
+        return Markup(f'<span class="correo-oculto"><button type="button" class="btn" data-correo="{cod}">{texto}</button></span>')
 
     # rutas
     def url(self, ruta):

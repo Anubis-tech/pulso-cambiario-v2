@@ -308,4 +308,16 @@
     var marcar = function () { barra.classList.toggle("con-sombra", window.scrollY > 4); };
     window.addEventListener("scroll", marcar, { passive: true }); marcar();
   }
+
+  /* Correo de contacto: se arma solo cuando el lector lo pide */
+  Array.prototype.forEach.call(document.querySelectorAll("[data-correo]"), function (b) {
+    b.addEventListener("click", function () {
+      try {
+        var c = atob(b.getAttribute("data-correo")).split("").reverse().join("");
+        var a = document.createElement("a");
+        a.href = "mailto:" + c; a.textContent = c; a.className = "correo-visible";
+        b.parentNode.replaceChild(a, b);
+      } catch (e) {}
+    });
+  });
 })(window);

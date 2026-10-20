@@ -36,8 +36,8 @@
     "whatsapp": ""
   },
   "contacto": {
-    "correo": "",
-    "correo_publicidad": ""
+    "_ayuda": "El correo se guarda codificado (base64 del texto invertido) para que no quede en texto plano en el repo ni en el HTML. Se muestra solo cuando el lector toca el botón. Si existe la variable de entorno CONTACTO_CORREO, tiene prioridad.",
+    "correo_codificado": "bW9jLmR1b2xjaUAyNS5yZWluaWFyLnR0YW0="
   },
   "responsable": {
     "_ayuda": "Datos de la página 'Acerca de'. Completar con datos reales. Mientras estén vacíos, la página muestra un aviso visible.",

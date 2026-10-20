@@ -507,3 +507,4 @@ body[data-pagina="conversor"] .figuras .figura:first-child{ --tema:var(--paralel
 .plegable[open] .prosa{ animation:desplegar 220ms ease-out; }
 @keyframes desplegar{ from{ opacity:0; transform:translateY(-4px); } to{ opacity:1; transform:none; } }
 @media (max-width:520px){ .explicacion{ padding:16px 18px 4px; border-radius:18px; } }
+.correo-oculto .btn{ margin:4px 0; } a.correo-visible{ font-weight:600; font-size:17px; }
