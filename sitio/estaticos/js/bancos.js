@@ -308,19 +308,24 @@ function renderSpotlight(mkt, sel, per, allAggs, selBanks){
   }
 
   // Más alto y más bajo
-  $('spHLLbl').textContent = isSys ? 'Banco que pagó más y que pagó menos' : 'Precio más alto y más bajo de tu selección';
-  const pool = isSys ? allAggs.filter(a => !a.thin) : per;
+  $('spHLLbl').textContent = isSys ? 'Banco que pagó mejor y peor frente al mercado' : 'Precio más alto y más bajo de tu selección';
+  const pool = isSys ? allAggs.filter(a => !a.thin && !SMALL.has(a.bank) && a.prima != null) : per;
   const box = $('spHL');
   if (pool.length < 2){
     box.innerHTML = '<div class="hl-note">'+(isSys ? 'Sin datos suficientes en el período.' : pool.length ? 'Elige un segundo banco para comparar.' : 'Elige 2 o 3 bancos para comparar.')+'</div>';
     $('spHLCtx').textContent = '';
     return;
   }
-  const sorted = [...pool].sort((a,b) => a.ppp - b.ppp);
+  // En todo el sistema se ordena por la diferencia contra el mercado en los mismos días
+  // (como el resumen mensual): un precio promedio sin ajustar premia a quien compró en días caros.
+  const clave = isSys ? (x => x.prima) : (x => x.ppp);
+  const sorted = [...pool].sort((a,b) => clave(a) - clave(b));
   const lo = sorted[0], hi = sorted[sorted.length-1];
-  const row = (k,a,cls) => '<div class="hl-row"><span class="hl-v '+cls+'">'+fmt(a.ppp,2)+'</span><span class="hl-b">'+dispF(a.bank)+'</span><span class="hl-k">'+k+'</span></div>';
+  const row = (k,a,cls) => '<div class="hl-row"><span class="hl-v '+cls+'">'+(isSys ? fmtSigned(a.prima,2) : fmt(a.ppp,2))+'</span><span class="hl-b">'+dispF(a.bank)+'</span><span class="hl-k">'+k+'</span></div>';
   box.innerHTML = row('paga más',hi,'good')+row('paga menos',lo,'bad');
-  $('spHLCtx').textContent = 'Diferencia: '+fmt(hi.ppp-lo.ppp,2)+' Bs por USD.'+(isSys ? ' Excluye bancos con muestra delgada.' : '');
+  $('spHLCtx').textContent = isSys
+    ? 'Bs por dólar frente al promedio del mercado en los mismos días. Excluye bancos PyME y con muestra delgada.'
+    : 'Diferencia: '+fmt(hi.ppp-lo.ppp,2)+' Bs por USD.';
 }
 
 function renderTiles(mkt, sel){

@@ -508,3 +508,13 @@ body[data-pagina="conversor"] .figuras .figura:first-child{ --tema:var(--paralel
 @keyframes desplegar{ from{ opacity:0; transform:translateY(-4px); } to{ opacity:1; transform:none; } }
 @media (max-width:520px){ .explicacion{ padding:16px 18px 4px; border-radius:18px; } }
 .correo-oculto .btn{ margin:4px 0; } a.correo-visible{ font-weight:600; font-size:17px; }
+
+/* QA final: tablas anchas de texto con scroll propio, contraste y objetivos táctiles */
+.prosa table{ display:block; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+.btn.whatsapp{ background:#157a42; border-color:#157a42; }
+.btn.whatsapp:hover{ background:#126a39; }
+.foot-cols a{ color:var(--ink-2); }
+.foot-legal{ color:var(--ink-2); }
+.sec-head a.hint,.sec-head .hint a,a.hint{ display:inline-flex; align-items:center; min-height:44px; }
+details.metodo summary{ min-height:44px; display:flex; align-items:center; }
+.compartir,.compartir-grande{ margin-bottom:48px; }

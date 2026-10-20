@@ -21,13 +21,13 @@
           <span class="v"><small>Bs</small>{{ D.usdt.valor_txt }}</span>
           {% if ay %}<span class="d {{ ay.dir }}">{{ ay.texto }}</span>{% endif %}
         </p>
-        <div class="mini"><div class="grafico h110" id="g-intradia"><p class="sin-js">Cargando gráfico</p></div>{% if D.usdt.min24_txt %}<p class="mini-rango">Hoy entre Bs {{ D.usdt.min24_txt }} y {{ D.usdt.max24_txt }}</p>{% endif %}</div>
+        <div class="mini"><div class="grafico h110" id="g-intradia"><p class="sin-js">Cargando gráfico</p></div>{% if D.usdt.min24_txt %}<p class="mini-rango">Últimas 24 horas: entre Bs {{ D.usdt.min24_txt }} y {{ D.usdt.max24_txt }}</p>{% endif %}</div>
         <p class="hora"><span class="live-dot" aria-hidden="true"></span>Dato de las {{ D.usdt.hora }}, <span data-hace="{{ D.usdt.ts }}">{{ D.usdt.fecha_corta }}</span>{% if D.atrasado.get('usdt', False) %} <span class="atrasado">dato atrasado</span>{% endif %}. <a href="{{ url('/metodologia/') }}">Cómo medimos</a></p>
       </div>
       <a class="kpi kpi-oficial" href="{{ url('/tipo-de-cambio-oficial/') }}">
         <span class="k-et">Oficial BCB</span>
         <span class="k-val"><small>Bs</small>{{ D.tco.venta_txt }}</span>
-        <span class="k-ctx">{{ 'Vigente para el ' ~ D.tco.dia_txt if D.tco.es_de_manana else 'Vigente hoy' }}{% if D.tco.ayer is defined %}, {{ D.tco.ayer.texto }}{% endif %}</span>
+        <span class="k-ctx"><span data-vigencia="{{ D.tco.fecha }}">{{ 'Vigente para el ' ~ D.tco.dia_txt if D.tco.es_de_manana else 'Vigente el ' ~ D.tco.fecha_corta }}</span>{% if D.tco.ayer is defined %}, {{ D.tco.ayer.texto }}{% endif %}</span>
       </a>
       <a class="kpi kpi-brecha" href="{{ url('/brecha-cambiaria/') }}">
         <span class="k-et">Brecha</span>

@@ -13,6 +13,7 @@
     // Acepta "1.250,50", "1250,50" y "1250.50".
     v = String(v || "").trim().replace(/\s/g, "");
     if (v.indexOf(",") > -1) v = v.replace(/\./g, "").replace(",", ".");
+    else if (/^\d{1,3}(\.\d{3})+$/.test(v)) v = v.replace(/\./g, ""); // "1.000" es mil, como se escribe en Bolivia
     var n = parseFloat(v);
     return isFinite(n) && n >= 0 ? n : null;
   }

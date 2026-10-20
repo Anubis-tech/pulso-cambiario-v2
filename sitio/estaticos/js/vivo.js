@@ -59,6 +59,7 @@
   function leerMonto(s) {
     s = String(s || "").trim().replace(/\s/g, "");
     if (s.indexOf(",") > -1) s = s.replace(/\./g, "").replace(",", ".");
+    else if (/^\d{1,3}(\.\d{3})+$/.test(s)) s = s.replace(/\./g, ""); // "1.000" es mil, como se escribe en Bolivia
     var n = parseFloat(s);
     return isFinite(n) && n >= 0 ? n : null;
   }
@@ -104,4 +105,13 @@
       }).catch(function (e) { if (!e || e.name !== "AbortError") window.open(wa, "_blank", "noopener"); });
     });
   });
+
+  /* "Vigente hoy" se decide en el navegador: el HTML se genera cada 15 minutos y no
+     debe decir "hoy" si el dato es de otro día. */
+  try {
+    var hoyBo = new Intl.DateTimeFormat("en-CA", { timeZone: "America/La_Paz" }).format(new Date());
+    document.querySelectorAll("[data-vigencia]").forEach(function (el) {
+      if (el.getAttribute("data-vigencia") === hoyBo) el.textContent = "Vigente hoy";
+    });
+  } catch (e) {}
 })();

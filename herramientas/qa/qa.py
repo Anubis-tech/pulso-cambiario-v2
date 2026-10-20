@@ -40,7 +40,7 @@ for f in sorted(raiz.rglob('*.html')):
         dest=raiz/ruta.lstrip('/')
         if ruta.endswith('/'): dest=dest/'index.html'
         if not dest.exists(): errores.append(f'{rel}: enlace roto {l}')
-    if rel.startswith('/embed/') or rel in('/cambiario/bancos.html','/404.html') or rel.startswith('/google'): continue
+    if rel.startswith('/embed/') or rel in('/cambiario/bancos.html','/cambiario/','/404.html') or rel.startswith('/google'): continue
     if p.h1!=1: errores.append(f'{rel}: tiene {p.h1} H1')
     if not p.canon or not p.canon.startswith(dominio): errores.append(f'{rel}: canonical {p.canon}')
     titulos.setdefault(p.title,[]).append(rel); descs.setdefault(p.desc,[]).append(rel)

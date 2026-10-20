@@ -503,7 +503,13 @@ def resumenes_mensuales(data):
     tco = {r["date"]: r["tco_oficial"] for r in data["tco"] if r.get("tco_oficial") is not None}
     meses_disp = sorted({r["date"][:7] for r in diario if r["date"] >= "2024-06"})
     bancos = data.get("banks") or {}
-    ppp_dia = {r["date"]: r["rate"] for r in (data.get("aggregates") or {}).get("Bancos (promedio ponderado)", []) if r.get("rate")}
+    # Mercado de cada día: promedio ponderado por monto de todos los bancos (igual que la herramienta de bancos)
+    _acc = {}
+    for _serie in bancos.values():
+        for r in _serie:
+            if r.get("rate") and r.get("monto"):
+                x = _acc.setdefault(r["date"], [0.0, 0.0]); x[0] += r["rate"] * r["monto"]; x[1] += r["monto"]
+    ppp_dia = {d: v[0] / v[1] for d, v in _acc.items() if v[1]}
     salida = []
     for ym in meses_disp:
         y, mth = int(ym[:4]), int(ym[5:7])
@@ -708,6 +714,9 @@ class Sitio:
         ctx.update({"ruta": ruta, "M": meta, "canonical": self.abs_url(ruta)})
         if extra:
             ctx.update(extra)
+        if meta.get("sin_anuncios") or meta.get("noindex"):
+            # Páginas sin contenido propio (404, contacto, legales): ni anuncios manuales ni automáticos.
+            ctx["anuncios_activos"] = False
         html_txt = self.env.get_template(plantilla).render(**ctx)
         self.escribir(ruta, html_txt)
         if sitemap:
@@ -806,7 +815,7 @@ def generar_hoy(sitio, D):
         y += alto + 30
         # Dos tarjetas: oficial y banco que más pagó
         ancho_t = (W - 2 * x + 40 - 30) // 2
-        tarjetas = [("Oficial BCB", f"Bs {t['venta_txt']}", (79, 143, 247), "Vigente " + ("para el " + t["dia_txt"] if t.get("es_de_manana") else "hoy"))]
+        tarjetas = [("Oficial BCB", f"Bs {t['venta_txt']}", (79, 143, 247), "Vigente " + ("para el " + t["dia_txt"] if t.get("es_de_manana") else "el " + t["fecha_corta"]))]
         if b.get("podio"):
             p = b["podio"][0]
             tarjetas.append(("Banco que más pagó", f"Bs {p['tasa_txt']}", (177, 140, 255), p["nombre"]))
@@ -1005,8 +1014,9 @@ def construir(datos_dir, salida, entorno=None, base=None):
              sitemap=False)
 
     # --- Página 404 y redirección de la URL vieja ---
-    s.pagina("/404.html", "404.html", {"titulo": "Página no encontrada", "descripcion": "La página que buscas no existe.", "h1": "No encontramos esta página", "og": og["sitio"]}, sitemap=False)
+    s.pagina("/404.html", "404.html", {"titulo": "Página no encontrada", "descripcion": "La página que buscas no existe.", "h1": "No encontramos esta página", "og": og["sitio"], "noindex": True}, sitemap=False)
     s.pagina("/cambiario/bancos.html", "redireccion.html", {"titulo": "Esta página se mudó", "descripcion": "", "destino": "/tipo-de-cambio-bancos/", "og": og["bancos"]}, sitemap=False)
+    s.pagina("/cambiario/", "redireccion.html", {"titulo": "Esta página se mudó", "descripcion": "", "destino": "/tipo-de-cambio-bancos/", "og": og["bancos"]}, sitemap=False)
 
     # --- sitemap.xml, robots.txt, ads.txt, manifest, cabeceras ---
     xml = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']

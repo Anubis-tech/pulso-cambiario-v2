@@ -5,10 +5,10 @@ descripcion: "Qué es Pulso Económico, quién está detrás, de dónde salen lo
 h1: "Acerca de Pulso Económico"
 dek: "Datos del mercado cambiario de Bolivia, explicados con claridad y con las fuentes a la vista."
 titulo_corto: "Acerca de"
-aviso_responsable: true
 actualizado: 2026-10-18
 prioridad: 0.4
 faq: []
+sin_anuncios: true
 ---
 ## Qué es
 

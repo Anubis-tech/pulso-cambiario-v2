@@ -14,7 +14,7 @@
 {% else %}
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
 {% endif %}
-<link rel="canonical" href="{{ canonical }}">
+{% if not (M.noindex is defined and M.noindex) %}<link rel="canonical" href="{{ canonical }}">{% endif %}
 <meta name="theme-color" content="#f3f4f6" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0b0b0c" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="{{ url('/favicon.svg') }}" type="image/svg+xml">

@@ -9,9 +9,6 @@
 {% block contenido %}
 <div class="wrap">
   <article class="seccion prosa">
-    {% if M.aviso_responsable is defined and M.aviso_responsable and not S.responsable.nombre %}
-    <p class="aviso"><b>Falta completar:</b> esta página necesita los datos reales del responsable del sitio (nombre, trayectoria y forma de contacto). Se completan en <code>config/sitio.json</code>, sección "responsable". Google y AdSense valoran saber quién está detrás de un sitio de información financiera.</p>
-    {% endif %}
     {{ prosa | safe }}
     {% if M.actualizado is defined %}<p class="pie">Última actualización de esta página: {{ (M.actualizado|string)|fecha_larga }}.</p>{% endif %}
   </article>

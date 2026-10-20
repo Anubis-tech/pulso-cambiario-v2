@@ -6,7 +6,7 @@
 {% block meta %}<span><span class="live-dot" aria-hidden="true"></span>Última medición: {{ D.usdt.hora }} del {{ D.usdt.fecha_larga }} (hora de Bolivia)</span>{% endblock %}
 {% block figuras %}
 {{ m.figura('Paralelo hoy', D.usdt.valor_txt, 'Bs', D.usdt.ayer.texto if D.usdt.ayer is defined else None, D.usdt.ayer.dir if D.usdt.ayer is defined else 'igual', '', '', 'Dato de las ' ~ D.usdt.hora, D.atrasado.get('usdt', False), 'var(--paralelo)') }}
-{{ m.figura('Hoy se movió entre', (D.usdt.min24_txt ~ ' y ' ~ D.usdt.max24_txt) if D.usdt.min24_txt else '—', 'Bs', None, 'igual', '', '', 'Últimas 24 horas') }}
+{{ m.figura('Rango en 24 horas', (D.usdt.min24_txt ~ ' y ' ~ D.usdt.max24_txt) if D.usdt.min24_txt else '—', 'Bs', None, 'igual', '', '', 'Últimas 24 horas') }}
 {{ m.figura('Cambio en 30 días', D.usdt.d30_txt ~ ' Bs' if D.usdt.d30_txt is defined else '—', '', (D.usdt.d30_pct_txt ~ '%') if D.usdt.d30_pct_txt is defined else None, D.usdt.d30_dir if D.usdt.d30_dir is defined else 'igual', '', '', '') }}
 {{ m.figura('Oficial (BCB)', D.tco.venta_txt, 'Bs', None, 'igual', '', '', 'En el paralelo pagas ' ~ D.brecha.bs_txt.lstrip('+') ~ ' Bs más por dólar' if D.brecha.pct > 0 else 'El paralelo está por debajo del oficial', False, 'var(--accent)') }}
 {% endblock %}

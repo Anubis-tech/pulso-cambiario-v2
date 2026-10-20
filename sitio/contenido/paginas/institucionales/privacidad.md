@@ -8,6 +8,7 @@ titulo_corto: "Privacidad"
 actualizado: 2026-10-18
 prioridad: 0.2
 faq: []
+sin_anuncios: true
 ---
 ## Quién es responsable
 

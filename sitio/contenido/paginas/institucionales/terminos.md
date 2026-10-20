@@ -8,6 +8,7 @@ titulo_corto: "Términos"
 actualizado: 2026-10-18
 prioridad: 0.2
 faq: []
+sin_anuncios: true
 ---
 > **Nota para el responsable del sitio:** texto base para revisar con un abogado antes del lanzamiento.
 

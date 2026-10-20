@@ -8,6 +8,7 @@ titulo_corto: "Contacto"
 actualizado: 2026-10-18
 prioridad: 0.3
 faq: []
+sin_anuncios: true
 ---
 Escríbenos. Toca el botón para ver la dirección:
 

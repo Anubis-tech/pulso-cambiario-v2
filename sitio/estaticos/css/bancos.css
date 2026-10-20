@@ -88,3 +88,4 @@
 .app-bancos details.metodo summary{ cursor:pointer; font-family:var(--font-mono); font-size:13px; color:var(--ink-2); }
 .app-bancos details.metodo ul{ margin:10px 0 0; padding-left:18px; max-width:78ch; }
 .app-bancos details.metodo li{ margin:0 0 6px; font-size:13px; color:var(--ink-2); line-height:1.55; }
+.app-bancos .pill-sistema.active{ background:#0f7a65; border-color:#0f7a65; color:#fff; }
