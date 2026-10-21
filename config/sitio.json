@@ -6,7 +6,7 @@
   "dominio": "https://elpulsoeconomico.com",
   "idioma": "es-BO",
   "_entorno": "'preview' = no indexable, sin anuncios ni analítica reales. 'produccion' = sitio oficial. Se puede forzar con la variable de entorno SITIO_ENTORNO.",
-  "entorno": "preview",
+  "entorno": "produccion",
   "_ruta_base_preview": "Carpeta donde GitHub Pages publica el preview (anubis-tech.github.io/pulso-cambiario-v2/). En producción, con dominio propio, la ruta base es vacía.",
   "ruta_base_preview": "/pulso-cambiario-v2",
   "adsense": {
