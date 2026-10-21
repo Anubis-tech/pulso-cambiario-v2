@@ -28,3 +28,4 @@ La **brecha** es la distancia entre el paralelo y el oficial. Llegó a superar e
 ## De dónde salen los datos
 
 Todo viene de fuentes públicas: el [Banco Central de Bolivia](https://www.bcb.gob.bo/) para el tipo de cambio oficial, los bancos, las reservas, la balanza cambiaria y el tipo de cambio real, y [Binance P2P](https://p2p.binance.com/) para el paralelo. La [metodología]({{ url('/metodologia/') }}) explica cómo se procesa cada dato y cuáles son sus límites. Si una fuente deja de responder, la cifra afectada lo indica con un aviso de "dato atrasado".
+
