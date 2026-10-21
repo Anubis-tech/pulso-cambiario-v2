@@ -41,12 +41,12 @@ jobs:
       atrasado: ${{ steps.frescura.outcome == 'failure' }}
     steps:
       - name: Descargar el código (rama main)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           persist-credentials: false
 
       - name: Descargar los datos (rama datos)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: datos
           path: datos
