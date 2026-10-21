@@ -44,7 +44,7 @@ Las consultas las ejecuta un proceso automático en GitHub Actions. Los horarios
 - **Promedio del sistema:** promedio de los precios de todos los bancos, ponderado por el monto que compró cada uno.
 - **Vs. mercado (herramienta interactiva):** diferencia entre el promedio ponderado del banco y el del mercado en los mismos días, ponderada por el monto del banco.
 - **Muestra delgada (†):** bancos PyME o con menos de 0,2% del monto del mercado, o con datos en menos de la mitad de los días del período. Su precio puede depender de muy pocas operaciones.
-- **Para comparar bancos** ("precio más alto / precio más bajo") se excluyen los bancos con muestra delgada.
+- **Para comparar bancos** ("el que más pagó / el que menos pagó") se excluyen los bancos con muestra delgada.
 
 ## Brecha cambiaria
 

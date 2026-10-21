@@ -36,7 +36,7 @@
       </a>
       {% if D.bancos.podio %}
       <a class="kpi kpi-bancos" href="{{ url('/tipo-de-cambio-bancos/') }}">
-        <span class="k-et">Precio más alto en bancos</span>
+        <span class="k-et">Banco que más pagó</span>
         <span class="k-val"><small>Bs</small>{{ D.bancos.podio[0].tasa_txt }}</span>
         <span class="k-ctx">Promedio de los bancos: Bs {{ D.bancos.ppp_txt }}</span>
       </a>
@@ -125,7 +125,7 @@
   <section class="seccion" aria-labelledby="mas-t">
     <div class="sec-head"><h2 id="mas-t">Más datos</h2></div>
     <div class="tarjetas">
-      {% if meses %}<a class="tarjeta" href="{{ url(meses[0].ruta) }}"><span class="t-et">Resumen del mes</span><span class="t-val">{{ meses[0].nombre|capitalize }}</span><span class="t-ctx">Máximo, mínimo y el precio más alto en bancos</span><span class="t-ir">Ver resumen</span></a>{% endif %}
+      {% if meses %}<a class="tarjeta" href="{{ url(meses[0].ruta) }}"><span class="t-et">Resumen del mes</span><span class="t-val">{{ meses[0].nombre|capitalize }}</span><span class="t-ctx">Máximo, mínimo y el banco que más pagó</span><span class="t-ir">Ver resumen</span></a>{% endif %}
       <a class="tarjeta" href="{{ url('/reservas-internacionales/') }}"><span class="t-et">Reservas del BCB</span><span class="t-val">$us {{ D.reservas.rin_txt }} MM</span><span class="t-ctx">Al {{ D.reservas.fecha_larga }}{% if D.reservas.d12_txt is defined %} · {{ D.reservas.d12_pct_txt }}% en 12 meses{% endif %}</span><span class="t-ir">Ver reservas</span></a>
       <a class="tarjeta" href="{{ url('/balanza-cambiaria/') }}"><span class="t-et">Dólares que entraron y salieron</span><span class="t-val">{{ D.balanza.flujo_txt }} MM</span><span class="t-ctx">Balanza cambiaria de {{ D.balanza.mes }}</span><span class="t-ir">Ver balanza</span></a>
       <a class="tarjeta" href="{{ url('/tipo-de-cambio-real/') }}"><span class="t-et">Tipo de cambio real</span><span class="t-val">{{ D.itcr.valor_txt }}</span><span class="t-ctx">{{ D.itcr.mes|capitalize }} · base dic-2022 = 100</span><span class="t-ir">Ver índice</span></a>
