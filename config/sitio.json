@@ -22,8 +22,8 @@
   },
   "analitica": {
     "_ayuda": "proveedor: '' (ninguno), 'ga4', 'cloudflare' o 'plausible'. id: el ID de medición (G-XXXX para GA4, token para Cloudflare Web Analytics, dominio para Plausible).",
-    "proveedor": "",
-    "id": ""
+    "proveedor": "ga4",
+    "id": "G-Q6YMYCNEXH"
   },
   "busqueda": {
     "_ayuda": "Código de verificación de Bing Webmaster Tools (meta msvalidate.01). El de Google ya está verificado con un archivo.",

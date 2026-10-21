@@ -18,7 +18,7 @@
       <li>Su precio más alto fue Bs {{ mm.max_txt }} ({{ mm.max_fecha }}) y el más bajo, Bs {{ mm.min_txt }} ({{ mm.min_fecha }}).</li>
       {% if mm.of_fin_txt %}<li>El {{ 'valor referencial del BCB' if mm.referencial else 'oficial del BCB' }} pasó de Bs {{ mm.of_ini_txt }} a Bs {{ mm.of_fin_txt }}{% if mm.referencial %} (el oficial legal seguía en Bs 6,96){% endif %}.</li>{% endif %}
       {% if mm.brecha_prom_txt %}<li>La brecha entre paralelo y {{ 'referencial' if mm.referencial else 'oficial' }} promedió {{ mm.brecha_prom_txt }}%.</li>{% endif %}
-      {% if mm.mejor_banco %}<li>El banco que mejor pagó en el mes fue <b>{{ mm.mejor_banco.nombre }}</b>: en los días en que compró, pagó en promedio {{ mm.mejor_banco.vs_txt }} Bs por dólar frente al promedio de todos los bancos esos mismos días (su precio promedio del mes fue Bs {{ mm.mejor_banco.ppp_txt }}). Solo cuentan bancos con volumen relevante.</li>{% endif %}
+      {% if mm.mejor_banco %}<li>El banco con el precio más alto frente al mercado fue <b>{{ mm.mejor_banco.nombre }}</b>: en los días en que compró, su precio estuvo en promedio {{ mm.mejor_banco.vs_txt }} Bs por dólar respecto del promedio de todos los bancos esos mismos días (su precio promedio del mes fue Bs {{ mm.mejor_banco.ppp_txt }}). Solo cuentan bancos con volumen relevante.</li>{% endif %}
     </ul>
   </section>
 

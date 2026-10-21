@@ -7,8 +7,8 @@
 {% block meta %}<span>Datos del {{ D.bancos.fecha_larga }} · fuente: Banco Central de Bolivia</span>{% endblock %}
 {% block figuras %}
 {{ m.figura('Lo que pagan los bancos si vendes', D.bancos.ppp_txt, 'Bs', None, 'igual', '', '', 'Promedio de todos, ' ~ D.bancos.dia_txt, D.atrasado.get('bancos', False), 'var(--ingreso)') }}
-{% if D.bancos.mejor %}{{ m.figura('Banco que más pagó', D.bancos.mejor.tasa_txt, 'Bs', None, 'igual', '', '', D.bancos.mejor.nombre) }}{% endif %}
-{% if D.bancos.peor %}{{ m.figura('Menor precio (bancos con volumen)', D.bancos.peor.tasa_txt, 'Bs', None, 'igual', '', '', D.bancos.peor.nombre) }}{% endif %}
+{% if D.bancos.mejor %}{{ m.figura('Precio más alto', D.bancos.mejor.tasa_txt, 'Bs', None, 'igual', '', '', D.bancos.mejor.nombre) }}{% endif %}
+{% if D.bancos.peor %}{{ m.figura('Precio más bajo (bancos con volumen)', D.bancos.peor.tasa_txt, 'Bs', None, 'igual', '', '', D.bancos.peor.nombre) }}{% endif %}
 {{ m.figura('Monto comprado en el día', ('$us ' ~ D.bancos.monto_txt ~ ' MM') if D.bancos.monto_txt else '—', '', None, 'igual', '', '', (D.bancos.n_txt ~ ' operaciones') if D.bancos.n_txt else '') }}
 {% endblock %}
 {% block cuerpo %}
@@ -23,7 +23,7 @@
     <div class="spotlight-grid">
       <div class="spotlight-figure"><div class="s-label">Monto comprado</div><div class="s-row"><div class="s-value" id="spMonto">—</div></div><div class="s-context" id="spMontoCtx"></div></div>
       <div class="spotlight-figure"><div class="s-label">Precio promedio ponderado</div><div class="s-row"><div class="s-value" id="spPpp">—</div><div id="spPppChip"></div></div><div class="s-context" id="spPppCtx"></div></div>
-      <div class="spotlight-figure"><div class="s-label" id="spHLLbl">Banco que pagó más y que pagó menos</div><div id="spHL"></div><div class="s-context" id="spHLCtx"></div></div>
+      <div class="spotlight-figure"><div class="s-label" id="spHLLbl">Precio más alto y más bajo frente al mercado</div><div id="spHL"></div><div class="s-context" id="spHLCtx"></div></div>
     </div>
   </div>
   <div class="filters">
@@ -67,7 +67,7 @@
   <section aria-labelledby="b3">
     <div class="sec-head"><h2 id="b3">Volumen y precio frente al mercado</h2><span class="hint">Todos los bancos del período</span></div>
     <div class="card">
-      <p class="context-note" style="margin-bottom:12px">Más arriba: el banco pagó más que el promedio del mercado esos mismos días (verde). Más abajo: pagó menos (rojo). El tamaño es el número de operaciones.</p>
+      <p class="context-note" style="margin-bottom:12px">Más arriba: el banco compró a un precio más alto que el promedio del mercado esos mismos días. Más abajo: a un precio más bajo. El tamaño es el número de operaciones.</p>
       <div class="chart-wrap tall"><canvas id="cBub" role="img" aria-label="Monto comprado contra diferencia con el mercado, por banco"></canvas><div class="empty" id="eBub"></div></div>
     </div>
   </section>
@@ -85,13 +85,13 @@
     {% for f in D.bancos.filas %}
       <tr><th scope="row">{{ f.nombre }}{% if f.motivo %} <span title="{{ f.motivo|capitalize }}: su precio puede depender de muy pocas operaciones">†</span>{% endif %}</th>
       <td class="num">{{ f.tasa_txt }}</td>
-      <td class="num {{ 'baja' if f.vs_dir == 'sube' else ('sube' if f.vs_dir == 'baja' else 'igual') }}">{{ f.vs_txt }}</td>
+      <td class="num">{{ f.vs_txt }}</td>
       <td class="num">{{ f.monto_txt }}</td><td class="num">{{ f.part_txt }}{% if f.part_txt != '—' %}%{% endif %}</td><td class="num">{{ f.n_txt }}</td></tr>
     {% endfor %}
     </tbody>
     <tfoot><tr class="destacada"><th scope="row">Promedio del sistema</th><td class="num">{{ D.bancos.ppp_txt }}</td><td></td><td class="num">{{ ('$us ' ~ D.bancos.monto_txt ~ ' MM') if D.bancos.monto_txt else '—' }}</td><td class="num">100%</td><td class="num">{{ D.bancos.n_txt or '—' }}</td></tr></tfoot>
   </table></div>
-        <p class="pie">† Banco PyME o que compró muy poco ese día (menos de 0,2% del total): su precio puede depender de una o dos operaciones, por eso no entra en "el que más pagó" ni en "menor precio". "Vs. promedio" en verde: el banco pagó más que el promedio ese día.</p>
+        <p class="pie">† Banco PyME o que compró muy poco ese día (menos de 0,2% del total): su precio puede depender de una o dos operaciones, por eso no entra en "precio más alto" ni en "precio más bajo". "Vs. promedio": diferencia entre el precio del banco y el promedio de todos ese día.</p>
       </div>
       <div class="det-panel" data-panel="periodo" hidden>
         <p class="pie" style="margin:0 0 10px">Toca un encabezado para ordenar.</p>

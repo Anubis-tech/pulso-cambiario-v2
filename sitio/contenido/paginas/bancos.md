@@ -3,12 +3,12 @@ titulo: "Tipo de cambio por banco en Bolivia hoy | Pulso Económico"
 og_titulo: "Tipo de cambio por banco en Bolivia"
 descripcion: "Cuánto pagó cada banco por el dólar el {{ D.bancos.fecha_larga }}: promedio del sistema Bs {{ D.bancos.ppp_txt }}. Montos, comparación y evolución por banco."
 h1: "Tipo de cambio por banco en Bolivia"
-dek: "Si vas a vender dólares, aquí ves qué banco pagó más. Dato oficial del BCB, banco por banco."
-resumen: "Es el precio promedio al que cada banco compró dólares a sus clientes, según el BCB. Si vas a vender, te conviene el que paga más{% if D.bancos.mejor %}: el {{ D.bancos.dia_txt }} fue {{ D.bancos.mejor.nombre }}, con Bs {{ D.bancos.mejor.tasa_txt }}{% endif %}."
+dek: "A qué precio compró dólares cada banco, de más alto a más bajo. Dato oficial del BCB, banco por banco."
+resumen: "Es el precio promedio al que cada banco compró dólares a sus clientes, según el BCB. {% if D.bancos.mejor %}El {{ D.bancos.dia_txt }}, el precio más alto fue el de {{ D.bancos.mejor.nombre }}, con Bs {{ D.bancos.mejor.tasa_txt }}.{% endif %}"
 fuente: "Fuente: Banco Central de Bolivia, datos del {{ D.bancos.fecha_larga }}."
 faq:
   - p: "¿Qué banco paga más por el dólar hoy?"
-    r: "{% if D.bancos.mejor %}En el último dato publicado, del {{ D.bancos.fecha_larga }}, el banco que más pagó en promedio fue **{{ D.bancos.mejor.nombre }}**, con Bs {{ D.bancos.mejor.tasa_txt }} por dólar. El promedio ponderado de todo el sistema fue Bs {{ D.bancos.ppp_txt }}. Para la comparación se excluyen los bancos con muy pocas operaciones.{% else %}Todavía no hay datos suficientes para el último día.{% endif %}"
+    r: "{% if D.bancos.mejor %}En el último dato publicado, del {{ D.bancos.fecha_larga }}, el precio promedio más alto fue el de **{{ D.bancos.mejor.nombre }}**, con Bs {{ D.bancos.mejor.tasa_txt }} por dólar. El promedio ponderado de todo el sistema fue Bs {{ D.bancos.ppp_txt }}. Para la comparación se excluyen los bancos con muy pocas operaciones.{% else %}Todavía no hay datos suficientes para el último día.{% endif %}"
   - p: "¿Por qué el precio de mi banco es distinto al de esta tabla?"
     r: "La tabla muestra el **promedio** de todas las compras de dólares del banco en el día, ponderado por monto. Lo que te ofrecen a ti depende del monto, del canal (agencia, banca digital), de si eres cliente y del momento del día. Toma la tabla como una referencia para comparar bancos, no como la cotización de una operación puntual."
   - p: "¿Por qué el dato es del día hábil anterior?"
@@ -18,12 +18,12 @@ faq:
 ---
 ## Qué muestra esta página
 
-El Banco Central de Bolivia publica, para cada banco, el **precio promedio** al que compró dólares a sus clientes cada día y el **monto** que compró. Con eso se puede responder una pregunta concreta: si vendo dólares, ¿qué banco pagó más?
+El Banco Central de Bolivia publica, para cada banco, el **precio promedio** al que compró dólares a sus clientes cada día y el **monto** que compró. Con eso se puede ver qué banco compró a un precio más alto y cuál a uno más bajo.
 
 Algunas claves para leer la tabla:
 
 - **Bs por USD:** lo que el banco pagó, en promedio, por cada dólar comprado ese día.
-- **Vs. promedio:** la diferencia con el promedio de todo el sistema. En verde, el banco pagó más que el promedio, lo que conviene a quien vende.
+- **Vs. promedio:** la diferencia con el promedio de todo el sistema. Positivo: precio más alto que el promedio; negativo: más bajo.
 - **Monto y participación:** cuántos dólares compró y qué parte del total del sistema representa. Un banco que compró muy poco puede mostrar un precio extremo por una sola operación (lo marcamos con †).
 - **Promedio del sistema:** el precio de todos los bancos, ponderado por el monto que compró cada uno.
 

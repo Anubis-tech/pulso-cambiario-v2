@@ -17,7 +17,7 @@ faq:
   - p: "¿Por qué el oficial ya no es 6,96?"
     r: "Porque en junio de 2026 Bolivia pasó de un tipo de cambio fijo (6,86 / 6,96, vigente desde noviembre de 2011) a un régimen flexible, en el que el BCB calcula el oficial cada día hábil con operaciones reales de los bancos."
   - p: "¿Qué banco paga más por el dólar?"
-    r: "{% if D.bancos.mejor %}Según el último dato del BCB ({{ D.bancos.fecha_larga }}), **{{ D.bancos.mejor.nombre }}**, con Bs {{ D.bancos.mejor.tasa_txt }} en promedio. {% endif %}Cambia de un día a otro: revisa la [tabla por banco]({{ url('/tipo-de-cambio-bancos/') }})."
+    r: "{% if D.bancos.mejor %}Según el último dato del BCB ({{ D.bancos.fecha_larga }}), el precio más alto fue el de **{{ D.bancos.mejor.nombre }}**, con Bs {{ D.bancos.mejor.tasa_txt }} en promedio. {% endif %}Cambia de un día a otro: revisa la [tabla por banco]({{ url('/tipo-de-cambio-bancos/') }})."
   - p: "¿Qué es la brecha cambiaria?"
     r: "La diferencia porcentual entre el paralelo y el oficial. Hoy es de {{ D.brecha.pct_txt }}%. Llegó a superar el 160% en mayo de 2025. [Historia de la brecha]({{ url('/brecha-cambiaria/') }})."
   - p: "¿Cada cuánto se actualiza el sitio?"

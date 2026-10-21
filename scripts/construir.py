@@ -488,7 +488,7 @@ def enriquecer(D, data):
     flecha_u = u.get("ayer", {}).get("flecha", "")
     D["compartir"] = {
         "texto": f"Dólar hoy ({dia_txt(u['fecha'], True)}, {u['hora']}): paralelo Bs {v} {flecha_u if flecha_u != '=' else ''}/ oficial Bs {t['venta_txt']}."
-                 + (f" ¿Dónde vender? {b['top'][0]['nombre']} pagó Bs {b['top'][0]['tasa_txt']}." if b["top"] else ""),
+                 + (f" Precio más alto en bancos: {b['top'][0]['nombre']}, Bs {b['top'][0]['tasa_txt']}." if b["top"] else ""),
         "param": "?d=" + u["fecha"].replace("-", "") + u["hora"].replace(":", ""),
     }
     return D
@@ -818,7 +818,7 @@ def generar_hoy(sitio, D):
         tarjetas = [("Oficial BCB", f"Bs {t['venta_txt']}", (79, 143, 247), "Vigente " + ("para el " + t["dia_txt"] if t.get("es_de_manana") else "el " + t["fecha_corta"]))]
         if b.get("podio"):
             p = b["podio"][0]
-            tarjetas.append(("Banco que más pagó", f"Bs {p['tasa_txt']}", (177, 140, 255), p["nombre"]))
+            tarjetas.append(("Precio más alto en bancos", f"Bs {p['tasa_txt']}", (177, 140, 255), p["nombre"]))
         for k, (et, val, colp, ctx) in enumerate(tarjetas):
             x0 = x - 20 + k * (ancho_t + 30)
             dr.rounded_rectangle([x0, y, x0 + ancho_t, y + 260], radius=40, fill=TARJETA)
@@ -959,7 +959,7 @@ def construir(datos_dir, salida, entorno=None, base=None):
     # --- Resúmenes mensuales ---
     s.pagina("/dolar-bolivia/", "meses.html", {
         "titulo": "El dólar en Bolivia mes a mes | Pulso Económico",
-        "descripcion": "Resumen de cada mes del dólar en Bolivia desde junio de 2024: máximo, mínimo y cierre del paralelo, el oficial, la brecha y el banco que más pagó.",
+        "descripcion": "Resumen de cada mes del dólar en Bolivia desde junio de 2024: máximo, mínimo y cierre del paralelo, el oficial, la brecha y el banco con el precio más alto.",
         "h1": "El dólar en Bolivia, mes a mes", "dek": "Cómo cerró cada mes el paralelo, el oficial y los bancos.", "og": og["sitio"]},
         {"meses": meses, "clave": "meses"}, cambia="daily", prioridad=0.6)
     for mm in meses:

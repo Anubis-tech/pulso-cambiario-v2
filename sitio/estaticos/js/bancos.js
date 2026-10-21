@@ -302,13 +302,13 @@ function renderSpotlight(mkt, sel, per, allAggs, selBanks){
       $('spPppCtx').textContent = 'Promedio simple: '+fmt(base.simple,2);
     } else {
       const d = sel.prima, r = +d.toFixed(2);
-      $('spPppChip').innerHTML = r === 0 ? '' : '<span class="s-chip '+(r < 0 ? 'down' : 'up')+'">'+fmtSigned(d,2)+' vs mercado</span>';
+      $('spPppChip').innerHTML = r === 0 ? '' : '<span class="s-chip">'+fmtSigned(d,2)+' vs mercado</span>';
       $('spPppCtx').textContent = 'Mercado del mismo día. Promedio simple: '+fmt(base.simple,2);
     }
   }
 
   // Más alto y más bajo
-  $('spHLLbl').textContent = isSys ? 'Banco que pagó mejor y peor frente al mercado' : 'Precio más alto y más bajo de tu selección';
+  $('spHLLbl').textContent = isSys ? 'Precio más alto y más bajo frente al mercado' : 'Precio más alto y más bajo de tu selección';
   const pool = isSys ? allAggs.filter(a => !a.thin && !SMALL.has(a.bank) && a.prima != null) : per;
   const box = $('spHL');
   if (pool.length < 2){
@@ -322,7 +322,7 @@ function renderSpotlight(mkt, sel, per, allAggs, selBanks){
   const sorted = [...pool].sort((a,b) => clave(a) - clave(b));
   const lo = sorted[0], hi = sorted[sorted.length-1];
   const row = (k,a,cls) => '<div class="hl-row"><span class="hl-v '+cls+'">'+(isSys ? fmtSigned(a.prima,2) : fmt(a.ppp,2))+'</span><span class="hl-b">'+dispF(a.bank)+'</span><span class="hl-k">'+k+'</span></div>';
-  box.innerHTML = row('paga más',hi,'good')+row('paga menos',lo,'bad');
+  box.innerHTML = row('más alto',hi,'')+row('más bajo',lo,'');
   $('spHLCtx').textContent = isSys
     ? 'Bs por dólar frente al promedio del mercado en los mismos días. Excluye bancos PyME y con muestra delgada.'
     : 'Diferencia: '+fmt(hi.ppp-lo.ppp,2)+' Bs por USD.';
@@ -528,7 +528,7 @@ function renderBubble(aggs){
     label:shortName(a.bank), bank:a.bank, ppp:a.ppp, n:a.n, hasN:a.hasN, thin:a.thin,
     showLabel: !a.thin
   }));
-  const col = a => a.prima > 0.005 ? good : a.prima < -0.005 ? bad : neutral;
+  const col = a => a.prima > 0.005 ? cssv('--accent') : a.prima < -0.005 ? cssv('--paralelo') : neutral;
   const {tick, grid} = axisBase();
   charts.bub = new Chart($('cBub'), {
     type:'bubble',
@@ -554,7 +554,7 @@ function renderBubble(aggs){
            title:{display:true, text:'Monto comprado (USD, escala logarítmica)', color:tick, font:{family:MONO,size:11}}},
         y:{grace:'10%', border:{display:false}, grid:{color:ctx => ctx.tick && ctx.tick.value === 0 ? cssv('--avg') : grid, lineWidth:ctx => ctx.tick && ctx.tick.value === 0 ? 1.5 : 1, drawTicks:false},
            ticks:{color:tick, padding:8, font:{family:MONO,size:11}, callback:v => fmtSigned(v,1)},
-           title:{display:true, text:'Diferencia vs mercado (Bs/USD) · arriba paga más', color:tick, font:{family:MONO,size:11}}}
+           title:{display:true, text:'Diferencia vs mercado (Bs/USD) · arriba, precio más alto', color:tick, font:{family:MONO,size:11}}}
       }
     }
   });
@@ -588,7 +588,7 @@ function renderTable(aggs, total){
   }
   h += '</tr></thead><tbody>';
   for (const a of rows){
-    const r = +a.prima.toFixed(2), cls = r>0 ? 'good' : r<0 ? 'bad' : '';
+    const r = +a.prima.toFixed(2), cls = '';
     const w = Math.min(48, Math.abs(a.prima)/maxAbs*48);
     const bar = r===0 ? '' : r<0 ? '<i class="r" style="right:50%;width:'+w+'px"></i>' : '<i class="g" style="left:50%;width:'+w+'px"></i>';
     h += '<tr>'
