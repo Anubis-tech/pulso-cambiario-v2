@@ -36,7 +36,7 @@
   "usdt": {
    "atrasado": false,
    "nombre": "Dólar paralelo (Binance P2P)",
-   "ultimo_dato_utc": "2026-10-21T22:46:48Z"
+   "ultimo_dato_utc": "2026-10-22T01:16:46Z"
   }
  },
  "fuentes": {
@@ -78,16 +78,16 @@
    "fallas_seguidas": 0,
    "ultimo_cambio": "2026-10-21T05:20:34Z",
    "ultimo_error": null,
-   "ultimo_intento": "2026-10-21T22:46:48Z",
-   "ultimo_ok": "2026-10-21T22:46:48Z"
+   "ultimo_intento": "2026-10-22T01:16:46Z",
+   "ultimo_ok": "2026-10-22T01:16:46Z"
   },
   "usdt": {
    "fallas_seguidas": 0,
-   "ultimo_cambio": "2026-10-21T22:46:48Z",
+   "ultimo_cambio": "2026-10-22T01:16:46Z",
    "ultimo_error": null,
-   "ultimo_intento": "2026-10-21T22:46:48Z",
-   "ultimo_ok": "2026-10-21T22:46:48Z"
+   "ultimo_intento": "2026-10-22T01:16:46Z",
+   "ultimo_ok": "2026-10-22T01:16:46Z"
   }
  },
- "ultima_corrida": "2026-10-21T22:46:59Z"
+ "ultima_corrida": "2026-10-22T01:16:46Z"
 }
