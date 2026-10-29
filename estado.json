@@ -36,7 +36,7 @@
   "usdt": {
    "atrasado": false,
    "nombre": "Dólar paralelo (Binance P2P)",
-   "ultimo_dato_utc": "2026-10-29T19:53:23Z"
+   "ultimo_dato_utc": "2026-10-29T23:48:15Z"
   }
  },
  "fuentes": {
@@ -44,50 +44,50 @@
    "fallas_seguidas": 0,
    "ultimo_cambio": "2026-10-21T22:46:56Z",
    "ultimo_error": null,
-   "ultimo_intento": "2026-10-29T19:53:31Z",
-   "ultimo_ok": "2026-10-29T19:53:31Z"
+   "ultimo_intento": "2026-10-29T23:48:23Z",
+   "ultimo_ok": "2026-10-29T23:48:23Z"
   },
   "banks": {
    "fallas_seguidas": 0,
    "ultimo_cambio": "2026-10-29T07:40:27Z",
    "ultimo_error": null,
-   "ultimo_intento": "2026-10-29T19:53:25Z",
-   "ultimo_ok": "2026-10-29T19:53:25Z"
+   "ultimo_intento": "2026-10-29T23:48:17Z",
+   "ultimo_ok": "2026-10-29T23:48:17Z"
   },
   "itcr": {
    "fallas_seguidas": 0,
    "ultimo_error": null,
-   "ultimo_intento": "2026-10-29T19:53:33Z",
-   "ultimo_ok": "2026-10-29T19:53:33Z"
+   "ultimo_intento": "2026-10-29T23:48:26Z",
+   "ultimo_ok": "2026-10-29T23:48:26Z"
   },
   "noticias": {
    "fallas_seguidas": 0,
    "ultimo_cambio": "2026-10-29T19:53:34Z",
    "ultimo_error": null,
-   "ultimo_intento": "2026-10-29T19:53:34Z",
-   "ultimo_ok": "2026-10-29T19:53:34Z"
+   "ultimo_intento": "2026-10-29T23:48:27Z",
+   "ultimo_ok": "2026-10-29T23:48:27Z"
   },
   "reservas": {
    "fallas_seguidas": 0,
    "ultimo_cambio": "2026-10-28T21:49:39Z",
    "ultimo_error": null,
-   "ultimo_intento": "2026-10-29T19:53:29Z",
-   "ultimo_ok": "2026-10-29T19:53:29Z"
+   "ultimo_intento": "2026-10-29T23:48:22Z",
+   "ultimo_ok": "2026-10-29T23:48:22Z"
   },
   "tco": {
    "fallas_seguidas": 0,
    "ultimo_cambio": "2026-10-29T07:40:26Z",
    "ultimo_error": null,
-   "ultimo_intento": "2026-10-29T19:53:24Z",
-   "ultimo_ok": "2026-10-29T19:53:24Z"
+   "ultimo_intento": "2026-10-29T23:48:15Z",
+   "ultimo_ok": "2026-10-29T23:48:15Z"
   },
   "usdt": {
    "fallas_seguidas": 0,
-   "ultimo_cambio": "2026-10-29T19:53:23Z",
+   "ultimo_cambio": "2026-10-29T23:48:15Z",
    "ultimo_error": null,
-   "ultimo_intento": "2026-10-29T19:53:23Z",
-   "ultimo_ok": "2026-10-29T19:53:23Z"
+   "ultimo_intento": "2026-10-29T23:48:15Z",
+   "ultimo_ok": "2026-10-29T23:48:15Z"
   }
  },
- "ultima_corrida": "2026-10-29T19:53:34Z"
+ "ultima_corrida": "2026-10-29T23:48:27Z"
 }
