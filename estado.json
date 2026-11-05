@@ -19,7 +19,7 @@
   "noticias": {
    "atrasado": false,
    "nombre": "Titulares de prensa",
-   "ultimo_dato_utc": "2026-11-05T16:31:32Z"
+   "ultimo_dato_utc": "2026-11-03T17:31:19Z"
   },
   "reservas": {
    "atrasado": false,
@@ -34,7 +34,7 @@
   "usdt": {
    "atrasado": false,
    "nombre": "Dólar paralelo (Binance P2P)",
-   "ultimo_dato_utc": "2026-11-05T17:52:22Z"
+   "ultimo_dato_utc": "2026-11-05T23:19:58Z"
   }
  },
  "fuentes": {
@@ -42,50 +42,50 @@
    "fallas_seguidas": 0,
    "ultimo_cambio": "2026-10-21T22:46:56Z",
    "ultimo_error": null,
-   "ultimo_intento": "2026-11-05T17:52:33Z",
-   "ultimo_ok": "2026-11-05T17:52:33Z"
+   "ultimo_intento": "2026-11-05T23:20:09Z",
+   "ultimo_ok": "2026-11-05T23:20:09Z"
   },
   "banks": {
    "fallas_seguidas": 0,
    "ultimo_cambio": "2026-11-05T09:52:59Z",
    "ultimo_error": null,
-   "ultimo_intento": "2026-11-05T17:52:24Z",
-   "ultimo_ok": "2026-11-05T17:52:24Z"
+   "ultimo_intento": "2026-11-05T23:20:00Z",
+   "ultimo_ok": "2026-11-05T23:20:00Z"
   },
   "itcr": {
    "fallas_seguidas": 0,
    "ultimo_error": null,
-   "ultimo_intento": "2026-11-05T17:52:38Z",
-   "ultimo_ok": "2026-11-05T17:52:38Z"
+   "ultimo_intento": "2026-11-05T23:20:14Z",
+   "ultimo_ok": "2026-11-05T23:20:14Z"
   },
   "noticias": {
    "fallas_seguidas": 0,
-   "ultimo_cambio": "2026-11-05T17:52:38Z",
+   "ultimo_cambio": "2026-11-05T23:20:14Z",
    "ultimo_error": null,
-   "ultimo_intento": "2026-11-05T17:52:38Z",
-   "ultimo_ok": "2026-11-05T17:52:38Z"
+   "ultimo_intento": "2026-11-05T23:20:14Z",
+   "ultimo_ok": "2026-11-05T23:20:14Z"
   },
   "reservas": {
    "fallas_seguidas": 0,
    "ultimo_cambio": "2026-11-04T22:27:24Z",
    "ultimo_error": null,
-   "ultimo_intento": "2026-11-05T17:52:31Z",
-   "ultimo_ok": "2026-11-05T17:52:31Z"
+   "ultimo_intento": "2026-11-05T23:20:06Z",
+   "ultimo_ok": "2026-11-05T23:20:06Z"
   },
   "tco": {
-   "fallas_seguidas": 1,
+   "fallas_seguidas": 0,
    "ultimo_cambio": "2026-11-05T09:52:58Z",
-   "ultimo_error": "HTTPError: 429 Client Error: Too Many Requests for url: https://apibcb.cucu.bo/api/v1/tc/oficial",
-   "ultimo_intento": "2026-11-05T17:52:22Z",
-   "ultimo_ok": "2026-11-05T09:52:58Z"
+   "ultimo_error": null,
+   "ultimo_intento": "2026-11-05T23:19:59Z",
+   "ultimo_ok": "2026-11-05T23:19:59Z"
   },
   "usdt": {
    "fallas_seguidas": 0,
-   "ultimo_cambio": "2026-11-05T17:52:22Z",
+   "ultimo_cambio": "2026-11-05T23:19:58Z",
    "ultimo_error": null,
-   "ultimo_intento": "2026-11-05T17:52:22Z",
-   "ultimo_ok": "2026-11-05T17:52:22Z"
+   "ultimo_intento": "2026-11-05T23:19:58Z",
+   "ultimo_ok": "2026-11-05T23:19:58Z"
   }
  },
- "ultima_corrida": "2026-11-05T17:52:38Z"
+ "ultima_corrida": "2026-11-05T23:20:14Z"
 }
