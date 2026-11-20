@@ -9,7 +9,7 @@
   "bancos": {
    "atrasado": false,
    "nombre": "Tipo de cambio por banco",
-   "ultimo_dato_utc": "2026-11-19T03:59:00Z"
+   "ultimo_dato_utc": "2026-11-20T03:59:00Z"
   },
   "itcr": {
    "atrasado": false,
@@ -29,12 +29,12 @@
   "tco": {
    "atrasado": false,
    "nombre": "Tipo de cambio oficial (TCO)",
-   "ultimo_dato_utc": "2026-11-20T03:59:00Z"
+   "ultimo_dato_utc": "2026-11-21T03:59:00Z"
   },
   "usdt": {
    "atrasado": false,
    "nombre": "Dólar paralelo (Binance P2P)",
-   "ultimo_dato_utc": "2026-11-20T02:58:28Z"
+   "ultimo_dato_utc": "2026-11-20T11:16:58Z"
   }
  },
  "fuentes": {
@@ -42,50 +42,50 @@
    "fallas_seguidas": 0,
    "ultimo_cambio": "2026-10-21T22:46:56Z",
    "ultimo_error": null,
-   "ultimo_intento": "2026-11-20T02:58:37Z",
-   "ultimo_ok": "2026-11-20T02:58:37Z"
+   "ultimo_intento": "2026-11-20T11:17:07Z",
+   "ultimo_ok": "2026-11-20T11:17:07Z"
   },
   "banks": {
    "fallas_seguidas": 0,
-   "ultimo_cambio": "2026-11-19T04:31:47Z",
+   "ultimo_cambio": "2026-11-20T11:17:00Z",
    "ultimo_error": null,
-   "ultimo_intento": "2026-11-20T02:58:31Z",
-   "ultimo_ok": "2026-11-20T02:58:31Z"
+   "ultimo_intento": "2026-11-20T11:17:00Z",
+   "ultimo_ok": "2026-11-20T11:17:00Z"
   },
   "itcr": {
    "fallas_seguidas": 0,
    "ultimo_error": null,
-   "ultimo_intento": "2026-11-20T02:58:41Z",
-   "ultimo_ok": "2026-11-20T02:58:41Z"
+   "ultimo_intento": "2026-11-20T11:17:11Z",
+   "ultimo_ok": "2026-11-20T11:17:11Z"
   },
   "noticias": {
    "fallas_seguidas": 0,
-   "ultimo_cambio": "2026-11-20T02:58:42Z",
+   "ultimo_cambio": "2026-11-20T11:17:11Z",
    "ultimo_error": null,
-   "ultimo_intento": "2026-11-20T02:58:42Z",
-   "ultimo_ok": "2026-11-20T02:58:42Z"
+   "ultimo_intento": "2026-11-20T11:17:11Z",
+   "ultimo_ok": "2026-11-20T11:17:11Z"
   },
   "reservas": {
    "fallas_seguidas": 0,
    "ultimo_cambio": "2026-11-18T23:30:39Z",
    "ultimo_error": null,
-   "ultimo_intento": "2026-11-20T02:58:36Z",
-   "ultimo_ok": "2026-11-20T02:58:36Z"
+   "ultimo_intento": "2026-11-20T11:17:06Z",
+   "ultimo_ok": "2026-11-20T11:17:06Z"
   },
   "tco": {
    "fallas_seguidas": 0,
-   "ultimo_cambio": "2026-11-19T04:31:46Z",
+   "ultimo_cambio": "2026-11-20T11:16:58Z",
    "ultimo_error": null,
-   "ultimo_intento": "2026-11-20T02:58:29Z",
-   "ultimo_ok": "2026-11-20T02:58:29Z"
+   "ultimo_intento": "2026-11-20T11:16:58Z",
+   "ultimo_ok": "2026-11-20T11:16:58Z"
   },
   "usdt": {
    "fallas_seguidas": 0,
-   "ultimo_cambio": "2026-11-20T02:58:28Z",
+   "ultimo_cambio": "2026-11-20T11:16:58Z",
    "ultimo_error": null,
-   "ultimo_intento": "2026-11-20T02:58:28Z",
-   "ultimo_ok": "2026-11-20T02:58:28Z"
+   "ultimo_intento": "2026-11-20T11:16:58Z",
+   "ultimo_ok": "2026-11-20T11:16:58Z"
   }
  },
- "ultima_corrida": "2026-11-20T02:58:42Z"
+ "ultima_corrida": "2026-11-20T11:17:11Z"
 }
